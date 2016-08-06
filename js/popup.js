@@ -1,4 +1,6 @@
-var channels = [
+
+
+var defaultChannels = [
     {
         url: "http://www.douyu.com/63375",
         name: "SteamParty",
@@ -23,6 +25,21 @@ var channels = [
         website: "douyu"
     }
 ];
+
+var channels = [];
+
+var initChannels = function(){
+    chrome.storage.sync.get("channels", function(data){
+        console.log(data);
+        for (key in data) {
+            channels[key] = data[key];
+        };
+    });
+    if(channels.length<1){
+        channels = defaultChannels;
+        chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+    };
+};
 
 var api = {
     douyu: "http://open.douyucdn.cn/api/RoomApi/room/"
@@ -126,7 +143,8 @@ var addClick = function(id){
         e.preventDefault();
         e.stopPropagation();
         chrome.tabs.create({
-            url: "http://www.douyu.com/"+id
+            url: "http://www.douyu.com/"+id,
+            selected: false
         });
     };
 };
@@ -136,10 +154,14 @@ var getName = function(room){
         channel = channels[i];
         var reg = new RegExp(room.room_id);
         if (channel.url.match(reg)){
+            if (channel.name !== room.owner_name){
+                channel.name = room.owner_name;
+                chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+            };
             return channel.name;
         };
     };
-}
+};
 
 var callback = {
     success:function(responseText){console.log('Success');createDom(responseText)},
@@ -152,17 +174,64 @@ var getUrl = function(channel) {
         var match = channel.url.match(reg);
         var id = match[1];
         var url = api.douyu+id;
-        console.log(url);
+        // console.log(url);
         return url;
     };
 };
 
 var fetchArray = function(){
+    console.log(channels);
     for(var i=0,len=channels.length;i<len;i++){
         channel = channels[i];
         var url = getUrl(channel);
         myHandler.request('GET',url,callback);
     };
+
 };
 
+var addChannel = function(text){
+    console.log(text);
+    if(text){
+        var reg = /douyu.com\/(.*)/;
+        var match = text.match(reg);
+        if(match){
+            var id = match[1];
+            var channel = {
+                url: "http://www.douyu.com/"+id,
+                name: "New",
+                website: "douyu"
+            };
+            channels.push(channel);
+            var url = getUrl(channel);
+            myHandler.request('GET',url,callback);
+            chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+        };
+    };
+};
+
+var regClick = function() {
+    var input = document.getElementById('new_channel');
+    var label = input.nextElementSibling;
+    label.onclick = function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        text = input.value;
+        addChannel(text);
+    };
+};
+
+chrome.storage.onChanged.addListenser = function(changes){
+    console.log(changes);
+    // for (key in changes) {
+    //     channels[key] = changes[key];
+    // };
+    // console.log(channels);
+};
+
+regClick();
+
+initChannels();
+
 fetchArray();
+
+
