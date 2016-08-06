@@ -1,0 +1,46 @@
+{
+  "background": {
+    "page": "background.html"
+  },
+
+   // "content_scripts": [ {
+   //    "all_frames": true,
+   //    "js": [ "js/live.js" ],
+   //    "matches": [ "\u003Call_urls\u003E" ]
+   // } ],
+
+  "options_page": "options.html",
+
+  "browser_action": {
+      "default_title": "LiveTV",
+      "default_icon": "images/logo48x48.png",
+      "default_popup": "popup.html"
+      // "Badge": "3"
+  },
+
+  "icons": {
+      "16": "images/logo16x16.png",
+      "48": "images/logo48x48.png",
+      "128": "images/logo128x128.png"
+   },
+
+  "permissions": [
+    // "contextMenus",
+    "tabs",
+    "bookmarks",
+    "storage",
+    "http://*.douyu.com/*",
+    "http://*.douyucdn.cn/*"
+  ],
+
+  "background": {
+    "scripts": ["js/background.js"]
+    // "page": "background.html"
+  },
+
+  "manifest_version": 2,
+  "name": "LiveTV",
+  "description": "查看主播是否在线",
+  // "update_url": "http://clients2.google.com/service/update2/crx",
+  "version": "0.0.1"
+}
