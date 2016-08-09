@@ -30,7 +30,8 @@
     "bookmarks",
     "storage",
     "http://*.douyu.com/*",
-    "http://*.douyucdn.cn/*"
+    "http://*.douyucdn.cn/*",
+    "http://*.bilibili.com/*"
   ],
 
   "background": {

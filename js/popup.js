@@ -26,24 +26,14 @@ var defaultChannels = [
     }
 ];
 
-var channels = [];
-
-var initChannels = function(){
-    chrome.storage.sync.get("channels", function(data){
-        console.log(data);
-        for (key in data) {
-            channels[key] = data[key];
-        };
-    });
-    if(channels.length<1){
-        channels = defaultChannels;
-        chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
-    };
-};
+var newChannel = null;
 
 var api = {
-    douyu: "http://open.douyucdn.cn/api/RoomApi/room/"
+    douyu: "http://open.douyucdn.cn/api/RoomApi/room/",
+    bilibili: "http://live.bilibili.com/live/getInfo?roomid="
 };
+
+var channels = [];
 
 var QueuedHandler = function(){
     this.queue = []; // 请求队列
@@ -69,7 +59,7 @@ QueuedHandler.prototype = {
             xhr.onreadystatechange = function(){
                 if(xhr.readyState !== 4) return;
                 if(xhr.status === 200){
-                    callback.success(xhr.responseText,xhr.responseXML);
+                    callback.success(xhr.responseText,url);
                     // 判断请求队列是否为空，如果不为空继续下一个请求
                     that.advanceQueue();
                 }else{
@@ -84,7 +74,7 @@ QueuedHandler.prototype = {
             xhr.open(method,url,true);
             if(method!=='POST')postVars = null;
             xhr.send(postVars);
-        }
+        };
     },
     createXhrObject:function(){
         var methods = [
@@ -97,11 +87,11 @@ QueuedHandler.prototype = {
              methods[i]();
             }catch(e){
                 continue;
-            }
+            };
             // 如果执行到这里就表明 methods[i] 是可用的
             this.createXhrObject = methods[i]; // 记住这个方法，下次使用不用再判断
             return methods[i]();
-        }
+        };
 
         throw new Error('SimpleHandler: Could not create an XHR object.');
     },
@@ -110,7 +100,7 @@ QueuedHandler.prototype = {
         if(this.queue.length === 0){
             this.requestInProgress = false;
             return;
-        }
+        };
         var req = this.queue.shift();
         this.request(req.method,req.url,req.callback,req.postVars,true);
     }
@@ -120,93 +110,130 @@ var myHandler = new QueuedHandler();
 
 // var frag = document.createDocumentFragment();
 
-//only for douyu
-var createDom = function(text) {
-    var room = JSON.parse(text).data;
-    console.log(room);
+var createDom = function(text, url) {
+    var data = JSON.parse(text).data;
     var li = document.createElement("li");
-    var name = getName(room);
-    li.id = room.room_id;
-    li.innerText = name+"   "+room.room_name;
-    if (room.room_status == 1) {
-        li.className = "online";
-    } else {
-        li.className = "offline";
+    var channel = getChannel(url, data);
+    if (url.match(/douyu/)){
+        li.innerText = data.owner_name+data.room_name;
+        if (data.room_status == 1) {
+            li.className = "online";
+        } else {
+            li.className = "offline";
+        };
+    }else if (url.match(/bilibili/)) {
+        li.innerText = data.ANCHOR_NICK_NAME+data.ROOMTITLE;
+        if (data.LIVE_STATUS == 'LIVE') { //data._satatus=='on'
+            li.className = "online";
+        } else {
+            li.className = "offline";
+        };
     };
     document.getElementById("channelsList").appendChild(li);
-    addClick(room.room_id);
+    addClick(li, channel);
 };
 
-var addClick = function(id){
-    var li = document.getElementById(id);
+var addClick = function(li, channel){
     li.onclick = function(e){
         e.preventDefault();
         e.stopPropagation();
+        var selected = false;
+        if (e.button === '0') {
+            selected = true;
+        }else{
+            selected = false;
+        }
         chrome.tabs.create({
-            url: "http://www.douyu.com/"+id,
-            selected: false
+            url: channel.url,
+            selected: selected
         });
-    };
+    }
 };
 
-var getName = function(room){
-    for(var i=0,len=channels.length;i<len;i++){
-        channel = channels[i];
-        var reg = new RegExp(room.room_id);
-        if (channel.url.match(reg)){
-            if (channel.name !== room.owner_name){
-                channel.name = room.owner_name;
-                chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+var getChannel = function(url, data){
+    if (newChannel){
+        saveChannel(url, data);
+        return newChannel;
+    }else{
+        for(var i=0,len=channels.length;i<len;i++){
+            channel = channels[i];
+            if (channel.apiUrl == url){
+                return channel;
             };
-            return channel.name;
+            // var reg = new RegExp(channel.website);
+            // if (url.match(reg)){
+                // if (channel.name !== room.owner_name){
+                //     channel.name = room.owner_name;
+                //     chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+                // };
+                // return channel;
+            // };
         };
     };
 };
 
+var saveChannel = function(url, data) {
+    if (url.match(/douyu/)){
+        newChannel.name = data.owner_name;
+    }else if (url.match(/bilibili/)){
+        newChannel.name = data.ANCHOR_NICK_NAME;
+    };
+    channels.push(newChannel);
+    chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+    newChannel = null;
+}
+
 var callback = {
-    success:function(responseText){console.log('Success');createDom(responseText)},
+    success:function(responseText, url){console.log('Success');createDom(responseText, url)},
     failure:function(statusCode){console.log('Failure');}
 };
 
-var getUrl = function(channel) {
-    if (channel.website == "douyu"){
-        var reg = /douyu.com\/(.*)/;
-        var match = channel.url.match(reg);
-        var id = match[1];
-        var url = api.douyu+id;
-        // console.log(url);
-        return url;
-    };
-};
-
-var fetchArray = function(){
-    console.log(channels);
-    for(var i=0,len=channels.length;i<len;i++){
-        channel = channels[i];
-        var url = getUrl(channel);
-        myHandler.request('GET',url,callback);
-    };
-
-};
-
-var addChannel = function(text){
-    console.log(text);
-    if(text){
+var getId = function(text){
+    if (text.match(/douyu/)){
         var reg = /douyu.com\/(.*)/;
         var match = text.match(reg);
-        if(match){
-            var id = match[1];
-            var channel = {
-                url: "http://www.douyu.com/"+id,
-                name: "New",
-                website: "douyu"
-            };
-            channels.push(channel);
-            var url = getUrl(channel);
-            myHandler.request('GET',url,callback);
-            chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+        return match[1];
+    }else if (text.match(/bilibili/)){
+        var reg = /bilibili.com\/(.*)/;
+        var match = text.match(reg);
+        return match[1];
+    };
+};
+
+var getUrl = function(channel) {
+    if (!channel.apiUrl) {
+        var id = getId(channel.url);
+        if (id){
+            channel.apiUrl = api[channel.website]+id;
+            return channel.apiUrl;
+        };
+    }else{
+        return channel.apiUrl;
+    };
+};
+
+
+
+var addChannel = function(text){
+    var id = getId(text);
+    if (text.match(/douyu/)){
+        var channel = {
+            url: "http://www.douyu.com/"+id,
+            apiUrl: api.douyu+id,
+            name: "New Channel",
+            website: "douyu"
+        };
+    }else if (text.match(/bilibili/)){
+        var channel = {
+            url: "http://live.bilibili.com/"+id,
+            apiUrl: api.bilibili+id,
+            name: "New Channel",
+            website: "bilibili"
         };
     };
+    newChannel = channel;
+    // var url = getUrl(channel);
+    myHandler.request('GET',channel.apiUrl,callback);
 };
 
 var regClick = function() {
@@ -216,8 +243,10 @@ var regClick = function() {
         e.preventDefault();
         e.stopPropagation();
         text = input.value;
-        addChannel(text);
-    };
+        if (text) {
+            addChannel(text);
+        };
+    }
 };
 
 chrome.storage.onChanged.addListenser = function(changes){
@@ -228,10 +257,42 @@ chrome.storage.onChanged.addListenser = function(changes){
     // console.log(channels);
 };
 
+// chrome.browserAction.onClicked.addListener(function() {
+//     regClick();
+//     initChannels();
+//     fetchArray();
+// });
+
+var fetchArray = function(){
+
+    console.log(channels);
+    for(var i=0,len=channels.length;i<len;i++){
+        channel = channels[i];
+        var url = getUrl(channel);
+        if (url) {
+            myHandler.request('GET',url,callback);
+        };
+    };
+};
+
+var initChannels = function(){
+    chrome.storage.sync.get({"channels":channels}, function(data){
+        console.log(data);
+        channels = data.channels;
+        // for (key in data) {
+        //     channels[key] = data[key];
+        // };
+        console.log(channels);
+        if(channels.length<1){
+            channels = defaultChannels;
+            console.log(channels);
+            chrome.storage.sync.set({"channels":channels},function(){console.log("save");});
+        };
+        fetchArray();
+    });
+};
+
 regClick();
 
 initChannels();
-
-fetchArray();
-
 
