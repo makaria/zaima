@@ -212,26 +212,48 @@ ChannelHandler.prototype = {
         var url = channel.url;
         if(url.match(/douyu/)){
             channel.title = data.owner_name+data.room_name;
+            this.setNickname(channel, data.owner_name);
         }else if(url.match(/bilibili/)){
             channel.title = data.ANCHOR_NICK_NAME+data.ROOMTITLE;
+            this.setNickname(channel, data.ANCHOR_NICK_NAME);
+        };
+    },
+
+    setNickname: function(channel, nickname){
+        if (channel.nickname === "New" || !channel.nickname){
+            channel.nickname = nickname;
+        };
+    },
+
+    isNewChannel: function(channel){
+        var isNew = true;
+        var channels = this.channels;
+        var length = channels.length;
+        for(var i=0;i<length;i++){
+            if (channels[i].apiUrl === channel.apiUrl){
+                isNew = isNew && false;
+            };
+        };
+        if (isNew){
+            this.channels.push(channel);
         };
     },
 
     generateChannel: function(value){
-        var id = this.filter("id", url);
+        var id = this.filter("id", value);
         if (value.match(/douyu/)){
             var channel = {
                 url: "http://www.douyu.com/"+id,
-                apiUrl: api.douyu+id,
-                name: "New Channel",
+                // apiUrl: api.douyu+id,
+                nickname: "New",
                 domain: "douyu",
                 data: null
             };
         }else if (value.match(/bilibili/)){
             var channel = {
                 url: "http://live.bilibili.com/"+id,
-                apiUrl: api.bilibili+id,
-                name: "New Channel",
+                // apiUrl: api.bilibili+id,
+                nickname: "New",
                 domain: "bilibili",
                 data: null
             };
@@ -255,10 +277,13 @@ ChannelHandler.prototype = {
             var channel = this.newChannel;
             channel.data = data;
             this.isOnline(channel);
-            this.channels.push(channel);
+            this.getTitle(channel, url);
+            this.isNewChannel(channel);
+            // this.channels.push(channel);
         }else{
             var channels = this.channels;
-            for(var i=0,len=channels.length;i<len;i++){
+            var length = channels.length;
+            for(var i=0;i<length;i++){
                 var channel = channels[i];
                 if (channel.apiUrl === url){
                     channel.data = data;
@@ -275,7 +300,8 @@ ChannelHandler.prototype = {
         var that = this;
         var obj = {};
         var channels = JSON.parse(JSON.stringify(this.channels));
-        for(var i=0,len=channels.length;i<len;i++){
+        var length = channels.length;
+        for(var i=0;i<length;i++){
             var channel = channels[i];
             channel.data = null;
             // channel.online = false;
@@ -289,15 +315,16 @@ ChannelHandler.prototype = {
     },
 
     addChannel: function(value ,callback){
-        var that = this;
-        var channel = this.genarateChannel(value);
+        // var that = this;
+        var channel = this.generateChannel(value);
+        var url = this.getApiUrl(channel);
         this.newChannel = channel;
         // var callback = {
         //     success: function(responseText){that.saveChannel(responseText);},
         //     failure: function(statusCode){alert("No Man's Room");},
         //     complete: function(){console.log("Complete");}
         // };
-        myRequest.request("GET", channel.apiUrl, callback);
+        myRequest.request("GET", url, callback);
     },
 
     initChannels: function(callback){
@@ -314,7 +341,8 @@ ChannelHandler.prototype = {
         this.fetching = true;
         this.initChannels(function(data){
             var channels = that.channels;
-            for(var i=0,len=channels.length;i<len;i++){
+            var length = channels.length;
+            for(var i=0;i<length;i++){
                 channel = channels[i];
                 var url = that.getApiUrl(channel);
                 if (url){
@@ -334,9 +362,10 @@ ChannelHandler.prototype = {
     },
 
     totalOnline: function(callback){
-        var channels = this.channels;
         this.online = 0;
-        for(var i=0,len=channels.length;i<len;i++){
+        var channels = this.channels;
+        var length = channels.length;
+        for(var i=0;i<length;i++){
             channel = channels[i];
             if (channel.online){
                 this.online += 1;

@@ -1,5 +1,7 @@
 var bg =  chrome.extension.getBackgroundPage();
 
+
+// move this to options.js.
 var addClickForInput = function() {
     var input = document.getElementById('new_channel');
     var label = input.nextElementSibling;
@@ -9,7 +11,7 @@ var addClickForInput = function() {
         e.stopPropagation();
         text = input.value;
         if (text) {
-            bg.addChannel(text);
+            bg.myChannel.addChannel(text, callbacks);
         };
     };
 };
@@ -35,9 +37,11 @@ var addClickForChannel = function(li, channel){
 
 var createDom = function(){
     console.log("create dom");
+    document.getElementById("channelsList").innerHTML = "";
     var frag = document.createDocumentFragment();
     var channels = bg.myChannel.channels;
-    for(var i=0,len=channels.length;i<len;i++){
+    var length = channels.length;
+    for(var i=0;i<length;i++){
         channel = channels[i];
         var li = document.createElement("li");
         li.innerText = channel.nickname + "   " + channel.title;

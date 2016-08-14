@@ -21,6 +21,10 @@ li {
     cursor: pointer;
 }
 
+label {
+    cursor: pointer;
+}
+
 .offline {
     color: #999;
 }
