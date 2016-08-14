@@ -3,19 +3,12 @@
     "page": "background.html"
   },
 
-   // "content_scripts": [ {
-   //    "all_frames": true,
-   //    "js": [ "js/live.js" ],
-   //    "matches": [ "\u003Call_urls\u003E" ]
-   // } ],
-
   "options_page": "options.html",
 
   "browser_action": {
       "default_title": "LiveTV",
-      "default_icon": "images/logo48x48.png",
-      "default_popup": "popup.html"
-      // "Badge": "3"
+      "default_icon": "images/logo48x48.png"
+      // "default_popup": "popup.html"
   },
 
   "icons": {
@@ -27,8 +20,9 @@
   "permissions": [
     // "contextMenus",
     "tabs",
-    "bookmarks",
+    // "bookmarks",
     "storage",
+    "unlimitedStorage",
     "http://*.douyu.com/*",
     "http://*.douyucdn.cn/*",
     "http://*.bilibili.com/*"
