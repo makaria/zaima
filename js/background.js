@@ -81,12 +81,6 @@ QueuedHandler.prototype = {
     }
 };
 
-// var callback = {
-//     success:function(responseText){console.log('Success');},
-//     failure:function(statusCode){console.log('Failure');},
-//     complete:function(){console.log("Complete");}
-// };
-
 var myRequest = new QueuedHandler();
 
 //storage
@@ -144,6 +138,8 @@ var ChannelHandler = function(){
             nickname: "SteamParty",
             title: "",
             domain: "douyu",
+            id: "63375",
+            alterId: null,
             online: false,
             data: null
         }
@@ -153,6 +149,8 @@ var ChannelHandler = function(){
             nickname: "有C",
             title: "",
             domain: "bilibili",
+            id: "41515",
+            alterId: null,
             online: false,
             data: null
         }
@@ -167,6 +165,7 @@ var ChannelHandler = function(){
     this.interval = 1000*60*30;
     this.start = true;
     this.fetching = false;
+    this.timestamp = 0;
 };
 
 ChannelHandler.prototype = {
@@ -195,12 +194,16 @@ ChannelHandler.prototype = {
         if (channel.apiUrl){
             return channel.apiUrl;
         }else{
-            var url = channel.url;
-            var id = this.filter("id", url);
-            var domain = this.filter("domain", url);
-            console.log(id, domain);
-            console.log(this.api);
+            var domain = channel.domain;
+            var id = channel.id;
+            // var url = channel.url;
+            // var id = this.filter("id", url);
+            // var domain = this.filter("domain", url);
+            // console.log(id, domain);
+            // console.log(this.api);
             if (id && domain){
+                // channel.id = id;
+                // channel.domain = domain;
                 channel.apiUrl = this.api[domain]+id;
                 return channel.apiUrl;
             };
@@ -227,11 +230,25 @@ ChannelHandler.prototype = {
 
     isNewChannel: function(channel){
         var isNew = true;
+        var data =channel.data;
         var channels = this.channels;
         var length = channels.length;
         for(var i=0;i<length;i++){
             if (channels[i].apiUrl === channel.apiUrl){
                 isNew = isNew && false;
+
+                //更改id&&别名id&&apiUrl中的id
+                if (channels[i].id !== channel.id){
+                    var id = data.room_id || data.ROOMID;
+                    channels[i].id = id;
+                    channels[i].alterId = channel.id;
+                    channels[i].apiUrl = channel.domain + id;
+                    // if (channel.domain === "douyu"){
+                    //     channels[i].id = data.room_id;
+                    // }else if (channel.domain === "bilibili"){
+                    //     channels[i].id = data.ROOMID;
+                    // };
+                };
             };
         };
         if (isNew){
@@ -241,22 +258,19 @@ ChannelHandler.prototype = {
 
     generateChannel: function(value){
         var id = this.filter("id", value);
-        if (value.match(/douyu/)){
-            var channel = {
-                url: "http://www.douyu.com/"+id,
-                // apiUrl: api.douyu+id,
-                nickname: "New",
-                domain: "douyu",
-                data: null
-            };
-        }else if (value.match(/bilibili/)){
-            var channel = {
-                url: "http://live.bilibili.com/"+id,
-                // apiUrl: api.bilibili+id,
-                nickname: "New",
-                domain: "bilibili",
-                data: null
-            };
+        var domain = this.filter("domain", value);
+        var channel = {
+            apiUrl: this.api[domain]+id,
+            nickname: "New",
+            domain: "douyu",
+            id: id,
+            data: null
+        };
+        //补全url，有必要吗？
+        if (domain === "douyu"){
+            channel.url = "http://www.douyu.com/"+id;
+        }else if (domain === "bilibili"){
+            channel.url = "http://live.bilibili.com/"+id;
         };
         return channel;
         // myRequest.request('GET',channel.apiUrl,callback);
@@ -269,7 +283,7 @@ ChannelHandler.prototype = {
     },
 
     saveChannel: function(text, url, callback){
-        var that = this;
+        // var that = this;
         var obj = JSON.parse(text);
         var data = obj.data;
         // console.log(data);
@@ -281,7 +295,7 @@ ChannelHandler.prototype = {
             this.isNewChannel(channel);
             // this.channels.push(channel);
         }else{
-            var channels = this.channels;
+            var channels = JSON.parse(JSON.stringify(this.channels));
             var length = channels.length;
             for(var i=0;i<length;i++){
                 var channel = channels[i];
@@ -293,7 +307,7 @@ ChannelHandler.prototype = {
                 };
             };
         };
-        this.saveChannels(callback);
+        // this.saveChannels(callback);
     },
 
     saveChannels: function(callback){
@@ -303,7 +317,7 @@ ChannelHandler.prototype = {
         var length = channels.length;
         for(var i=0;i<length;i++){
             var channel = channels[i];
-            channel.data = null;
+            channel.data = null; //否则数据太大会超过限制无法存储
             // channel.online = false;
         };
         obj["channels"] = channels;
@@ -342,9 +356,11 @@ ChannelHandler.prototype = {
         this.initChannels(function(data){
             var channels = that.channels;
             var length = channels.length;
+            console.log(channels);
             for(var i=0;i<length;i++){
                 channel = channels[i];
                 var url = that.getApiUrl(channel);
+                console.log(url);
                 if (url){
                     myRequest.request('GET',url,callback);
                 };
@@ -390,14 +406,16 @@ var myChannel = new ChannelHandler();
 var callbacks = {
     success: function(responseText, url){myChannel.saveChannel(responseText, url);},
     failure: function(statusCode){console.log("No Man's Room");},
-    complete: function(){myChannel.fetching=false;myChannel.totalOnline();}
+    complete: function(){myChannel.fetching=false;myChannel.timestamp=Date.now();myChannel.totalOnline();myChannel.saveChannels();}
 };
 
 var 快活 = function(){
+    console.log(new Date());
     myChannel.fetchChannels(callbacks);
     if (myChannel.start){
         setInterval(function(){
-            快活();
+            console.log(new Date());
+            myChannel.fetchChannels(callbacks);
         }, myChannel.interval);
     };
 };

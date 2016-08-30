@@ -1,6 +1,5 @@
 var bg =  chrome.extension.getBackgroundPage();
 
-
 // move this to options.js.
 var addClickForInput = function() {
     var input = document.getElementById('new_channel');
@@ -59,8 +58,20 @@ var createDom = function(){
 var callbacks = {
     success: function(responseText, url){bg.myChannel.saveChannel(responseText, url);},
     failure: function(statusCode){console.log("No Man's Room");},
-    complete: function(){bg.myChannel.fetching=false;bg.myChannel.totalOnline();createDom();}
+    complete: function(){bg.myChannel.fetching=false;bg.myChannel.timestamp=Date.now();bg.myChannel.totalOnline();createDom();}
+};
+
+var happy = function(){
+    var now = Date.now();
+    var timestamp = bg.myChannel.timestamp;
+    var interval = now - timestamp;
+    if (interval > 10*60*1000){
+        bg.myChannel.fetchChannels(callbacks);
+    }else{
+        console.log(interval);
+        createDom();
+    };
 };
 
 addClickForInput();
-bg.myChannel.fetchChannels(callbacks);
+happy();
