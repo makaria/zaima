@@ -1,22 +1,22 @@
 
 ol {
-  flex: 1 1 auto;
+  align-items: stretch;
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   justify-content: space-between;
-  align-items: stretch;
   padding: 5px;
 }
 
 li {
+  border-bottom: 1px solid black;
+  cursor: pointer;
   flex: 1 1 auto;
-  overflow: auto;
   line-height: 1.5;
   list-style-type: none;
   margin: 0 5px;
+  overflow: auto;
   width: 200px;
-  border-bottom: 1px solid black;
-  cursor: pointer;
 }
 
 label {

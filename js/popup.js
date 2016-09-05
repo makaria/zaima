@@ -36,7 +36,7 @@ var addClickForChannel = function (li, channel) {
 
 var createDom = function () {
   console.log('create dom')
-  document.getElementById('channelsList').innerHTML = ''
+  document.getElementById('channels_list').innerHTML = ''
   var frag = document.createDocumentFragment()
   var channels = bg.myChannel.channels
   var length = channels.length
@@ -53,7 +53,7 @@ var createDom = function () {
     frag.appendChild(li)
     addClickForChannel(li, channel)
   };
-  document.getElementById('channelsList').appendChild(frag)
+  document.getElementById('channels_list').appendChild(frag)
 }
 
 var callbacks = {
