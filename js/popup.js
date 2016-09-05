@@ -4,7 +4,7 @@ var bg = chrome.extension.getBackgroundPage()
 var addClickForInput = function () {
   var input = document.getElementById('new_channel')
   var label = input.nextElementSibling
-  // console.log(input);
+  // console.log(input)
   label.onclick = function (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -26,7 +26,7 @@ var addClickForChannel = function (li, channel) {
       selected = true
     } else {
       selected = false
-    };
+    }
     chrome.tabs.create({
       url: channel.url,
       selected: selected
@@ -49,10 +49,10 @@ var createDom = function () {
       li.className = 'online'
     } else {
       li.className = 'offline'
-    };
+    }
     frag.appendChild(li)
     addClickForChannel(li, channel)
-  };
+  }
   document.getElementById('channels_list').appendChild(frag)
 }
 

@@ -1,7 +1,6 @@
 chrome.browserAction.onClicked.addListener(function (tab) {
   console.log(tab)
   chrome.browserAction.setPopup({
-    // tabId: tab.id,
     popup: 'popup.html'
   })
 })
@@ -44,10 +43,9 @@ QueuedHandler.prototype = {
       }
 
       xhr.open(method, url, true)
-      // xhr.send(null);
       if (method !== 'POST') postVars = null
       xhr.send(postVars)
-    };
+    }
   },
 
   createXhrObject: function () {
@@ -61,11 +59,11 @@ QueuedHandler.prototype = {
         methods[i]()
       } catch (e) {
         continue
-      };
+      }
       // 如果执行到这里就表明 methods[i] 是可用的
       this.createXhrObject = methods[i] // 记住这个方法，下次使用不用再判断
       return methods[i]()
-    };
+    }
 
     throw new Error('SimpleHandler: Could not create an XHR object.')
   },
@@ -75,7 +73,7 @@ QueuedHandler.prototype = {
       this.requestInProgress = false
       callback.complete()
       return
-    };
+    }
     var req = this.queue.shift()
     this.request(req.method, req.url, req.callback, req.postVars, true)
   }
@@ -128,8 +126,6 @@ ChromeHandler.prototype = {
   }
 }
 
-// var myChrome = new ChromeHandler()
-
 // channels
 var ChannelHandler = function () {
   this.defaultChannels = [
@@ -176,7 +172,7 @@ ChannelHandler.prototype = {
       reg = /(\.com\/(.*))|(\.tv\/(.*))|(\.tv\/star\/)(.*)/
     } else if (key === 'domain') {
       reg = /\.(.*)\.com|\.(.*)\.tv/
-    };
+    }
     match = text.match(reg)
     if (match) {
       var length = match.length - 1
@@ -195,14 +191,7 @@ ChannelHandler.prototype = {
     } else {
       var domain = channel.domain
       var id = channel.id
-      // var url = channel.url;
-      // var id = this.filter("id", url);
-      // var domain = this.filter("domain", url);
-      // console.log(id, domain);
-      // console.log(this.api);
       if (id && domain) {
-        // channel.id = id;
-        // channel.domain = domain;
         channel.apiUrl = this.api[domain] + id
         return channel.apiUrl
       }
@@ -242,11 +231,6 @@ ChannelHandler.prototype = {
           channels[i].id = id
           channels[i].alterId = channel.id
           channels[i].apiUrl = channel.domain + id
-          // if (channel.domain === "douyu") {
-          //   channels[i].id = data.room_id;
-          // }else if (channel.domain === "bilibili") {
-          //   channels[i].id = data.ROOMID;
-          // };
         }
       }
     }
@@ -272,7 +256,6 @@ ChannelHandler.prototype = {
       channel.url = 'http://live.bilibili.com/' + id
     }
     return channel
-    // myRequest.request('GET',channel.apiUrl,callback);
   },
 
   deleteChannel: function (index, callback) {
@@ -282,10 +265,8 @@ ChannelHandler.prototype = {
   },
 
   saveChannel: function (text, url, callback) {
-    // var that = this;
     var obj = JSON.parse(text)
     var data = obj.data
-    // console.log(data);
     var channel
     if (this.newChannel) {
       channel = this.newChannel
@@ -293,7 +274,6 @@ ChannelHandler.prototype = {
       this.isOnline(channel)
       this.getTitle(channel, url)
       this.isNewChannel(channel)
-      // this.channels.push(channel);
     } else {
       var channels = JSON.parse(JSON.stringify(this.channels))
       var length = channels.length
@@ -307,7 +287,6 @@ ChannelHandler.prototype = {
         }
       }
     }
-    // this.saveChannels(callback);
   },
 
   saveChannels: function (callback) {
@@ -318,10 +297,8 @@ ChannelHandler.prototype = {
     for (var i = 0; i < length; i++) {
       var channel = channels[i]
       channel.data = null // 否则数据太大会超过限制无法存储
-      // channel.online = false;
-    };
+    }
     obj['channels'] = channels
-    // console.log(obj);
     chrome.storage.sync.set(obj, function (data) {
       that.newChannel = null
       callback && callback()
@@ -329,22 +306,15 @@ ChannelHandler.prototype = {
   },
 
   addChannel: function (value, callback) {
-    // var that = this;
     var channel = this.generateChannel(value)
     var url = this.getApiUrl(channel)
     this.newChannel = channel
-    // var callback = {
-    //   success: function (responseText) {that.saveChannel(responseText);},
-    //   failure: function (statusCode) {alert("No Man's Room");},
-    //   complete: function () {console.log("Complete");}
-    // };
     myRequest.request('GET', url, callback)
   },
 
   initChannels: function (callback) {
     var that = this
     chrome.storage.sync.get('channels', function (data) {
-      // console.log(data);
       that.channels = data['channels'] ? data['channels'] : that.defaultChannels
       callback && callback(data)
     })
