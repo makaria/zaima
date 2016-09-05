@@ -1,4 +1,4 @@
 {
-  "attr-bans": [],
-  "line-end-style": false
+  "line-end-style": false,
+  "tag-self-close": "never"
 }
