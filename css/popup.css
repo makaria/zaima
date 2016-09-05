@@ -1,3 +1,7 @@
+body {
+  width: 250px;
+  margin: 5px 5px;
+}
 
 ol {
   align-items: stretch;
@@ -14,13 +18,16 @@ li {
   flex: 1 1 auto;
   line-height: 1.5;
   list-style-type: none;
-  margin: 0 5px;
   overflow: auto;
-  width: 200px;
 }
 
-label {
+.wrapper label {
   cursor: pointer;
+  width: 20px;
+}
+
+.wrapper input {
+  width: calc(100% - 40px);
 }
 
 .offline {
