@@ -1,34 +1,53 @@
 
 ol {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
-    padding: 5px;
-    }
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 5px;
+}
 
 li {
-    flex: 1 1 auto;
-    overflow: auto;
-    line-height: 1.5;
-    list-style-type: none;
-    margin: 0;
-    padding: 5px;
-    margin-left:0px;
-    width: 200px;
-    border-bottom: 1px solid black;
-    cursor: pointer;
+  flex: 1 1 auto;
+  overflow: auto;
+  line-height: 2;
+  list-style-type: none;
+  margin: 0;
+  padding: 5px;
+  margin-left:0px;
+  max-width: 250px;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
+li>span {
+  flex: 1 1 auto;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.excited {
+  color: blue;
+}
+
+.exciting {
+  color: black;
+}
+
+.none {
+  display: none;
 }
 
 label {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .offline {
-    color: #999;
+  color: #999;
 }
 
 .online {
-    color: #fd9ccc;
+  color: #fd9ccc;
 }

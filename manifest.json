@@ -37,5 +37,5 @@
   "name": "LiveTV",
   "description": "查看主播是否在线",
   // "update_url": "http://clients2.google.com/service/update2/crx",
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
