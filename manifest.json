@@ -1,5 +1,5 @@
 {
-  "options_page": "options.html",
+  "options_page": "html/options.html",
 
   "browser_action": {
       "default_title": "LiveTV",

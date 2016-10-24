@@ -52,3 +52,4 @@ README.html
 # node_modules
 node_modules
 *.sublime-workspace
+*.sublime-project

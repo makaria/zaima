@@ -61,7 +61,7 @@ var createDom = function (channel) {
         var li = document.createElement('li')
         li.id = id
         li.setAttribute('title', channel.url)
-        document.getElementById('channelsList').appendChild(li)
+        document.getElementById('channels_list').appendChild(li)
         addClickForChannel(li, channel)
         updateEle(channel, li)
       }
@@ -69,7 +69,7 @@ var createDom = function (channel) {
       console.error(channel)
     }
   } else {
-    document.getElementById('channelsList').innerHTML = ''
+    document.getElementById('channels_list').innerHTML = ''
     var channels = bg.myChannel.channels
     var length = channels.length,
       channel
@@ -114,7 +114,7 @@ var updateEle = function (channel, el) {
 }
 
 var clearDom = function () {
-  var channels = document.getElementById('channelsList')
+  var channels = document.getElementById('channels_list')
   var bgChannels = bg.myChannel.channels
   if (channels.childElementCount > bgChannels.length) {
     for (var i in channels.childNodes) {
@@ -129,7 +129,7 @@ var clearDom = function () {
       }
       console.log(live)
       if (!live) {
-        channels.childNodes[i].remove()
+        channels.childNodes[i].className = 'none'
       }
     }
   }

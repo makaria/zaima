@@ -1,7 +1,7 @@
 //TODO 每次点击显示popup页面，都要重新生成dom，注册click事件，如何避免此过程，改成只更新dom？
 chrome.browserAction.onClicked.addListener(function (tab) {
   chrome.browserAction.setPopup({
-    popup: 'popup.html'
+    popup: 'html/popup.html'
   })
 })
 
@@ -249,7 +249,7 @@ ChannelHandler.prototype = {
     if (id !== channel.id) {
       channel.alterId = channel.id
       channel.id = id
-      channel.apiUrl = channel.domain + id
+      channel.apiUrl = this.api[channel.domain] + id
     }
     for (var i = 0; i < length; i++) {
       if (channels[i].apiUrl === channel.apiUrl) {
@@ -309,7 +309,7 @@ ChannelHandler.prototype = {
           if (id !== channel.id) {
             channel.alterId = channel.id
             channel.id = id
-            channel.apiUrl = channel.domain + id
+            channel.apiUrl = this.api[channel.domain] + id
           }
           this.isOnline(channel)
           this.getTitle(channel)
