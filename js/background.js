@@ -1,7 +1,6 @@
 //TODO 每次点击显示popup页面，都要重新生成dom，注册click事件，如何避免此过程，改成只更新dom？
 chrome.browserAction.onClicked.addListener(function (tab) {
   chrome.browserAction.setPopup({
-    // tabId: tab.id,
     popup: 'popup.html'
   })
 })
@@ -56,7 +55,10 @@ QueuedHandler.prototype = {
       }
 
       xhr.open(method, url, true)
+<<<<<<< HEAD
       // xhr.send(null)
+=======
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
       if (method !== 'POST') postVars = null
       xhr.send(postVars)
     }
@@ -140,8 +142,6 @@ ChromeHandler.prototype = {
   }
 }
 
-// var myChrome = new ChromeHandler()
-
 // channels
 var ChannelHandler = function () {
   this.defaultChannels = [
@@ -186,6 +186,7 @@ var ChannelHandler = function () {
 
 ChannelHandler.prototype = {
   filter: function (key, text) {
+<<<<<<< HEAD
     if (text.match(/douyu/) || text.match(/live\.bilibili/)) {
       var reg = null
       var match = null
@@ -203,6 +204,23 @@ ChannelHandler.prototype = {
           if (result !== undefined) {
             return result
           }
+=======
+    var reg = null
+    var match = null
+    var result = null
+    if (key === 'id') {
+      reg = /(\.com\/(.*))|(\.tv\/(.*))|(\.tv\/star\/)(.*)/
+    } else if (key === 'domain') {
+      reg = /\.(.*)\.com|\.(.*)\.tv/
+    }
+    match = text.match(reg)
+    if (match) {
+      var length = match.length - 1
+      for (var i = length; i--; i > 0) {
+        result = match[i]
+        if (result !== undefined) {
+          return result
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
         }
       }
     }
@@ -254,6 +272,17 @@ ChannelHandler.prototype = {
     for (var i = 0; i < length; i++) {
       if (channels[i].apiUrl === channel.apiUrl) {
         isNew = isNew && false
+<<<<<<< HEAD
+=======
+
+        // 更改id&&别名id&&apiUrl中的id
+        if (channels[i].id !== channel.id) {
+          var id = data.room_id || data.ROOMID
+          channels[i].id = id
+          channels[i].alterId = channel.id
+          channels[i].apiUrl = channel.domain + id
+        }
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
       }
     }
     if (isNew) {
@@ -287,11 +316,17 @@ ChannelHandler.prototype = {
     this.saveChannels(callback)
   },
 
+<<<<<<< HEAD
   saveChannel: function (text, url, callback) { //找到对应的channel然后更新。考虑更改callback的方式以直接更新，不用找。
     // var that = this;
     var obj = JSON.parse(text)
     var data = obj.data
     // console.log(data)
+=======
+  saveChannel: function (text, url, callback) {
+    var obj = JSON.parse(text)
+    var data = obj.data
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     var channel
     if (this.newChannel) {
       channel = this.newChannel
@@ -299,7 +334,10 @@ ChannelHandler.prototype = {
       this.isOnline(channel)
       this.getTitle(channel, url)
       this.isNewChannel(channel)
+<<<<<<< HEAD
       // this.channels.push(channel)
+=======
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     } else {
       var channels = JSON.parse(JSON.stringify(this.channels))
       var length = channels.length
@@ -320,7 +358,10 @@ ChannelHandler.prototype = {
         }
       }
     }
+<<<<<<< HEAD
     // this.saveChannels(callback)
+=======
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
   },
 
   saveChannels: function (callback) {
@@ -331,18 +372,24 @@ ChannelHandler.prototype = {
     for (var i = 0; i < length; i++) {
       var channel = channels[i]
       channel.data = null // 否则数据太大会超过限制无法存储
-      // channel.online = false;
-    };
+    }
     obj['channels'] = channels
+<<<<<<< HEAD
     // console.log(obj)
+=======
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     chrome.storage.sync.set(obj, function (data) {
       // that.newChannel = null
       callback && callback()
     })
   },
 
+<<<<<<< HEAD
   addChannel: function (value, callback) { //TODO 无法同时添加多个？没有检验是否重复
     // var that = this;
+=======
+  addChannel: function (value, callback) {
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     var channel = this.generateChannel(value)
     var url = this.getApiUrl(channel)
     this.newChannel = channel
@@ -352,7 +399,10 @@ ChannelHandler.prototype = {
   initChannels: function (callback) {
     var that = this
     chrome.storage.sync.get('channels', function (data) {
+<<<<<<< HEAD
       // console.log(data)
+=======
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
       that.channels = data['channels'] ? data['channels'] : that.defaultChannels
       callback && callback(data)
     })

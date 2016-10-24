@@ -1,5 +1,23 @@
 var bg = chrome.extension.getBackgroundPage()
 
+<<<<<<< HEAD
+=======
+// move this to options.js.
+var addClickForInput = function () {
+  var input = document.getElementById('new_channel')
+  var label = input.nextElementSibling
+  // console.log(input)
+  label.onclick = function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    var text = input.value
+    if (text) {
+      bg.myChannel.addChannel(text, callbacks)
+    }
+  }
+}
+
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
 var addClickForChannel = function (li, channel) {
   console.log('add click')
   li.onclick = function (e) {
@@ -19,6 +37,7 @@ var addClickForChannel = function (li, channel) {
   }
 }
 
+<<<<<<< HEAD
 var addClickForExciting = function (){
   var exciting = document.getElementById('exciting')
   exciting.onclick = function(e){
@@ -130,6 +149,28 @@ var clearDom = function () {
       }
     }
   }
+=======
+var createDom = function () {
+  console.log('create dom')
+  document.getElementById('channels_list').innerHTML = ''
+  var frag = document.createDocumentFragment()
+  var channels = bg.myChannel.channels
+  var length = channels.length
+  var channel
+  for (var i = 0; i < length; i++) {
+    channel = channels[i]
+    var li = document.createElement('li')
+    li.innerText = channel.nickname + '   ' + channel.title
+    if (channel.online) {
+      li.className = 'online'
+    } else {
+      li.className = 'offline'
+    }
+    frag.appendChild(li)
+    addClickForChannel(li, channel)
+  }
+  document.getElementById('channels_list').appendChild(frag)
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
 }
 
 var callbacks = {

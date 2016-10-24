@@ -1,14 +1,27 @@
+body {
+  margin: 5px 5px;
+  width: 250px;
+}
 
 ol {
+<<<<<<< HEAD
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
+=======
+  align-items: stretch;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: space-between;
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
   padding: 5px;
 }
 
 li {
+<<<<<<< HEAD
   flex: 1 1 auto;
   overflow: auto;
   line-height: 2;
@@ -42,6 +55,23 @@ li>span {
 
 label {
   cursor: pointer;
+=======
+  border-bottom: 1px solid black;
+  cursor: pointer;
+  flex: 1 1 auto;
+  line-height: 1.5;
+  list-style-type: none;
+  overflow: auto;
+}
+
+.wrapper label {
+  cursor: pointer;
+  width: 20px;
+}
+
+.wrapper input {
+  width: calc(100% - 40px);
+>>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
 }
 
 .offline {
