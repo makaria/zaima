@@ -27,26 +27,27 @@ QueuedHandler.prototype = {
       var xhr = this.createXhrObject()
       var that = this
 
-      var isTimeout = false, timer
-      if(this.retryDelay>0){
-          timer = setTimeout(function(){
-            xhr.abort()
-            isTimeout = true
-          },this.retryDelay*1000*3)
-        }
+      var isTimeout = false,
+        timer
+      if (this.retryDelay > 0) {
+        timer = setTimeout(function () {
+          xhr.abort()
+          isTimeout = true
+        }, this.retryDelay * 1000 * 3)
+      }
 
       xhr.onreadystatechange = function () {
         if ((xhr.readyState !== 4) || false) return
         if (xhr.status === 200) {
           callback.success(xhr.responseText, url)
-          // 判断请求队列是否为空，如果不为空继续下一个请求
+            // 判断请求队列是否为空，如果不为空继续下一个请求
           that.advanceQueue(callback)
-        } else if (xhr.status === 0){
-            callback.timeout(xhr.status)
-            that.advanceQueue(callback)
-        } else{
+        } else if (xhr.status === 0) {
+          callback.timeout(xhr.status)
+          that.advanceQueue(callback)
+        } else {
           callback.failure(xhr.status)
-          // 每过一定时间重新请求
+            // 每过一定时间重新请求
           setTimeout(function () {
             that.request(method, url, callback, postVars)
           }, that.retryDelay * 1000)
@@ -55,10 +56,6 @@ QueuedHandler.prototype = {
       }
 
       xhr.open(method, url, true)
-<<<<<<< HEAD
-      // xhr.send(null)
-=======
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
       if (method !== 'POST') postVars = null
       xhr.send(postVars)
     }
@@ -66,9 +63,15 @@ QueuedHandler.prototype = {
 
   createXhrObject: function () {
     var methods = [
-      function () { return new XMLHttpRequest() },
-      function () { return new window.ActiveXObject('Msxml2.XMLHTTP') },
-      function () { return new window.ActiveXObject('Microsoft.XMLHTTP') }
+      function () {
+        return new XMLHttpRequest()
+      },
+      function () {
+        return new window.ActiveXObject('Msxml2.XMLHTTP')
+      },
+      function () {
+        return new window.ActiveXObject('Microsoft.XMLHTTP')
+      }
     ]
     for (var i = 0, len = methods.length; i < len; i++) {
       try {
@@ -144,32 +147,29 @@ ChromeHandler.prototype = {
 
 // channels
 var ChannelHandler = function () {
-  this.defaultChannels = [
-    {
-      url: 'http://www.douyu.com/63375',
-      nickname: 'SteamParty',
-      title: '',
-      domain: 'douyu',
-      id: '63375',
-      alterId: null,
-      online: false,
-      hide: false, //暂时不想知道这个房间是否online。获取数据时忽略此房间
-      color: false, //自定义online颜色
-      data: null
-    },
-    {
-      url: 'http://live.bilibili.com/41515',
-      nickname: '有C',
-      title: '',
-      domain: 'bilibili',
-      id: '41515',
-      alterId: null,
-      online: false,
-      hide: false,
-      color: false,
-      data: null
-    }
-  ]
+  this.defaultChannels = [{
+    url: 'http://www.douyu.com/63375',
+    nickname: 'SteamParty',
+    title: '',
+    domain: 'douyu',
+    id: '63375',
+    alterId: null,
+    online: false,
+    hide: false, //暂时不想知道这个房间是否online。获取数据时忽略此房间
+    color: false, //自定义online颜色
+    data: null
+  }, {
+    url: 'http://live.bilibili.com/41515',
+    nickname: '有C',
+    title: '',
+    domain: 'bilibili',
+    id: '41515',
+    alterId: null,
+    online: false,
+    hide: false,
+    color: false,
+    data: null
+  }]
   this.api = {
     douyu: 'http://open.douyucdn.cn/api/RoomApi/room/',
     bilibili: 'http://live.bilibili.com/live/getInfo?roomid='
@@ -186,7 +186,6 @@ var ChannelHandler = function () {
 
 ChannelHandler.prototype = {
   filter: function (key, text) {
-<<<<<<< HEAD
     if (text.match(/douyu/) || text.match(/live\.bilibili/)) {
       var reg = null
       var match = null
@@ -204,23 +203,6 @@ ChannelHandler.prototype = {
           if (result !== undefined) {
             return result
           }
-=======
-    var reg = null
-    var match = null
-    var result = null
-    if (key === 'id') {
-      reg = /(\.com\/(.*))|(\.tv\/(.*))|(\.tv\/star\/)(.*)/
-    } else if (key === 'domain') {
-      reg = /\.(.*)\.com|\.(.*)\.tv/
-    }
-    match = text.match(reg)
-    if (match) {
-      var length = match.length - 1
-      for (var i = length; i--; i > 0) {
-        result = match[i]
-        if (result !== undefined) {
-          return result
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
         }
       }
     }
@@ -263,7 +245,7 @@ ChannelHandler.prototype = {
     var length = channels.length
     var data = channel.data
     var id = data.room_id || data.ROOMID
-    // 更改id&&别名id&&apiUrl中的id
+      // 更改id&&别名id&&apiUrl中的id
     if (id !== channel.id) {
       channel.alterId = channel.id
       channel.id = id
@@ -272,17 +254,6 @@ ChannelHandler.prototype = {
     for (var i = 0; i < length; i++) {
       if (channels[i].apiUrl === channel.apiUrl) {
         isNew = isNew && false
-<<<<<<< HEAD
-=======
-
-        // 更改id&&别名id&&apiUrl中的id
-        if (channels[i].id !== channel.id) {
-          var id = data.room_id || data.ROOMID
-          channels[i].id = id
-          channels[i].alterId = channel.id
-          channels[i].apiUrl = channel.domain + id
-        }
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
       }
     }
     if (isNew) {
@@ -295,13 +266,13 @@ ChannelHandler.prototype = {
     var id = this.filter('id', value)
     var domain = this.filter('domain', value)
     var channel = {
-      apiUrl: this.api[domain] + id,
-      nickname: 'New',
-      domain: 'douyu',
-      id: id,
-      data: null
-    }
-    // 补全url，有必要吗？
+        apiUrl: this.api[domain] + id,
+        nickname: 'New',
+        domain: 'douyu',
+        id: id,
+        data: null
+      }
+      // 补全url，有必要吗？
     if (domain === 'douyu') {
       channel.url = 'http://www.douyu.com/' + id
     } else if (domain === 'bilibili') {
@@ -316,28 +287,16 @@ ChannelHandler.prototype = {
     this.saveChannels(callback)
   },
 
-<<<<<<< HEAD
   saveChannel: function (text, url, callback) { //找到对应的channel然后更新。考虑更改callback的方式以直接更新，不用找。
-    // var that = this;
     var obj = JSON.parse(text)
-    var data = obj.data
-    // console.log(data)
-=======
-  saveChannel: function (text, url, callback) {
-    var obj = JSON.parse(text)
-    var data = obj.data
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
-    var channel
+    var data = obj.data,
+      channel
     if (this.newChannel) {
       channel = this.newChannel
       channel.data = data
       this.isOnline(channel)
       this.getTitle(channel, url)
       this.isNewChannel(channel)
-<<<<<<< HEAD
-      // this.channels.push(channel)
-=======
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     } else {
       var channels = JSON.parse(JSON.stringify(this.channels))
       var length = channels.length
@@ -346,7 +305,7 @@ ChannelHandler.prototype = {
         if (channel.apiUrl === url) {
           channel.data = data
           var id = data.room_id || data.ROOMID
-          // 更改id&&别名id&&apiUrl中的id
+            // 更改id&&别名id&&apiUrl中的id
           if (id !== channel.id) {
             channel.alterId = channel.id
             channel.id = id
@@ -358,10 +317,6 @@ ChannelHandler.prototype = {
         }
       }
     }
-<<<<<<< HEAD
-    // this.saveChannels(callback)
-=======
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
   },
 
   saveChannels: function (callback) {
@@ -374,22 +329,12 @@ ChannelHandler.prototype = {
       channel.data = null // 否则数据太大会超过限制无法存储
     }
     obj['channels'] = channels
-<<<<<<< HEAD
-    // console.log(obj)
-=======
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     chrome.storage.sync.set(obj, function (data) {
-      // that.newChannel = null
       callback && callback()
     })
   },
 
-<<<<<<< HEAD
   addChannel: function (value, callback) { //TODO 无法同时添加多个？没有检验是否重复
-    // var that = this;
-=======
-  addChannel: function (value, callback) {
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
     var channel = this.generateChannel(value)
     var url = this.getApiUrl(channel)
     this.newChannel = channel
@@ -399,10 +344,6 @@ ChannelHandler.prototype = {
   initChannels: function (callback) {
     var that = this
     chrome.storage.sync.get('channels', function (data) {
-<<<<<<< HEAD
-      // console.log(data)
-=======
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
       that.channels = data['channels'] ? data['channels'] : that.defaultChannels
       callback && callback(data)
     })
@@ -459,7 +400,7 @@ ChannelHandler.prototype = {
     callback && callback()
   },
 
-  isExciting: function (url, callback){
+  isExciting: function (url, callback) {
     var naive = false
     var id = this.filter('id', url)
     if (id) {
@@ -472,13 +413,13 @@ ChannelHandler.prototype = {
           naive = true
         }
       }
-    }else{
+    } else {
       naive = 'none'
     }
     callback && callback(naive)
   },
 
-  toggleExciting: function (url, callback){
+  toggleExciting: function (url, callback) {
     var naive = false
     var id = this.filter("id", url)
     var channels = this.channels
@@ -562,7 +503,9 @@ Setting.prototype = {
       customOnlineColor: this.customOnlineColor,
       customOfflineColor: this.customOfflineColor
     }
-    chrome.storage.sync.set({'setting': setting}, function (data) {
+    chrome.storage.sync.set({
+      'setting': setting
+    }, function (data) {
       console.log("设置已保存！")
       console.log(data)
     })

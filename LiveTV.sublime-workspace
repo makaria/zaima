@@ -383,7 +383,7 @@
 			"file": "options.html",
 			"settings":
 			{
-				"buffer_size": 539,
+				"buffer_size": 801,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -401,7 +401,7 @@
 			"file": "js/popup.js",
 			"settings":
 			{
-				"buffer_size": 4213,
+				"buffer_size": 5361,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -410,7 +410,7 @@
 			"file": "js/background.js",
 			"settings":
 			{
-				"buffer_size": 14292,
+				"buffer_size": 15666,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -419,7 +419,7 @@
 			"file": "manifest.json",
 			"settings":
 			{
-				"buffer_size": 832,
+				"buffer_size": 778,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -428,7 +428,7 @@
 			"file": ".gitignore",
 			"settings":
 			{
-				"buffer_size": 726,
+				"buffer_size": 746,
 				"line_ending": "Windows"
 			}
 		},
@@ -436,7 +436,7 @@
 			"file": "css/popup.css",
 			"settings":
 			{
-				"buffer_size": 626,
+				"buffer_size": 1165,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -735,7 +735,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -744,15 +744,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 539,
+						"buffer_size": 801,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								423,
-								423
+								0,
+								0
 							]
 						],
 						"settings":
@@ -770,7 +770,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -813,15 +813,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4213,
+						"buffer_size": 5361,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3335,
-								3335
+								0,
+								0
 							]
 						],
 						"settings":
@@ -831,74 +831,6 @@
 							"is_init_dirty_state": false,
 							"origin_encoding": "ASCII",
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1330.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "js/background.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14292,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9278,
-								9278
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4887.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "manifest.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 832,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								665,
-								665
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
@@ -907,32 +839,68 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": ".gitignore",
+					"buffer": 3,
+					"file": "js/background.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 726,
+						"buffer_size": 15666,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								83,
-								83
+								13131,
+								13131
 							]
 						],
 						"settings":
 						{
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
+							"is_init_dirty_state": false,
 							"origin_encoding": "ASCII",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "manifest.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 778,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
@@ -945,20 +913,55 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "css/popup.css",
+					"buffer": 5,
+					"file": ".gitignore",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 626,
+						"buffer_size": 746,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								256,
-								256
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "css/popup.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1165,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -976,7 +979,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -1011,7 +1014,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]

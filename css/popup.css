@@ -1,83 +1,98 @@
-body {
-  margin: 5px 5px;
-  width: 250px;
+body
+{
+    width: 250px;
+    margin: 5px 5px;
 }
 
-ol {
-<<<<<<< HEAD
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-=======
-  align-items: stretch;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  justify-content: space-between;
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
-  padding: 5px;
+ol
+{
+    display: flex;
+    flex-direction: column;
+
+    padding: 5px;
+
+    align-items: stretch;
+    flex: 1 1 auto;
+    justify-content: space-between;
 }
 
-li {
-<<<<<<< HEAD
-  flex: 1 1 auto;
-  overflow: auto;
-  line-height: 2;
-  list-style-type: none;
-  margin: 0;
-  padding: 5px;
-  margin-left:0px;
-  max-width: 250px;
-  border-bottom: 1px solid black;
-  cursor: pointer;
+li
+{
+    line-height: 2;
+
+    overflow: auto;
+
+    max-width: 250px;
+    margin: 0;
+    padding: 5px;
+
+    list-style-type: none;
+
+    cursor: pointer;
+
+    border-bottom: 1px solid black;
+
+    flex: 1 1 auto;
 }
 
-li>span {
-  flex: 1 1 auto;
-  display: flex;
-  text-align: center;
-  justify-content: center;
+li > span
+{
+    display: flex;
+
+    text-align: center;
+
+    flex: 1 1 auto;
+    justify-content: center;
 }
 
-.excited {
-  color: blue;
+.excited
+{
+    color: blue;
 }
 
-.exciting {
-  color: black;
+.exciting
+{
+    color: black;
 }
 
-.none {
-  display: none;
+.none
+{
+    display: none;
 }
 
-label {
-  cursor: pointer;
-=======
-  border-bottom: 1px solid black;
-  cursor: pointer;
-  flex: 1 1 auto;
-  line-height: 1.5;
-  list-style-type: none;
-  overflow: auto;
+label
+{
+    line-height: 1.5;
+
+    overflow: auto;
+
+    list-style-type: none;
+
+    cursor: pointer;
+
+    border-bottom: 1px solid black;
+
+    flex: 1 1 auto;
 }
 
-.wrapper label {
-  cursor: pointer;
-  width: 20px;
+.wrapper label
+{
+    width: 20px;
+
+    cursor: pointer;
 }
 
-.wrapper input {
-  width: calc(100% - 40px);
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
+.wrapper input
+{
+    width: calc(100% - 40px);
 }
 
-.offline {
-  color: #999;
+.offline
+{
+    color: #999;
 }
 
-.online {
-  color: #fd9ccc;
+.online
+{
+    color: #fd9ccc;
 }

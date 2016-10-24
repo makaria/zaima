@@ -1,23 +1,5 @@
 var bg = chrome.extension.getBackgroundPage()
 
-<<<<<<< HEAD
-=======
-// move this to options.js.
-var addClickForInput = function () {
-  var input = document.getElementById('new_channel')
-  var label = input.nextElementSibling
-  // console.log(input)
-  label.onclick = function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    var text = input.value
-    if (text) {
-      bg.myChannel.addChannel(text, callbacks)
-    }
-  }
-}
-
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
 var addClickForChannel = function (li, channel) {
   console.log('add click')
   li.onclick = function (e) {
@@ -37,29 +19,29 @@ var addClickForChannel = function (li, channel) {
   }
 }
 
-<<<<<<< HEAD
-var addClickForExciting = function (){
+var addClickForExciting = function () {
   var exciting = document.getElementById('exciting')
-  exciting.onclick = function(e){
+  exciting.onclick = function (e) {
     e.preventDefault()
     e.stopPropagation()
-    chrome.tabs.getSelected(function(tab){
+    chrome.tabs.getSelected(function (tab) {
       bg.myChannel.toggleExciting(tab.url, callbacks)
     })
   }
 }
 
-var isExciting = function(){
+var isExciting = function () {
   var exciting = document.getElementById('exciting')
-  chrome.tabs.getSelected(function(tab){
-    bg.myChannel.isExciting(tab.url, function(naive){
-      if (naive == 'none'){
+  chrome.tabs.getSelected(function (tab) {
+    bg.myChannel.isExciting(tab.url, function (naive) {
+      if (naive == 'none') {
         exciting.parentNode.className = 'none'
-      } if (naive) {
+      }
+      if (naive) {
         exciting.innerText = "已关注"
         exciting.className = "excited"
         exciting.setAttribute('title', 'Excited!')
-      }else{
+      } else {
         exciting.innerText = "关注"
         exciting.className = "exciting"
         exciting.setAttribute('title', 'Exciting!')
@@ -69,7 +51,7 @@ var isExciting = function(){
 }
 
 var createDom = function (channel) {
-  if (channel){
+  if (channel) {
     var id = channel.domain + channel.id
     if (id) {
       var li = document.getElementById(id)
@@ -78,7 +60,7 @@ var createDom = function (channel) {
       } else {
         var li = document.createElement('li')
         li.id = id
-        li.setAttribute('title',channel.url)
+        li.setAttribute('title', channel.url)
         document.getElementById('channelsList').appendChild(li)
         addClickForChannel(li, channel)
         updateEle(channel, li)
@@ -89,7 +71,8 @@ var createDom = function (channel) {
   } else {
     document.getElementById('channelsList').innerHTML = ''
     var channels = bg.myChannel.channels
-    var length = channels.length, channel
+    var length = channels.length,
+      channel
     for (var i = 0; i < length; i++) {
       channel = channels[i]
       createDom(channel)
@@ -98,7 +81,7 @@ var createDom = function (channel) {
 }
 
 var updateDom = function (channel) {
-  if (channel){
+  if (channel) {
     var id = channel.domain + channel.id
     if (id) {
       var li = document.getElementById(id)
@@ -112,7 +95,8 @@ var updateDom = function (channel) {
     }
   } else {
     channels = bg.myChannel.channels
-    var length = channels.length, channel, li, id
+    var length = channels.length,
+      channel, li, id
     for (var i = 0; i < length; i++) {
       channel = channels[i]
       updateDom(channel)
@@ -149,28 +133,6 @@ var clearDom = function () {
       }
     }
   }
-=======
-var createDom = function () {
-  console.log('create dom')
-  document.getElementById('channels_list').innerHTML = ''
-  var frag = document.createDocumentFragment()
-  var channels = bg.myChannel.channels
-  var length = channels.length
-  var channel
-  for (var i = 0; i < length; i++) {
-    channel = channels[i]
-    var li = document.createElement('li')
-    li.innerText = channel.nickname + '   ' + channel.title
-    if (channel.online) {
-      li.className = 'online'
-    } else {
-      li.className = 'offline'
-    }
-    frag.appendChild(li)
-    addClickForChannel(li, channel)
-  }
-  document.getElementById('channels_list').appendChild(frag)
->>>>>>> 53893062e5379b7ed8d0cc9eb88d208dbd4d5049
 }
 
 var callbacks = {
