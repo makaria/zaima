@@ -268,7 +268,7 @@ ChannelHandler.prototype = {
     var channel = {
         apiUrl: this.api[domain] + id,
         nickname: 'New',
-        domain: 'douyu',
+        domain: domain,
         id: id,
         data: null
       }
@@ -355,12 +355,12 @@ ChannelHandler.prototype = {
     this.initChannels(function (data) {
       var channels = that.channels
       var length = channels.length
-      console.log(channels)
+        // console.log(channels)
       var channel
       for (var i = 0; i < length; i++) {
         channel = channels[i]
         var url = that.getApiUrl(channel)
-        console.log(url)
+          // console.log(url)
         if (url) {
           myRequest.request('GET', url, callback)
         }
@@ -409,7 +409,8 @@ ChannelHandler.prototype = {
       var channel
       for (var i = 0; i < length; i++) {
         channel = channels[i]
-        if (channel.id === id || channel.alterId === id) {
+        // 此处id为String，但是channel.id是Number，不能用===
+        if (channel.id == id || channel.alterId == id) {
           naive = true
         }
       }
@@ -420,18 +421,19 @@ ChannelHandler.prototype = {
   },
 
   toggleExciting: function (url, callback) {
-    var naive = false
+    // var naive = false
     var id = this.filter("id", url)
-    var channels = this.channels
-    var length = channels.length
-    var channel, index
-    for (var i = 0; i < length; i++) {
-      channel = channels[i]
-      if (channel.id === id || channel.alterId === id) {
-        naive = true
-        index = i
-      }
-    }
+      // var channels = this.channels
+      // var length = channels.length
+      // var channel, index
+      // for (var i = 0; i < length; i++) {
+      //   channel = channels[i]
+      //   if (channel.id === id || channel.alterId === id) {
+      //     naive = true
+      //     index = i
+      //   }
+      // }
+    var naive = this.channels.find((channel) => channel.id == id || channel.alterId == id)
     if (naive) {
       this.deleteChannel(index, callback.complete)
     } else {
@@ -544,7 +546,7 @@ var callbacks = {
 }
 
 var 快活 = function () {
-  // console.log(new Date())
+  console.log(new Date())
   myChannel.fetchChannels(callbacks)
   if (myChannel.start) {
     setTimeout(function () {

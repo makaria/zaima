@@ -156,14 +156,14 @@ var callbacks = {
   }
 }
 
-var interval = bg.myChannel.interval
+// var interval = bg.myChannel.interval
 
 var happy = function () {
   var now = Date.now()
   var timestamp = bg.myChannel.timestamp
   var interval = now - timestamp
   var recent = bg.myChannel.recent
-  if (interval > recent) {
+  if (interval > recent * 0.9) {
     bg.myChannel.fetchChannels(callbacks)
   } else {
     console.log(interval, recent, now, timestamp)

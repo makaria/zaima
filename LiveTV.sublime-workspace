@@ -380,15 +380,6 @@
 	"buffers":
 	[
 		{
-			"file": "options.html",
-			"settings":
-			{
-				"buffer_size": 801,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "css/options.css",
 			"settings":
 			{
@@ -401,25 +392,25 @@
 			"file": "js/popup.js",
 			"settings":
 			{
-				"buffer_size": 5361,
+				"buffer_size": 4261,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "js/background.js",
+			"file": "html/options.html",
 			"settings":
 			{
-				"buffer_size": 15666,
+				"buffer_size": 542,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "manifest.json",
+			"file": "html/popup.html",
 			"settings":
 			{
-				"buffer_size": 778,
+				"buffer_size": 464,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -428,15 +419,7 @@
 			"file": ".gitignore",
 			"settings":
 			{
-				"buffer_size": 746,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "css/popup.css",
-			"settings":
-			{
-				"buffer_size": 1165,
+				"buffer_size": 765,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -551,11 +534,18 @@
 	[
 		"/C/Users/ding/Documents/GitHub/LiveTV",
 		"/C/Users/ding/Documents/GitHub/LiveTV/css",
+		"/C/Users/ding/Documents/GitHub/LiveTV/html",
+		"/C/Users/ding/Documents/GitHub/LiveTV/images",
 		"/C/Users/ding/Documents/GitHub/LiveTV/js"
 	],
 	"file_history":
 	[
+		"/C/Users/ding/.ssh/config",
+		"/C/Users/ding/Documents/GitHub/LiveTV/images/logo.url",
+		"/C/Users/ding/Documents/GitHub/LiveTV/manifest.json",
+		"/C/Users/ding/Documents/GitHub/LiveTV/js/background.js",
 		"/C/Users/ding/Documents/GitHub/LiveTV/css/popup.css",
+		"/C/Users/ding/Documents/GitHub/LiveTV/options.html",
 		"/C/Users/ding/Documents/GitHub/LiveTV/js/popup.js",
 		"/C/Users/ding/Documents/c42helium/.git/config",
 		"/C/Users/ding/Documents/c42hydrogen/.git/config",
@@ -613,7 +603,6 @@
 		"/C/Users/ding/Documents/GitHub/Spider4Papers/db.js",
 		"/C/Users/ding/Documents/GitHub/Spider4Papers/kuailexue.js",
 		"/C/Users/ding/Documents/list.html",
-		"/C/Users/ding/Documents/GitHub/LiveTV/js/background.js",
 		"/C/Users/ding/Documents/GitHub/Spider4Papers/popup.html",
 		"/C/Users/ding/Documents/live.js",
 		"/C/Users/ding/Documents/kuailexue/kuailexue.js",
@@ -629,7 +618,6 @@
 		"/C/Users/ding/Downloads/2016山东理.html",
 		"/C/Users/ding/Documents/c42hydrogen/package.json",
 		"/C/Users/ding/Downloads/kuailexue/kuailexue.js",
-		"/C/Users/ding/Documents/GitHub/LiveTV/manifest.json",
 		"/C/Program Files/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
 		"/C/Users/ding/Documents/GitHub/LiveTV/background.html",
 		"/C/Program Files/Sublime Text 3/Data/Packages/User/Default (Windows).sublime-keymap",
@@ -659,6 +647,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"sL",
 			"NewC",
 			" =",
 			"this.",
@@ -735,46 +724,11 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "options.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 801,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "css/options.css",
 					"semi_transient": false,
 					"settings":
@@ -804,24 +758,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "js/popup.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5361,
+						"buffer_size": 4261,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								3290,
+								3290
 							]
 						],
 						"settings":
@@ -831,6 +785,76 @@
 							"is_init_dirty_state": false,
 							"origin_encoding": "ASCII",
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1470.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "html/options.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 542,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								199,
+								199
+							]
+						],
+						"settings":
+						{
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "html/popup.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 464,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								276,
+								276
+							]
+						],
+						"settings":
+						{
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
@@ -843,90 +867,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "js/background.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15666,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13131,
-								13131
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
 					"buffer": 4,
-					"file": "manifest.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 778,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
 					"file": ".gitignore",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 746,
+						"buffer_size": 765,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								713,
+								713
 							]
 						],
 						"settings":
@@ -941,49 +895,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 70.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "css/popup.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1165,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/CSS/CSS.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
+					"buffer": 5,
 					"file": "js/options.js",
 					"semi_transient": false,
 					"settings":
@@ -1014,7 +933,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
