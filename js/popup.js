@@ -1,5 +1,7 @@
 var bg = chrome.extension.getBackgroundPage()
 
+//下面的函数应该只在启动时执行一次而不是每次打开popup.html都重新执行一遍
+
 var addClickForChannel = function (li, channel) {
   console.log('add click')
   li.onclick = function (e) {

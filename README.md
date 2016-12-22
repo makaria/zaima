@@ -13,3 +13,4 @@ TODO:
 <!--- [ ] 时间戳，限制短时间内多次获取数据 && ajax的超时处理;-->
 <!--- [ ] 实时监控上线状态？-->
 - [ ] user promise && fetch replace ajax
+- [ ] autofullscreen when open, need content script

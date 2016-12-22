@@ -1,9 +1,9 @@
 //TODO 每次点击显示popup页面，都要重新生成dom，注册click事件，如何避免此过程，改成只更新dom？
-chrome.browserAction.onClicked.addListener(function (tab) {
-  chrome.browserAction.setPopup({
-    popup: 'html/popup.html'
-  })
-})
+// chrome.browserAction.onClicked.addListener(function (tab) {
+//   chrome.browserAction.setPopup({
+//     popup: 'html/popup.html'
+//   })
+// })
 
 // xhr request
 var QueuedHandler = function () {
