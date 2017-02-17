@@ -12,5 +12,5 @@ TODO:
 <!--- [x] middle click;-->
 <!--- [ ] 时间戳，限制短时间内多次获取数据 && ajax的超时处理;-->
 <!--- [ ] 实时监控上线状态？-->
-- [ ] user promise && fetch replace ajax
+- [ ] use promise && fetch instead of ajax
 - [ ] autofullscreen when open, need content script
