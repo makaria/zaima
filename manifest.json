@@ -14,11 +14,8 @@
   },
 
   "permissions": [
-    // "contextMenus",
     "tabs",
-    // "bookmarks",
     "storage",
-    "unlimitedStorage",
     "http://*.douyu.com/*",
     "http://*.douyucdn.cn/*",
     "http://*.bilibili.com/*"
