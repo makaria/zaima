@@ -1,9 +1,7 @@
 chrome.runtime.getBackgroundPage((bg) => {
   //下面的函数应该只在启动时执行一次而不是每次打开popup.html都重新执行一遍
   var addClickForChannel = function (li, channel) {
-    console.log('add click')
     li.onclick = function (e) {
-      console.log(e.button)
       e.preventDefault()
       e.stopPropagation()
       var selected = false
@@ -127,7 +125,6 @@ chrome.runtime.getBackgroundPage((bg) => {
             live = true
           }
         }
-        console.log(live)
         if (!live) {
           channels.childNodes[i].className = 'none'
         }
@@ -164,9 +161,7 @@ chrome.runtime.getBackgroundPage((bg) => {
     var recent = bg.myChannel.recent
     if (interval > recent * 0.9) {
       bg.myChannel.fetchChannels(callbacks)
-    } else {
-      console.log(interval, recent, now, timestamp)
-    }
+    } else {}
   }
 
   addClickForExciting()

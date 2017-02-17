@@ -2,7 +2,6 @@ chrome.runtime.getBackgroundPage((bg) => {
   var addClickForInput = function () {
     var input = document.getElementById('new_channel')
     var label = input.nextElementSibling
-    // console.log(input)
     label.onclick = function (e) {
       e.preventDefault()
       e.stopPropagation()
