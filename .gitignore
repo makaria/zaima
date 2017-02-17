@@ -51,5 +51,8 @@ README.html
 
 # node_modules
 node_modules
+
+# sublime files
 *.sublime-workspace
 *.sublime-project
+LiveTV.sublime-*
