@@ -22,7 +22,13 @@
   ],
 
   "background": {
-    "scripts": ["js/eventPage.js"],
+    "scripts": [
+      "js/queueHandler.js",
+      "js/chromeHandler.js",
+      "js/channelHandler.js",
+      "js/settings.js",
+      "js/eventPage.js"
+    ],
     "persistent": false
   },
 
