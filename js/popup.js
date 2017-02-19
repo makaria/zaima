@@ -1,6 +1,6 @@
 var bg = chrome.extension.getBackgroundPage()
 
-//下面的函数应该只在启动时执行一次而不是每次打开popup.html都重新执行一遍
+//下面的函数应该只在启动时执行一次而不是每次打开popup.html都重新执行一遍。updateDom目前没用
 
 var addClickForChannel = function (li, channel) {
   console.log('add click')
@@ -60,7 +60,7 @@ var createDom = function (channel) {
       if (li) {
         console.error(id + "has already been created!", channel)
       } else {
-        var li = document.createElement('li')
+        li = document.createElement('li')
         li.id = id
         li.setAttribute('title', channel.url)
         document.getElementById('channels_list').appendChild(li)
@@ -73,8 +73,7 @@ var createDom = function (channel) {
   } else {
     document.getElementById('channels_list').innerHTML = ''
     var channels = bg.myChannel.channels
-    var length = channels.length,
-      channel
+    var length = channels.length, channel
     for (var i = 0; i < length; i++) {
       channel = channels[i]
       createDom(channel)
@@ -107,6 +106,7 @@ var updateDom = function (channel) {
 }
 
 var updateEle = function (channel, el) {
+  console.log('update channel', channel)
   el.innerText = channel.nickname + '   ' + channel.title
   if (channel.online) {
     el.className = 'online'

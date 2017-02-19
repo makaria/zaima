@@ -547,6 +547,8 @@ var callbacks = {
 
 var 快活 = function () {
   console.log(new Date())
+  fetch('http://open.douyucdn.cn/api/RoomApi/room/63375')
+  .then((req)=>console.log(req,req.body,req.json()))
   myChannel.fetchChannels(callbacks)
   if (myChannel.start) {
     setTimeout(function () {
