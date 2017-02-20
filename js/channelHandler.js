@@ -36,6 +36,7 @@ class ChannelHandler {
     this.start = true
     this.fetching = false
     this.timestamp = 0
+    this.myRequest = new QueueHandler()
   }
 
   filter(key, text) {
@@ -191,7 +192,7 @@ class ChannelHandler {
     var channel = this.generateChannel(value)
     var url = this.getApiUrl(channel)
     this.newChannel = channel
-    myRequest.request('GET', url, callback)
+    this.myRequest.request('GET', url, callback)
   }
 
   initChannels(callback) {
@@ -215,7 +216,7 @@ class ChannelHandler {
         var url = that.getApiUrl(channel)
         // console.log(url)
         if (url) {
-          myRequest.request('GET', url, callback)
+          that.myRequest.request('GET', url, callback)
         }
       }
     })

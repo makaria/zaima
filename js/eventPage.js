@@ -5,9 +5,7 @@
 //   })
 // })
 
-var myRequest = new QueueHandler()
 var myChannel = new ChannelHandler()
-var mySetting = new Setting()
 // start
 var callbacks = {
   success: function (responseText, url) {
