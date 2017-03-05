@@ -2,7 +2,7 @@
   "options_page": "html/options.html",
 
   "browser_action": {
-    "default_title": "LiveTV",
+    "default_title": "__MSG_browser_action_default_title__",
     "default_icon": "images/logo48x48.png",
     "default_popup": "html/popup.html"
   },
@@ -36,6 +36,6 @@
   "manifest_version": 2,
   "name": "LiveTV",
   "description": "查看主播是否在线",
-  // "update_url": "http://clients2.google.com/service/update2/crx",
+  "default_locale": "zh_CN",
   "version": "0.1.1"
 }
