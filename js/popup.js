@@ -18,33 +18,38 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   var addClickForExciting = function () {
-    var exciting = document.getElementById('exciting')
-    exciting.onclick = function (e) {
+    $('#exciting').click((e) => {
       e.preventDefault()
       e.stopPropagation()
-      chrome.tabs.getSelected(function (tab) {
-        bg.myChannel.toggleExciting(tab.url, callbacks)
+      chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        var currentTab = tabs[0]
+        if (currentTab) {
+          bg.myChannel.toggleExciting(currentTab.url, callbacks)
+        }
       })
-    }
+    })
   }
 
   var isExciting = function () {
     var exciting = document.getElementById('exciting')
-    chrome.tabs.getSelected(function (tab) {
-      bg.myChannel.isExciting(tab.url, function (naive) {
-        if (naive == 'none') {
-          exciting.parentNode.className = 'none'
-        }
-        if (naive) {
-          exciting.innerText = "已关注"
-          exciting.className = "excited"
-          exciting.setAttribute('title', 'Excited!')
-        } else {
-          exciting.innerText = "关注"
-          exciting.className = "exciting"
-          exciting.setAttribute('title', 'Exciting!')
-        }
-      })
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+      var currentTab = tabs[0]
+      if (currentTab) {
+        bg.myChannel.isExciting(currentTab.url, function (naive) {
+          if (naive == 'none') {
+            exciting.parentNode.className = 'none'
+          }
+          if (naive) {
+            exciting.innerText = "已关注"
+            exciting.className = "excited"
+            exciting.setAttribute('title', 'Excited!')
+          } else {
+            exciting.innerText = "关注"
+            exciting.className = "exciting"
+            exciting.setAttribute('title', 'Exciting!')
+          }
+        })
+      }
     })
   }
 
