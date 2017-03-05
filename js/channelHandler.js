@@ -135,10 +135,13 @@ class ChannelHandler {
     return channel
   }
 
-  deleteChannel(index, callback) {
+  deleteChannel(channel, callback) {
     var channels = this.channels
-    channels.splice(index, 1)
-    this.saveChannels(callback)
+    var index = channels.indexOf(channel)
+    if (index !== -1) {
+      channels.splice(index, 1)
+      this.saveChannels(callback)
+    }
   }
 
   saveChannel(text, url, callback) { //找到对应的channel然后更新。考虑更改callback的方式以直接更新，不用找。
@@ -275,21 +278,10 @@ class ChannelHandler {
   }
 
   toggleExciting(url, callback) {
-    // var naive = false
     var id = this.filter("id", url)
-    // var channels = this.channels
-    // var length = channels.length
-    // var channel, index
-    // for (var i = 0; i < length; i++) {
-    //   channel = channels[i]
-    //   if (channel.id === id || channel.alterId === id) {
-    //     naive = true
-    //     index = i
-    //   }
-    // }
     var naive = this.channels.find((channel) => channel.id == id || channel.alterId == id)
     if (naive) {
-      this.deleteChannel(index, callback.complete)
+      this.deleteChannel(naive, callback.complete)
     } else {
       this.addChannel(url, callback)
     }

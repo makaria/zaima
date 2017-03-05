@@ -26,7 +26,6 @@ var callbacks = {
 }
 
 var 快活 = function () {
-  console.log(new Date())
   myChannel.fetchChannels(callbacks)
   if (myChannel.start) {
     setTimeout(function () {
