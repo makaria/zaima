@@ -1,48 +1,19 @@
 body
 {
-    width: 250px;
+    /*width: 250px;*/
     margin: 5px 5px;
 }
 
-ol
+td
 {
-    display: flex;
-    flex-direction: column;
-
-    padding: 5px;
-
-    align-items: stretch;
-    flex: 1 1 auto;
-    justify-content: space-between;
-}
-
-li
-{
-    line-height: 2;
-
-    overflow: auto;
-
-    max-width: 250px;
-    margin: 0;
-    padding: 5px;
-
-    list-style-type: none;
-
-    cursor: pointer;
-
     border-bottom: 1px solid black;
-
-    flex: 1 1 auto;
 }
 
-.wrapper > span
+.wrapper
 {
-    display: flex;
-
+    padding: 5px;
+    border-bottom: 1px solid black;
     text-align: center;
-
-    flex: 1 1 auto;
-    justify-content: center;
 }
 
 .excited
@@ -60,33 +31,6 @@ li
     display: none;
 }
 
-label
-{
-    line-height: 1.5;
-
-    overflow: auto;
-
-    list-style-type: none;
-
-    cursor: pointer;
-
-    border-bottom: 1px solid black;
-
-    flex: 1 1 auto;
-}
-
-.wrapper label
-{
-    width: 20px;
-
-    cursor: pointer;
-}
-
-.wrapper input
-{
-    width: calc(100% - 40px);
-}
-
 .offline
 {
     color: #999;
@@ -95,4 +39,25 @@ label
 .online
 {
     color: #fd9ccc;
+}
+
+/*.title
+{
+  font-size: 16px;
+}*/
+
+.small
+{
+    font-size: 11px;
+}
+
+.divide
+{
+    height: 3px
+}
+
+a
+{
+    white-space: nowrap;
+    text-decoration: none;
 }

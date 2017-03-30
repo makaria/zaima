@@ -48,7 +48,7 @@ class Setting {
   }
 
   saveSetting() {
-    var setting = {
+    return setting = {
       showHidden: this.showHidden,
       showOnline: this.showOnline,
       interval: this.interval,
@@ -59,19 +59,13 @@ class Setting {
       customOnlineColor: this.customOnlineColor,
       customOfflineColor: this.customOfflineColor
     }
-    chrome.storage.sync.set({
-      'setting': setting
-    }, function (data) {
-      console.log("设置已保存！")
-      console.log(data)
-    })
   }
 
-  initSetting() {
+  updateSetting() {
     var that = this
     chrome.storage.sync.get('setting', function (data) {
       var setting = data.setting || {}
-      for (var key in setting) {
+      for (let key in setting) {
         that[key] = setting[key]
       }
     })

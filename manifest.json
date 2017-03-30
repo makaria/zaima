@@ -16,13 +16,18 @@
   "permissions": [
     "tabs",
     "storage",
-    "http://*.douyu.com/*",
-    "http://*.douyucdn.cn/*",
-    "http://*.bilibili.com/*"
+    "alarms",
+    "*://*.douyu.com/*",
+    "*://*.douyucdn.cn/*",
+    "*://*.bilibili.com/*",
+    "*://*.panda.tv/*",
+    "*://*.zhanqi.tv/*",
+    "*://*.quanmin.tv/*"
   ],
 
   "background": {
     "scripts": [
+      "js/api.js",
       "js/queueHandler.js",
       "js/chromeHandler.js",
       "js/channelHandler.js",

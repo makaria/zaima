@@ -1,20 +1,32 @@
+<!DOCTYPE HTML>
 <html>
 
-<head>
-  <title>LiveTV</title>
-  <meta charset="utf-8" />
-  <link href="../css/popup.css" type="text/css" rel="stylesheet" />
-</head>
+  <head>
+    <title>LiveTV</title>
+    <meta charset="utf-8" />
+    <link href="../css/popup.css" type="text/css" rel="stylesheet" />
+  </head>
 
-<body>
-  <div>
-    <li class="wrapper">
-      <span id="exciting"></span>
-    </li>
-    <ol id="channels_list"></ol>
-  </div>
-  <script src="../js/tools.js" type="text/javascript" charset="utf-8"></script>
-  <script src="../js/popup.js" type="text/javascript" charset="utf-8"></script>
-</body>
+  <body>
+    <div>
+      <div class="wrapper" id="exciting"></div>
+      <table id="channels_list">
+        <tr class="channel_template">
+          <td>
+            <span class="title">
+              <a class="detail" href="https://github.com">No channel now</a>
+            </span>
+            <div class="divide"></div>
+            <span class="small">
+              Last Online: -- - --
+            </span>
+          </td>
+
+        </tr>
+      </table>
+    </div>
+    <script src="../js/tools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/popup.js" type="text/javascript" charset="utf-8"></script>
+  </body>
 
 </html>

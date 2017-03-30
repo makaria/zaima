@@ -1,4 +1,19 @@
 {
+  "name": "livetv",
+  "version": "0.1.1",
+  "description": "A chrome extension for inspect live streaming",
+  // "main": "main.js",
+  // "scripts": {
+  //   "start": "electron ."
+  // },
+  "repository": "https://github.com/makaria/LiveTV",
+  "keywords": [
+    "chrome",
+    "extension",
+    "stream"
+  ],
+  // "author": "GitHub",
+  // "license": "CC0-1.0",
   "devDependencies": {
     "eslint": "^3.4.0",
     "eslint-config-standard": "^6.0.0",

@@ -1,171 +1,134 @@
 chrome.runtime.getBackgroundPage((bg) => {
-  //下面的函数应该只在启动时执行一次而不是每次打开popup.html都重新执行一遍
-  var addClickForChannel = function (li, channel) {
-    li.onclick = function (e) {
-      e.preventDefault()
-      e.stopPropagation()
-      var selected = false
-      if (e.button === 0) { // left button
-        selected = true
-      } else {
-        selected = false
-      }
-      chrome.tabs.create({
-        url: channel.url,
-        selected: selected
-      })
-    }
-  }
+  console.log("popup")
+  // var addClickForChannel = function(li, channel) {
+  //   li.onclick = function (e) {
+  //     e.preventDefault()
+  //     e.stopPropagation()
+  //     var selected = false
+  //     if (e.button === 0) { // left button
+  //       selected = true
+  //     } else {
+  //       selected = false
+  //     }
+  //     chrome.tabs.create({
+  //       url: channel.url,
+  //       selected: selected
+  //     })
+  //   }
+  // }
 
-  var addClickForExciting = function () {
+  function toggleExciting() {
     var exciting = document.getElementById('exciting')
-    exciting.onclick = function (e) {
-      e.preventDefault()
-      e.stopPropagation()
-      chrome.tabs.getSelected(function (tab) {
-        bg.myChannel.toggleExciting(tab.url, callbacks)
-      })
-    }
-  }
-
-  var isExciting = function () {
-    var exciting = document.getElementById('exciting')
-    chrome.tabs.getSelected(function (tab) {
-      bg.myChannel.isExciting(tab.url, function (naive) {
-        if (naive == 'none') {
-          exciting.parentNode.className = 'none'
-        }
-        if (naive) {
-          exciting.innerText = "已关注"
-          exciting.className = "excited"
-          exciting.setAttribute('title', 'Excited!')
-        } else {
-          exciting.innerText = "关注"
-          exciting.className = "exciting"
-          exciting.setAttribute('title', 'Exciting!')
-        }
+    chrome.tabs.getSelected(function(tab) {
+      bg.isChannel(tab.url, function(channel) {
+        if (!channel)
+          exciting.classList.add('none')
+        else
+          var index = bg.myChannel.getIndex(channel)
+          if (index !== -1) {
+            exciting.innerText = "已关注"
+            exciting.classList.add("excited")
+          } else
+            exciting.innerText = "关注"
+            exciting.classList.remove("excited")
+          exciting.onclick = function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            var index = bg.myChannel.getIndex(channel)
+            if (index !== -1) {
+              exciting.innerText = "关注"
+              exciting.classList.remove("excited")
+              bg.myChannel.deleteChannel(channel)
+              removeDom(channel)
+              bg.myChannel.totalOnline()
+              bg.myChrome.setBadge(myChannel.online.toString())
+              bg.myChrome.set(myChannel.saveChannel(channel))
+              bg.myChrome.set({'channels': myChannel.saveChannels()})
+            } else
+              bg.getChannel(channel, function(data) {
+                if (data) {
+                  exciting.innerText = "已关注"
+                  exciting.classList.add("excited")
+                  updateDom(data)
+                }
+              })
+          }
       })
     })
   }
 
-  var createDom = function (channel) {
-    if (channel) {
-      var id = channel.domain + channel.id
-      if (id) {
-        var li = document.getElementById(id)
-        if (li) {
-          console.error(id + "has already been created!", channel)
-        } else {
-          var li = document.createElement('li')
-          li.id = id
-          li.setAttribute('title', channel.url)
-          document.getElementById('channels_list').appendChild(li)
-          addClickForChannel(li, channel)
-          updateEle(channel, li)
-        }
-      } else {
-        console.error(channel)
-      }
-    } else {
-      document.getElementById('channels_list').innerHTML = ''
-      var channels = bg.myChannel.channels
-      var length = channels.length,
-        channel
-      for (var i = 0; i < length; i++) {
-        channel = channels[i]
-        createDom(channel)
-      }
-    }
+  function removeDom(channel) {
+    var ele = document.getElementById(channel.domain+channel.id)
+    ele.remove()
   }
 
-  var updateDom = function (channel) {
-    if (channel) {
-      var id = channel.domain + channel.id
-      if (id) {
-        var li = document.getElementById(id)
-        if (li) {
-          updateEle(channel, li)
-        } else {
-          createDom(channel)
-        }
-      } else {
-        console.error(channel)
-      }
-    } else {
-      channels = bg.myChannel.channels
-      var length = channels.length,
-        channel, li, id
-      for (var i = 0; i < length; i++) {
-        channel = channels[i]
-        updateDom(channel)
-      }
-    }
+  function createDom(channel) {
+    var id = channel.domain + channel.id
+    var template = document.getElementsByClassName('channel_template')[0]
+    var el = template.cloneNode(true)
+    !template.classList.contains('none') && template.classList.add('none')
+    el.id = id
+    el.classList.remove('channel_template', 'none')
+    el.getElementsByClassName("detail")[0].href = channel.url
+    el.getElementsByClassName("detail")[0].title = channel.url
+    document.getElementById('channels_list').appendChild(el)
+    updateEle(channel, el)
   }
 
-  var updateEle = function (channel, el) {
-    el.innerText = channel.nickname + '   ' + channel.title
+  function updateDom(channel) {
+    var id = channel.domain + channel.id
+    var el = document.getElementById(id)
+    if (el)
+      updateEle(channel, el)
+    else
+      createDom(channel)
+  }
+
+  function updateEle(channel, el) {
+    var a = el.getElementsByClassName("detail")[0]
+    var small = el.getElementsByClassName("small")[0]
     if (channel.online) {
-      el.className = 'online'
-    } else {
-      el.className = 'offline'
+      online = '在播'
+      el.classList.remove('offline')
+      if (!el.classList.contains('online'))
+        el.classList.add('online')
     }
-  }
-
-  var clearDom = function () {
-    var channels = document.getElementById('channels_list')
-    var bgChannels = bg.myChannel.channels
-    if (channels.childElementCount > bgChannels.length) {
-      for (var i in channels.childNodes) {
-        var id = channels.childNodes[i].id
-        var live = false
-        for (var k in bgChannels) {
-          channel = bgChannels[k]
-          cid = channel.domain + channel.id
-          if (id == cid) {
-            live = true
-          }
-        }
-        if (!live) {
-          channels.childNodes[i].className = 'none'
-        }
-      }
+    else {
+      online = '在摸'
+      el.classList.remove('online')
+      if (!el.classList.contains('offline'))
+        el.classList.add('offline')
     }
+    a.innerText = online + ' ' + channel.name + ' ' + channel.title
+    a.className = el.className
+    small.innerText = (channel.start_time || '--') + ' - ' + (channel.end_time || '--')
   }
 
-  var callbacks = {
-    success: function (responseText, url) {
-      bg.myChannel.saveChannel(responseText, url)
-    },
-    failure: function (statusCode) {
-      console.error("No Man's Room")
-    },
-    complete: function () {
-      bg.myChannel.fetching = false
-      bg.myChannel.timestamp = Date.now()
-      bg.myChannel.totalOnline()
-      bg.myChannel.saveChannels()
-      isExciting()
-      updateDom()
-      clearDom()
-    },
-    timeout: function () {
-      console.error("Timeout!")
-    }
-  }
+  // function clearDom() {
+  //   var channels = document.getElementById('channels_list')
+  //   var bgChannels = bg.myChannel.channels
+  //   if (channels.childElementCount > bgChannels.length) {
+  //     for (var i in channels.childNodes) {
+  //       var id = channels.childNodes[i].id
+  //       var live = false
+  //       for (var k in bgChannels) {
+  //         channel = bgChannels[k]
+  //         cid = channel.domain + channel.id
+  //         if (id == cid) {
+  //           live = true
+  //         }
+  //       }
+  //       if (!live) {
+  //         channels.childNodes[i].className = 'none'
+  //       }
+  //     }
+  //   }
+  // }
 
-  // var interval = bg.myChannel.interval
-  var happy = function () {
-    var now = Date.now()
-    var timestamp = bg.myChannel.timestamp
-    var interval = now - timestamp
-    var recent = bg.myChannel.recent
-    if (interval > recent * 0.9) {
-      bg.myChannel.fetchChannels(callbacks)
-    } else {}
-  }
-
-  addClickForExciting()
-  isExciting()
-  createDom()
-  happy()
+  toggleExciting()
+  bg.scheduleUpdate(function(channel) {
+    console.log(channel)
+    if (channel)
+      updateDom(channel)
+  })
 })

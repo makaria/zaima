@@ -1,40 +1,37 @@
-// storage
+// storage, 简单的包装, 可有可无
 class ChromeHandler {
   constructor() {}
   set(obj, callback) {
-    chrome.storage.sync.set(obj, function (data) {
-      callback && callback(data)
-    })
+    chrome.storage.sync.set(obj, callback)
+  }
+
+  setByKey(key, value, callback) {
+    var obj = {}
+    obj[key] = value
+    this.set(obj, callback)
   }
 
   get(key, callback) {
-    chrome.storage.sync.get(key, function (data) {
-      callback && callback(data)
-    })
+    chrome.storage.sync.get(key, callback)
   }
 
   remove(key, callback) {
-    chrome.storage.sync.remove(key, function (data) {
-      callback && callback(data)
-    })
+    chrome.storage.sync.remove(key, callback)
   }
 
-  push(key, value, callback) {
-    chrome.storage.sync.get(key, function (result) {
-      var array = result[key] ? result[key] : []
-      array.push(value)
-      var obj = {}
-      obj[key] = array
-      chrome.storage.sync.set(obj, function (data) {
-        callback && callback(data)
-      })
-    })
+  setBadge(text) {
+    chrome.browserAction.setBadgeText({text: text})
   }
 
-  setBadge(text, callback) {
-    chrome.browserAction.setBadgeText({
-      text: myChannel.online.toString()
-    })
-    callback && callback()
+  getAlarm(name, callback) {
+    chrome.alarms.get(name, callback)
+  }
+
+  createAlarm(name, alarmInfo) {
+    chrome.alarms.create(name, alarmInfo)
+  }
+
+  onAlarm(callback) {
+    chrome.alarms.onAlarm.addListener(callback)
   }
 }
