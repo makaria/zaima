@@ -35,23 +35,21 @@ chrome.runtime.getBackgroundPage((bg) => {
             e.preventDefault()
             e.stopPropagation()
             var index = bg.myChannel.getIndex(channel)
-            if (index !== -1) {
+            if (index !== -1) { // remove a channel
               exciting.innerText = "关注"
               exciting.classList.remove("excited")
-              bg.myChannel.deleteChannel(channel)
+              bg.deleteChannel(channel)
               removeDom(channel)
-              bg.myChannel.totalOnline()
-              bg.myChrome.setBadge(myChannel.online.toString())
-              bg.myChrome.set(myChannel.saveChannel(channel))
-              bg.myChrome.set({'channels': myChannel.saveChannels()})
-            } else
+            } else { // add a channel
               bg.getChannel(channel, function(data) {
-                if (data) {
+                if (data && data.domain) {
                   exciting.innerText = "已关注"
                   exciting.classList.add("excited")
+                  bg.addChannel(data)
                   updateDom(data)
                 }
               })
+            }
           }
       })
     })
@@ -60,6 +58,10 @@ chrome.runtime.getBackgroundPage((bg) => {
   function removeDom(channel) {
     var ele = document.getElementById(channel.domain+channel.id)
     ele.remove()
+    if (bg.myChannel.channels.length == 0) {
+      var template = document.getElementsByClassName('channel_template')[0]
+      template.classList.remove('none')
+    }
   }
 
   function createDom(channel) {
@@ -76,12 +78,17 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   function updateDom(channel) {
-    var id = channel.domain + channel.id
-    var el = document.getElementById(id)
-    if (el)
-      updateEle(channel, el)
-    else
-      createDom(channel)
+    if (channel) {
+      var id = channel.domain + channel.id
+      var el = document.getElementById(id)
+      if (el)
+        updateEle(channel, el)
+      else
+        createDom(channel)
+    } else {
+      var channels = bg.myChannel.channels
+      channels.forEach(channel => updateDom(channel))
+    }
   }
 
   function updateEle(channel, el) {
@@ -128,7 +135,12 @@ chrome.runtime.getBackgroundPage((bg) => {
   toggleExciting()
   bg.scheduleUpdate(function(channel) {
     console.log(channel)
-    if (channel)
+    if (typeof channel == 'string' && channel == 'Updated') {
+      updateDom()
+    } else if (channel && channel.domain && channel.id !== undefined && channel.id !== null) {
       updateDom(channel)
+    } else {
+      bg.invalidChannels()
+    }
   })
 })

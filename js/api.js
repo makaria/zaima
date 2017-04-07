@@ -4,7 +4,7 @@ class Rooms {
     this.bilibili = {
       // 目前似乎没有slug
       api: 'https://live.bilibili.com/live/getInfo?roomid=ROOMID',
-      url: 'live.bilibili.com/:id',
+      url: 'https://live.bilibili.com/:id',
       domain: 'bilibili',
       keys: {
         // error: 'code',

@@ -16,7 +16,6 @@ class ChannelHandler {
     //   data: null //json返回的原始数据，可以不放在这。
     // }]
     this.online = 0 //关注的主播在线人数
-    // this.newChannel = null
     this.channels = [] //显示popup用
     this.interval = 1000 * 60 * 30 //每隔一定时间间隔重新获取数据
     this.recent = 1000 * 60 * 5 //如果最近刚获取过数据则不再请求
@@ -119,7 +118,7 @@ class ChannelHandler {
   }
 
   // 保存一个channel数据，key为domain+id，value即生成的channel对象
-  saveChannel(channel) {
+  exportChannel(channel) {
     var channel_id = channel.domain + '-' + channel.id
     var size = JSON.stringify(channel).length // 小于8192
     var obj = {}
@@ -132,12 +131,27 @@ class ChannelHandler {
   }
 
   // 保存所有的channels数据，一个只含有channel的domain+id信息的数组
-  saveChannels() {
+  exportChannels() {
     var channels = []
+    var invalid = false
     for (let channel of this.channels) {
-      channels.push(channel.domain + '-' + channel.id)
+      if (channel && channel.domain && channel.id !== undefined && channel.id !== null) {
+        channels.push(channel.domain + '-' + channel.id)
+      } else {
+        invalid = true
+      }
+    }
+    if (invalid) {
+      this.validChannels()
     }
     return channels
+  }
+
+  validChannels() {
+    var validChannels = this.channels.filter(channel => {
+      return channel && channel.domain && channel.id !== undefined && channel.id !== null
+    })
+    this.channels = validChannels
   }
 
   totalOnline() {

@@ -10,10 +10,11 @@ class QueueHandler {
     .then(json => callback(json))
     .catch(e => {
       console.error(e)
-      callback(false)
+      callback(e)
     })
   }
 
+  // todo: timeout shall be catch & callback('timeout')
   timeoutPromise(ms, promise) {
     return new Promise(function(resolve, reject) {
       setTimeout(function() {
