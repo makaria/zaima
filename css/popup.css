@@ -57,6 +57,11 @@ td:hover
     color: #fd9ccc;
 }
 
+.timeout
+{
+  color: lightgrey;
+}
+
 /*.title
 {
   font-size: 16px;
