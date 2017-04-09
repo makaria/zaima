@@ -17,6 +17,7 @@
     "tabs",
     "storage",
     "alarms",
+    "bookmarks",
     "*://*.douyu.com/*",
     "*://*.douyucdn.cn/*",
     "*://*.bilibili.com/*",
@@ -28,6 +29,7 @@
   "background": {
     "scripts": [
       "js/api.js",
+      "js/bookmarkHandler.js",
       "js/queueHandler.js",
       "js/chromeHandler.js",
       "js/channelHandler.js",

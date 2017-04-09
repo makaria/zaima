@@ -106,7 +106,4 @@ class Rooms {
       }
     }
   }
-  hello () {
-
-  }
 }

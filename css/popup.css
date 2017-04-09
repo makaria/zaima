@@ -1,12 +1,28 @@
 body
 {
-    /*min-width: 150px;*/
     margin: 5px 5px;
+}
+
+table
+{
+  width: 233px;
+  table-layout: fixed;
 }
 
 td
 {
     border-bottom: 1px solid black;
+    white-space: nowrap;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+td:hover
+{
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 .wrapper
@@ -53,11 +69,10 @@ td
 
 .divide
 {
-    height: 3px
+    height: 3px;
 }
 
 a
 {
-    white-space: nowrap;
     text-decoration: none;
 }

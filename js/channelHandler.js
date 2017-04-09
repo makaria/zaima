@@ -41,7 +41,7 @@ class ChannelHandler {
     for (let reg of regs) {
       var result = url.match(reg)
       if (result && result[1] && result[2] !== undefined && result[2] !== null)
-        return {domain: result[1].replace(/.*\./,''), id: result[2]}
+        return {domain: result[1].replace(/.*\./,''), id: result[2].replace(/\/.*/, '')}
     }
     return false
   }
@@ -59,7 +59,7 @@ class ChannelHandler {
 
   //http://stackoverflow.com/questions/6393943/convert-javascript-string-in-dot-notation-into-an-object-reference
   getByDot(obj, key, value) {
-    if (!key) return
+    if (!key || !obj) return value
     if (typeof key == 'string')
       return this.getByDot(obj, key.split('.'), value)
     else if (key.length == 1)
@@ -72,6 +72,7 @@ class ChannelHandler {
 
   // 将返回的数据格式化成统一的格式以作为dom的数据
   json2channel(data, channel) {
+    if (!channel || !data) return false
     var online = false
     // 没有用===，是为了 "1"==1
     if (this.getByDot(data, channel.keys.online.key) == channel.keys.online.on)
@@ -84,6 +85,7 @@ class ChannelHandler {
       slug: this.getByDot(data, channel.keys.slug),
       title: this.getByDot(data, channel.keys.title),
       url: channel.url.replace(/:id/, this.getByDot(data, channel.keys.id)),
+      apiUrl: channel.api.replace(/ROOMID/, this.getByDot(data, channel.keys.id)),
       // nickname: 'SteamParty',
       avatar: this.getByDot(data, channel.keys.avatar),
       start_time: this.date2string(this.getByDot(data, channel.keys.start_time)),
@@ -101,7 +103,7 @@ class ChannelHandler {
     return this.channels.findIndex(item => this.isExists(item, channel))
   }
 
-  updateChannel(channel) {
+  addChannel(channel) {
     var index = this.getIndex(channel)
     if (index !== -1)
       this.channels[index] = channel
@@ -147,10 +149,13 @@ class ChannelHandler {
     return channels
   }
 
+  // this shall never run
   validChannels() {
     var validChannels = this.channels.filter(channel => {
+      console.log(channel)
       return channel && channel.domain && channel.id !== undefined && channel.id !== null
     })
+    console.error(validChannels, this.channels)
     this.channels = validChannels
   }
 

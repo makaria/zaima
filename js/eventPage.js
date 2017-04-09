@@ -2,94 +2,36 @@ var myChannel = new ChannelHandler()
 var myChrome = new ChromeHandler()
 var myQuest = new QueueHandler()
 var myRoom = new Rooms()
+var myBookmark = new BookmarkHandler()
 
-// start
- // 返回url的fetch结果
-function fetchJson(url, callback) {
-  myQuest.fetchOne(url, function(data) {
-    if (data && data.data)
-      callback(data.data)
-    else if (data && data.no) // quanmin
-      callback(data)
-    else if (data && data.message) {
-      callback(data)
-    } else {
-      callback(false)
-    }
-  })
-}
-
-function createApiUrl(room) {
-  if (room && room.domain && myRoom[room.domain])
-    return myRoom[room.domain].api.replace(/ROOMID/, room.id)
-  else
-    return false
-}
-
-function isChannel(url, callback) {
-  var room = myChannel.getDomainAndId(url)
-  var apiUrl = createApiUrl(room)
-  if (room && apiUrl)
-    fetchJson(apiUrl, function(data) {
-      if (data && data.message == 'timeout') {
-        callback(false)
-      } else {
-        var channel = myChannel.json2channel(data, myRoom[room.domain])
-        if (room.id != channel.id) {
-          channel.slug = room.id
-        }
-        callback(channel)
-      }
-    })
-  else
-    callback(false)
-}
-
-function getChannel(room, callback) {
-  var apiUrl = createApiUrl(room)
-  if (apiUrl)
-    fetchJson(apiUrl, function(data) {
-      // 'when timeout try use local data'
-      if (data && data.message == 'timeout') {
-        var channel_key = room.domain + '-' + 'room.id'
-        myChrome.getLocal(channel_key, function(data) {
-          channel = data[channel_key] ? data[channel_key] : false
-          callback(channel)
-        })
-      } else {
-        var channel = myChannel.json2channel(data, myRoom[room.domain])
-        if (room.id != channel.id) {
-          channel.slug = room.id
-        }
-        callback(channel)
-      }
-    })
-  else
-    callback && callback(false)
-}
-
+// save channel change to storage
+// update online number
 function updateOnline() {
   myChannel.totalOnline()
   myChrome.setBadge(myChannel.online.toString())
 }
 
+// save channel to storage
 function saveChannel(channel) {
   myChrome.setLocal(myChannel.exportChannel(channel))
   myChrome.setSync(myChannel.exportChannel(channel))
 }
 
+// save myChannel.channels to storage
 function saveChannels() {
   myChrome.setLocal({'channels': myChannel.exportChannels()})
   myChrome.setSync({'channels': myChannel.exportChannels()})
 }
 
+// add channel for myChannel && storage
 function addChannel(channel) {
-  myChannel.updateChannel(channel)
+  myChannel.addChannel(channel)
   updateOnline()
   saveChannel(channel)
   saveChannels()
 }
 
+// remove channel from myChannel && storage
 function deleteChannel(channel) {
   myChannel.deleteChannel(channel)
   updateOnline()
@@ -99,40 +41,101 @@ function deleteChannel(channel) {
   })
 }
 
-function scheduleCallback(channel) {
-  console.log('schedule callback', channel)
-  if (channel && channel.domain) {
-    myChannel.updateChannel(channel)
-    updateOnline()
-    saveChannel(channel)
-  } else if (typeof channel == 'string') { // 'Updated'
-    console.log(channel)
+
+// create url for fetch
+function createApiUrl(room) {
+  if (room && room.domain && myRoom[room.domain])
+    return myRoom[room.domain].api.replace(/ROOMID/, room.id)
+  else
+    return false
+}
+
+// get channel' info, from fetch or storage.local
+function getChannel(room, callback) {
+  if (room) {
+    var apiUrl = room.apiUrl || createApiUrl(room)
+    if (apiUrl) {
+      myQuest.fetchOne(apiUrl, callback)
+    } else {
+      callback(false)
+    }
   } else {
-    console.error('Unknown data', channel)
-    invalidChannels()
+    callback(false)
   }
 }
 
-function scheduleUpdate(callback) {
-  if (Date.now() - myChannel.timestamp < myChannel.recent) {
+
+
+// after schedule update, there are something to do
+// convert data to a new channel, room is old channel.
+function updateChannel(room, data, callback) {
+  console.log('schedule update channel')
+  if (room && room.domain) {
+    if (data && (data.data || data.no)) {
+      var json = data.data || data.no
+      var channel = myChannel.json2channel(json, myRoom[room.domain])
+      if (channel && channel.id !== null && channel.id !== undefined) {
+        if (channel.id != room.id) {
+          channel.slug = room.id
+        }
+        if (callback) {
+          callback(channel)
+        } else {
+          myChannel.addChannel(channel)
+          updateOnline()
+          saveChannel(channel)
+        }
+      } else {
+        console.error("unknown data", room, data, channel, json)
+        callback && callback(false)
+      }
+    } else if (data && data.message == 'timeout') {
+      room.timeout = Date.now()
+      if (callback) {
+        callback(room)
+      } else {
+        myChannel.addChannel(room)
+        updateOnline()
+        saveChannel(room)
+      }
+    } else {
+      console.error('Unknown data', data, room)
+      invalidChannels()
+      callback && callback(false)
+    }
+  } else {
+    callback && callback(false)
+  }
+}
+
+// regular update channels' info, interval is set by setting or default, a certain number.
+function scheduleUpdate() {
+  if (Date.now() - myChannel.timestamp > myChannel.recent) {
+    // maybe update shall not be so regular, add random interval
     console.log("scheduleUpdate start!")
     myChannel.timestamp = Date.now()
     var channels = myChannel.channels
     if (channels.length > 0) {
-      channels.forEach(channel => getChannel(channel, callback))
+      channels.forEach(channel => {
+        getChannel(channel, function(data) {
+          updateChannel(channel, data)
+        })
+      })
     } else { // should never run. when local channels.length=0, schedule update shall just stop.
       // todo: sync everytime v.s. storage.onChanged(or use both)
       console.log('scheduleUpdate from sync')
-      startUpdate(callback)
+      startUpdate()
     }
   } else { // only trig when click browserAction
-    console.log('Lasest Update at: ' + Date(myChannel.timestamp))
-    callback && callback('Updated')
+    console.log('Lasest Update at: ' + new Date(myChannel.timestamp))
+    // callback && callback('Updated')
   }
 }
 
+// clear invalid channel, why those channels exist?
 function invalidChannels() {
   // clear sync && local
+  console.error('clear invalid channels')
   myChrome.getSync('channels', function(data) {
     channels = data['channels'] ? data['channels'] : []
     channels.forEach(channel_key => {
@@ -149,50 +152,88 @@ function invalidChannels() {
 
 }
 
-// alarm could  miss?
-function onAlarm(alarm) {
-  console.log('Got alarm', alarm)
-  if (alarm && alarm.name == 'schedule') {
-    scheduleUpdate(scheduleCallback)
-  } else {
-    console.error('Unknown alarm', alarm)
-    if (alarm.name) {
-      myChrome.removeAlarm(alarm.name)
-    }
-  }
-}
-
-function startUpdate(callback) {
+// start update channels' info
+function startUpdate() {
   console.log("startUpdate start!")
-  // overwrite myChannel.channels here?
-  var arr = myChannel.channels
-  myChannel.channels = []
   myChrome.getSync('channels', function(data) {
+    // overwrite myChannel.channels here?
+    myChannel.channels = []
+    myChannel.timestamp = Date.now()
     channels = data['channels'] ? data['channels'] : []
     // todo: Does getSync work great when channels.length>>>>>>>>=511(maxitems when sync)?
     channels.forEach(channel_key => {
       myChrome.getSync(channel_key, function(data) {
-        channel = data[channel_key] ? data[channel_key] : {}
-        getChannel(channel, callback)
+        let channel = data[channel_key] ? data[channel_key] : false
+        getChannel(channel, function(data) {
+          updateChannel(channel, data)
+        })
       })
     })
   })
 }
 
-// // DRY
-// function mergeArray(one, two) {
-//   var first = one.filter(i => {
-//     return two.findIndex(j => {return j.domain == i.domain && j.id == i.id}) !== -1
-//   })
-//   two.forEach(k => {
-//     var index = first.findIndex(l => {return k.domain == l.domain && k.id == l.id})
-//     if (index !== -1) {
-//       first.push(k)
-//     }
-//   })
-//   return first
-// }
 
+// bookmark function
+// bookmark convert to channel && channel convert to bookmark
+function importBookmark() {
+  var domains = []
+  for (let domain in myRoom) {
+    if (domain && myRoom[domain].url) {
+      domains.push(domain)
+    }
+  }
+  console.log(domains)
+  domains.forEach(domain => {
+    myBookmark.search(domain, function(bookmarks) {
+      bookmarks.forEach(bookmark => {
+        bookmark2channel(bookmark)
+      })
+    })
+  })
+}
+
+function exportBookmark(name, callback) {
+  var channels = myChannel.channels
+  if (channels.length > 0) {
+    var folder = {
+      parentId: '1',
+      title: name || 'Live Stream',
+    }
+    myBookmark.create(folder, function(data) {
+      console.log(data)
+      var parentId = data.id
+      channels.forEach(channel => {
+        channel2bookmark(channel, parentId, callback)
+      })
+    })
+  }
+}
+
+function bookmark2channel(bookmark) {
+  var room = myChannel.getDomainAndId(bookmark.url)
+  getChannel(room, function(data) {
+    updateChannel(room, data, function(channel) {
+      if (channel) {
+        addChannel(channel)
+      } else {
+        console.info("invalid bookmark", bookmark, channel)
+      }
+    })
+  })
+
+}
+
+function channel2bookmark(channel, parentId, callback) {
+  var bookmark = {
+    parentId: parentId,
+    title: channel.title,
+    url: channel.url
+  }
+  myBookmark.create(bookmark, callback)
+}
+
+
+// update channels from other machine or not
 function mergeChannel(array) {
   var expire = false
   var channels = myChannel.channels
@@ -200,19 +241,15 @@ function mergeChannel(array) {
     var two = array[i]
     if (one.domain != two.domain || one.id != two.id) {
       expire = true
+      // shall break here, but forEach don't
     }
   })
-  // for (let one of channels) {
-  //   if (one.domain != two.domain || one.id != two.id) {
-  //     expire = true
-  //     break
-  //   }
-  // }
   if (expire) {
-    startUpdate(scheduleCallback)
+    startUpdate()
   }
 }
 
+// storage.onChanged
 function onChanged(changes, namespace) {
   for (let key in changes) {
     var storageChange = changes[key]
@@ -223,34 +260,52 @@ function onChanged(changes, namespace) {
     for (let key in changes) {
       var storageChange = changes[key]
       if (key == 'channels') {
-        var arr = []
+        var array = []
         storageChange.newValue.forEach(key => {
-          arr.push({
+          array.push({
             domain: key.split('-')[0],
             id: key.split('-')[1]
           })
         })
-        mergeChannel(arr)
-        // sync from other machine need update myChannel.channels
-        // otherwise myChannel.channels shall be equal to storageChange.newValue
-
-        // item order may change. sort by order?
-        // myChannel.channels = mergeArray(arr, myChannel.channels)
-        // save to local?
-        // myChrome.setLocal({'channels': storageChange.newValue})
+        mergeChannel(array)
       } else if (key == 'setting') {
         console.log(storageChange.newValue)
       } else {
-        myChannel.updateChannel(storageChange.newValue)
-        // myChrome.setLocalByKey(key, storageChange.newValue)
+        myChannel.addChannel(storageChange.newValue)
       }
     }
   }
 }
 
+// change update interval
+function changeAlarm(interval) {
+  if (!interval) {
+    interval = myChannel.interval
+  } else if (interval < 5) { //better apply this limit in input && popup a warn message
+    interval = 5
+  }
+  myChrome.removeAlarm('schedule', function(data) {
+    myChrome.createAlarm('schedule', {periodInMinutes: interval})
+  })
+}
+
+// alarm could  miss?
+function onAlarm(alarm) {
+  console.log('Got alarm', alarm)
+  if (alarm && alarm.name == 'schedule') {
+    scheduleUpdate()
+  } else {
+    console.error('Unknown alarm', alarm)
+    if (alarm.name) {
+      myChrome.removeAlarm(alarm.name)
+    }
+  }
+}
+
+// extension/chrome start
 function onStart() {
   console.log("onStart")
-  startUpdate(scheduleCallback)
+  startUpdate()
   // todo: maybe better when startUpdate success
   // todo: periodInMinutes should be changable in settings
   myChrome.createAlarm('schedule', {periodInMinutes: 30})
