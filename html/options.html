@@ -3,20 +3,107 @@
 
 <head>
   <title>LiveTV Extension Options</title>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <link href="../css/options.css" type="text/css" rel="stylesheet" />
 </head>
 
 <body>
   <div>
-    <li id="channelTemplate">
-      <input id="new_channel" type="text">
-      <label for="new_channel">Add</label>
-    </li>
-    <ol id="channelsList">
-    </ol>
+    <h2>Manage Channels</h2>
+    <div class="list">
+      <table summary="Channel List">
+        <!--<caption>Channel List</caption>-->
+        <thead>
+          <th scope="col">Status</th>
+          <th scope="col">Nickname</th>
+          <th scope="col">URL</th>
+          <th scope="col" colspan="3">Actions</th>
+        </thead>
+        <tbody id="channels_list">
+          <tr class="channel_template">
+            <td>
+              <span class="status">?</span>
+            </td>
+            <td>
+              <input class="nickname" placeholder="Nickname">
+            </td>
+            <td>
+              <input class="url" placeholder="Type a url for the channel">
+            </td>
+            <td>
+              <button class="delete">Delete</button>
+            </td>
+            <td>
+              <button class="insert">Insert</button>
+            </td>
+            <td>
+              <button class="move">Move</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="bookmark">
+        <button class="import">Import From Bookmarks</button>
+        <button class="export">Export to Bookmarks</button>
+      </div>
+    </div>
+    <h2>Customize How Channels Display</h2>
+    <div class="list">
+      <label class="item">
+        <div class="item-content">Online First</div>
+        <div class="item-secondary">
+          <span class="toggle">
+            <input type="checkbox" class="onlinefirst">
+            <div></div>
+          </span>
+        </div>
+      </label>
+      <label class="item">
+        <div class="item-content">Open channel in new tab</div>
+        <div class="item-secondary">
+          <span class="toggle">
+            <input type="checkbox" class="newtab">
+            <div></div>
+          </span>
+        </div>
+      </label>
+      <label class="item two-lines">
+        <div class="item-content has-secondary">
+          <div>Hide Name</div>
+          <div class="secondary">Hide broadcasters' name</div>
+        </div>
+        <div class="item-secondary">
+          <span class="toggle">
+            <input type="checkbox" class="hidename">
+            <div></div>
+          </span>
+        </div>
+      </label>
+      <label class="item two-lines">
+        <div class="item-content has-secondary">
+          <div>Hide Title</div>
+          <div class="secondary">Hide broadcasters' title</div>
+        </div>
+        <div class="item-secondary">
+          <span class="toggle">
+            <input type="checkbox" class="hidetitle">
+            <div></div>
+          </span>
+        </div>
+      </label>
+      <label class="item two-lines">
+        <div class="item-content has-secondary">
+          <div>Customize Update Interval(minutes)</div>
+          <div class="secondary">Periodic refresh channels' status, [5-240]</div>
+        </div>
+        <div class="item-secondary numberic textfield row inline items-center">
+          <i class="remove">－</i>
+          <input type="number" pattern="[0-9]*" tabindex="0" step="1" min="5" max="240" class="no-style interval">
+          <i class="add">＋</i>
+        </div>
+      </label>
+    </div>
   </div>
-  <script src="../js/tools.js" type="text/javascript" charset="utf-8"></script>
   <script src="../js/options.js" type="text/javascript" charset="utf-8"></script>
 </body>
 

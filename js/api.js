@@ -62,27 +62,27 @@ class Rooms {
         end_time: 'end_time' // '1489920119', second
       }
     },
-    this.zhanqi = {
-      // 必须是数字id，不能是slug。window.oPageConfig.oRoom的值即是json数据。
-      // 如何获取到数字id？
-      api: 'https://www.zhanqi.tv/api/static/live.roomid/ROOMID.json',
-      url: 'https://www.zhanqi.tv/:id',
-      domain: 'zhanqi',
-      keys: {
-        // error: 'code',
-        name: 'nickname',
-        id: 'id',
-        online: {
-          key: 'status',
-          on: '4',
-          off: '0'
-        },
-        title: 'title',
-        avatar: 'avatar',
-        start_time: 'liveTime', // '1489988546', second
-        end_time: 'end_time' // no such key
-      }
-    },
+    // this.zhanqi = {
+    //   // 必须是数字id，不能是slug。window.oPageConfig.oRoom的值即是json数据。
+    //   // 如何获取到数字id？id只能用于获取json. slug和code才是网页网址
+    //   api: 'https://www.zhanqi.tv/api/static/live.roomid/ROOMID.json',
+    //   url: 'https://www.zhanqi.tv/:id',
+    //   domain: 'zhanqi',
+    //   keys: {
+    //     // error: 'code',
+    //     name: 'nickname',
+    //     id: 'id', // id for json url only, 'code' && 'url' for tab url only.
+    //     online: {
+    //       key: 'status',
+    //       on: '4',
+    //       off: '0'
+    //     },
+    //     title: 'title',
+    //     avatar: 'avatar',
+    //     start_time: 'liveTime', // '1489988546', second
+    //     end_time: 'end_time' // no such key
+    //   }
+    // },
     this.quanmin = {
       //ROOMID可以为房间别名
       api: 'http://www.quanmin.tv/json/rooms/ROOMID/noinfo4.json',

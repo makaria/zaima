@@ -50,6 +50,10 @@ class ChromeHandler {
     }
   }
 
+  setTitle(title) {
+    chrome.browserAction.setTitle({'title': title})
+  }
+
   setBadge(text) {
     chrome.browserAction.setBadgeText({text: text})
   }

@@ -1,16 +1,13 @@
-body
-{
-    margin: 5px 5px;
+body {
+    margin: .3125rem .3125rem;
 }
 
-table
-{
-  width: 233px;
-  table-layout: fixed;
+table {
+    width: 15rem;
+    table-layout: fixed;
 }
 
-td
-{
+td {
     border-bottom: 1px solid black;
     white-space: nowrap;
     text-decoration: none;
@@ -18,47 +15,42 @@ td
     overflow: hidden;
 }
 
-td:hover
-{
+td:hover {
     overflow: visible;
     white-space: normal;
     word-wrap: break-word;
 }
 
-.wrapper
-{
-    padding: 5px;
+button {
+    width: 100%;
+    height: 2rem;
+    border: none;
+    cursor: help;
+}
+
+.wrapper {
+    padding: .3rem;
     border-bottom: 1px solid black;
     text-align: center;
 }
 
-.excited
-{
+.subscribed {
     color: blue;
 }
 
-.exciting
-{
-    color: black;
-}
-
-.none
-{
+.none {
     display: none;
 }
 
-.offline
-{
+.offline {
     color: #999;
 }
 
-.online
-{
+.online {
     color: #fd9ccc;
 }
 
-.timeout
-{
+.timeout {
   color: lightgrey;
 }
 
@@ -67,17 +59,14 @@ td:hover
   font-size: 16px;
 }*/
 
-.small
-{
-    font-size: 11px;
+.small {
+    font-size: .7em;
 }
 
-.divide
-{
-    height: 3px;
+.divide {
+    height: .2em;
 }
 
-a
-{
+a {
     text-decoration: none;
 }

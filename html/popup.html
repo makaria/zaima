@@ -9,22 +9,23 @@
 
   <body>
     <div>
-      <div class="wrapper" id="exciting"></div>
+      <div class="wrapper" id="subscribe"></div>
       <!-- replace table with li?  -->
-      <table id="channels_list">
-        <tr class="channel_template">
-          <td>
-            <span class="title">
-              <a class="detail" href="https://github.com">No channel now</a>
-            </span>
-            <div class="divide"></div>
-            <span class="small">Last Online: -- - --</span>
-          </td>
-        </tr>
+      <table summary="Channel List">
+        <tbody id="channels_list">
+          <tr class="channel_template">
+            <td>
+              <span class="title">
+                <a class="detail" href="https://github.com">No channel now</a>
+              </span>
+              <div class="divide"></div>
+              <span class="small">Last Online: -- - --</span>
+            </td>
+          </tr>
+        </tbody>
       </table>
-      <!--<table class="first none"></table>
-      <table class="second none"></table>-->
     </div>
+    <button id="go-to-options">Go to options</button>
     <script src="../js/tools.js" type="text/javascript" charset="utf-8"></script>
     <script src="../js/popup.js" type="text/javascript" charset="utf-8"></script>
   </body>
