@@ -60,6 +60,7 @@ function showChannels() {
   console.log('show channels start')
   chrome.runtime.getBackgroundPage(bg => {
     console.log('get bg done!')
+    //
     function createDom(template) {
       if (!template) {
         template = document.getElementsByClassName('channel_template')[0]
@@ -84,6 +85,7 @@ function showChannels() {
       var moveEl = el.getElementsByClassName('move')[0]
       deleteEl.onclick = function(e) {
         console.log('delete channel')
+        bg.deleteChannel(channel)
         removeDom(el)
       }
       insertEl.onclick = function(e) {
@@ -92,8 +94,20 @@ function showChannels() {
         parentNode.insertBefore(emptyEl, el.nextSibling)
         updateDom(emptyEl, null)
       }
-      moveEl.ondragstart = function(e) {
-        console.log('drag start')
+      moveEl.onclick = function(e) {
+        console.log('move up')
+        parentNode.insertBefore(el, el.previousSibling)
+        if (channel) {
+          var index = bg.myChannel.getIndex(channel)
+          var channels = bg.myChannel.channels
+          var head = channels.slice(0, index-1)
+          var middle = channels.slice(index-1, index+1).reverse()
+          var tail = channels.slice(index+1)
+          var array = head.concat(middle, tail)
+          console.log(array)
+          bg.myChannel.channels = array
+          bg.saveChannels()
+        }
       }
       if (channel) {
         el.id = channel.domain + channel.id
@@ -110,7 +124,7 @@ function showChannels() {
           console.log(e)
           if (channel.nickname !== e.target.value) {
             channel.nickname = e.target.value
-            bg.myChannel.addChannel(channel)
+            bg.addChannel(channel)
           } else {
             console.log('nickname not changed', e.target.value)
           }

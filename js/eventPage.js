@@ -89,8 +89,18 @@ function updateIcon() {
 
 // save channel to storage
 function saveChannel(channel) {
-  myChrome.setLocal(myChannel.exportChannel(channel))
-  myChrome.setSync(myChannel.exportChannel(channel))
+  if (channel) {
+    myChrome.setLocal(myChannel.exportChannel(channel))
+    myChrome.setSync(myChannel.exportChannel(channel))
+  } else {
+    for (let channel of myChannel.channels) {
+      if (channel) {
+        saveChannel(channel)
+      } else {
+        myChannel.validChannels()
+      }
+    }
+  }
 }
 
 // save myChannel.channels to storage
@@ -176,6 +186,7 @@ function updateChannel(room, data, callback) {
         if (channel.id != room.id) {
           channel.slug = room.id
         }
+        channel.nickname = room.nickname
         channel.timestamp = Date.now()
         callback(channel)
       } else {
