@@ -99,14 +99,21 @@ function showChannels() {
         parentNode.insertBefore(el, el.previousSibling)
         if (channel) {
           var index = bg.myChannel.getIndex(channel)
-          var channels = bg.myChannel.channels
-          var head = channels.slice(0, index-1)
-          var middle = channels.slice(index-1, index+1).reverse()
-          var tail = channels.slice(index+1)
-          var array = head.concat(middle, tail)
-          console.log(array)
-          bg.myChannel.channels = array
-          bg.saveChannels()
+          if (index !== -1) {
+            if (index > 0) {
+              var channels = bg.myChannel.channels
+              var head = channels.slice(0, index-1)
+              var middle = channels.slice(index-1, index+1).reverse()
+              var tail = channels.slice(index+1)
+              var array = head.concat(middle, tail)
+              bg.myChannel.channels = array
+              bg.saveChannels()
+            } else {
+              console.log('Already on the top', index)
+            }
+          } else {
+            console.error("channel hasn't save", channel, bg.myChannel.channels)
+          }
         }
       }
       if (channel) {
