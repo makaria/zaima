@@ -6,7 +6,7 @@
   },
 
   "browser_action": {
-    "default_title": "__MSG_browser_action_default_title__",
+    "default_title": "__MSG_ext_default_title__",
     "default_icon": "images/logo48x48.png",
     "default_popup": "html/popup.html"
   },
@@ -37,15 +37,14 @@
       "js/queueHandler.js",
       "js/chromeHandler.js",
       "js/channelHandler.js",
-      "js/settings.js",
       "js/eventPage.js"
     ],
     "persistent": false
   },
 
   "manifest_version": 2,
-  "name": "LiveTV",
-  "description": "定时查询主播是否在线,目前支持bilibili, douyu, panda, quanmin",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
   // "update_url": "http://clients2.google.com/service/update2/crx",
   "version": "1.0.0",
   "default_locale": "zh_CN"

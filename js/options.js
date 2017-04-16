@@ -12,7 +12,7 @@ function restore_options() {
     document.querySelector('.newtab').checked = items.newtab
     document.querySelector('.hidename').checked = items.hidename
     document.querySelector('.hidetitle').checked = items.hidetitle
-    document.querySelector('.recent').checked = items.recent
+    document.querySelector('.recent').checked = !items.recent
     document.querySelector('.interval').value = items.interval
   })
 }
@@ -71,6 +71,45 @@ function changeInterval(e) {
   })
 }
 
+// i18n. seems wired
+function translate() {
+  var names = [
+    "options_manage",
+    "options_status",
+    "options_nickname",
+    "options_url",
+    "options_actions",
+    "options_delete",
+    "options_insert",
+    "options_move",
+    "options_import",
+    "options_export",
+    "options_customize",
+    "options_onlinefirst",
+    "options_newtab",
+    "options_hidename",
+    "options_hidename_detail",
+    "options_hidetitle",
+    "options_hidetitle_detail",
+    "options_immediately",
+    "options_immediately_detail",
+    "options_interval",
+    "options_interval_detail"
+  ]
+  chrome.runtime.getBackgroundPage(bg => {
+    console.log('translate start')
+    names.forEach(name => {
+      let classname = "." + name
+      document.querySelector(classname).innerText = bg.myChrome.getMessage(name)
+    })
+    var template = document.getElementsByClassName('channel_template')[0]
+    var input_nickname = template.getElementsByClassName('nickname')[0]
+    var input_url = template.getElementsByClassName('url')[0]
+    input_nickname.innerText = bg.myChrome.getMessage("options_nickname_placeholder")
+    input_url.innerText = bg.myChrome.getMessage("options_url_placeholder")
+  })
+}
+
 function showChannels() {
   console.log('show channels start')
   chrome.runtime.getBackgroundPage(bg => {
@@ -113,11 +152,11 @@ function showChannels() {
       if (channel) {
         el.id = channel.domain + '-' + channel.id
         if (channel.timeout) {
-          statusEl.innerText = 'Timeout'
+          statusEl.innerText = bg.myChrome.getMessage('timeout')
         } else if (channel.online) {
-          statusEl.innerText = 'Online'
+          statusEl.innerText = bg.myChrome.getMessage('online')
         } else {
-          statusEl.innerText = 'Offline'
+          statusEl.innerText = bg.myChrome.getMessage('offline')
         }
         if (channel.nickname !== undefined) {
           nameEl.value = channel.nickname
@@ -195,9 +234,9 @@ function showChannels() {
                 bg.addChannel(channel, index+1)
                 updateDom(el, channel)
               } else if (channel.timeout) {
-                statusEl.innerText = 'Timeout!'
+                statusEl.innerText = bg.myChrome.getMessage('timeout')
               } else {
-                statusEl.innerText = 'Invalid URL'
+                statusEl.innerText = bg.myChrome.getMessage('invalid_url')
               }
             })
           })
@@ -254,8 +293,9 @@ function showChannels() {
 }
 
 function onInit() {
-  showChannels()
+  translate()
   restore_options()
+  showChannels()
 }
 
 document.addEventListener('DOMContentLoaded', onInit)

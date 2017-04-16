@@ -9,48 +9,48 @@
 
 <body>
   <div>
-    <h2>Manage Channels</h2>
+    <h2 class="options_manage">Manage Channels</h2>
     <div class="list">
       <table summary="Channel List">
         <!--<caption>Channel List</caption>-->
         <thead>
-          <th scope="col">Status</th>
-          <th scope="col">Nickname</th>
-          <th scope="col">URL</th>
-          <th scope="col" colspan="3">Actions</th>
+          <th scope="col" class="options_status">Status</th>
+          <th scope="col" class="options_nickname">Nickname</th>
+          <th scope="col" class="options_url">URL</th>
+          <th scope="col" colspan="3" class="options_actions">Actions</th>
         </thead>
         <tbody id="channels_list">
           <tr class="channel_template">
             <td>
-              <span class="status">Status</span>
+              <span class="status options_status">Status</span>
             </td>
             <td>
-              <input class="nickname" placeholder="Nickname">
+              <input class="nickname options_nickname">
             </td>
             <td>
-              <input class="url" placeholder="Type a url for the channel">
+              <input class="url options_url">
             </td>
             <td>
-              <button class="delete">Delete</button>
+              <button class="delete options_delete">Delete</button>
             </td>
             <td>
-              <button class="insert">Insert</button>
+              <button class="insert options_insert">Insert</button>
             </td>
             <td>
-              <button class="move">Move Up</button>
+              <button class="move options_move">Move Up</button>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="bookmark">
-        <button class="import">Import From Bookmarks</button>
-        <button class="export">Export to Bookmarks</button>
+        <button class="import options_import">Import From Bookmarks</button>
+        <button class="export options_export">Export to Bookmarks</button>
       </div>
     </div>
-    <h2>Customize How Channels Display</h2>
+    <h2 class="options_customize">Customize How Channels Display</h2>
     <div class="list">
       <label class="item">
-        <div class="item-content">Online First</div>
+        <div class="item-content options_onlinefirst">Online First</div>
         <div class="item-secondary">
           <span class="toggle">
             <input type="checkbox" class="onlinefirst">
@@ -59,7 +59,7 @@
         </div>
       </label>
       <label class="item">
-        <div class="item-content">Open channel in new tab</div>
+        <div class="item-content options_newtab">Open channel in new tab</div>
         <div class="item-secondary">
           <span class="toggle">
             <input type="checkbox" class="newtab">
@@ -69,8 +69,10 @@
       </label>
       <label class="item two-lines">
         <div class="item-content has-secondary">
-          <div>Hide Name</div>
-          <div class="secondary">Hide broadcasters' name if there is a nickname</div>
+          <div class="options_hidename">Hide Name</div>
+          <div class="secondary options_hidename_detail">
+            Hide broadcasters' name if there is a nickname
+          </div>
         </div>
         <div class="item-secondary">
           <span class="toggle">
@@ -81,8 +83,8 @@
       </label>
       <label class="item two-lines">
         <div class="item-content has-secondary">
-          <div>Hide Title</div>
-          <div class="secondary">Hide broadcasters' title</div>
+          <div class="options_hidetitle">Hide Title</div>
+          <div class="secondary options_hidetitle_detail">Hide broadcasters' title</div>
         </div>
         <div class="item-secondary">
           <span class="toggle">
@@ -93,8 +95,10 @@
       </label>
       <label class="item two-lines">
         <div class="item-content has-secondary">
-          <div>Immedialtely Update</div>
-          <div class="secondary">Click extension icon will trigger an update immedialtely</div>
+          <div class="options_immediately">Immediately Update</div>
+          <div class="secondary options_immediately_detail">
+            Click extension icon will trigger an update immediately
+          </div>
         </div>
         <div class="item-secondary">
           <span class="toggle">
@@ -105,8 +109,10 @@
       </label>
       <label class="item two-lines">
         <div class="item-content has-secondary">
-          <div>Customize Update Interval(minutes)</div>
-          <div class="secondary">Periodic refresh channels' status, [5-240]</div>
+          <div class="options_interval">Customize Update Interval(minutes)</div>
+          <div class="secondary options_interval_detail">
+            Periodic refresh channels' status, [5-240]
+          </div>
         </div>
         <div class="item-secondary numberic textfield row inline items-center">
           <i class="remove">－</i>

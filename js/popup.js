@@ -28,12 +28,12 @@ chrome.runtime.getBackgroundPage((bg) => {
       e.stopPropagation()
       var index = bg.myChannel.getIndex(channel)
       if (index !== -1) { // remove a channel
-        el.innerText = "关注"
+        el.innerText = bg.myChrome.getMessage('subscribe')
         el.classList.remove("subscribed")
         bg.deleteChannel(channel)
         removeDom(channel)
       } else { // add a channel
-        el.innerText = "已关注"
+        el.innerText = bg.myChrome.getMessage('subscribed')
         el.classList.add("subscribed")
         bg.addChannel(channel)
         addDom(channel)
@@ -55,10 +55,10 @@ chrome.runtime.getBackgroundPage((bg) => {
           } else {
             var index = bg.myChannel.getIndex(channel)
             if (index !== -1) {
-              button.innerText = "已关注"
+              button.innerText = bg.myChrome.getMessage('subscribed')
               button.classList.add("subscribed")
             } else
-              button.innerText = "关注"
+              button.innerText = bg.myChrome.getMessage('subscribe')
               button.classList.remove("subscribed")
             toggleSubscribe(button, channel)
           }
@@ -116,7 +116,8 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   function openOptions() {
-    document.querySelector('#go-to-options').addEventListener('click', function() {
+    document.querySelector(".options").innerText = bg.myChrome.getMessage('options')
+    document.querySelector('.options').addEventListener('click', function() {
       if (chrome.runtime.openOptionsPage) {
         // New way to open options pages, if supported (Chrome 42+).
         chrome.runtime.openOptionsPage();
@@ -179,21 +180,29 @@ chrome.runtime.getBackgroundPage((bg) => {
     a.title = channel.url
     small.innerText = (channel.start_time || '--') + ' - ' + (channel.end_time || '--')
     if (channel.online) {
-      online = '在播'
+      online = bg.myChrome.getMessage('online')
       a.classList.remove('offline', 'timeout')
       a.classList.add('online')
       a.innerText = online + name + ' ' + title
     } else if (channel.timeout) {
-      online = 'Timeout!'
+      online = bg.myChrome.getMessage('timeout')
       a.classList.remove('online', 'offline')
       a.classList.add('timeout')
       a.innerText = online + name + ' ' + title
     } else {
-      online = '在摸'
+      online = bg.myChrome.getMessage('offline')
       a.classList.remove('online', 'timeout')
       a.classList.add('offline')
       a.innerText = online + name + ' ' + title
     }
+  }
+
+  function translate() {
+    var template = document.getElementsByClassName('channel_template')[0]
+    var a = template.getElementsByClassName("detail")[0]
+    var small = template.getElementsByClassName("small")[0]
+    a.innerText = bg.myChrome.getMessage('no_channels')
+    small.innerText = bg.myChrome.getMessage('last_online')
   }
 
   function start() {
@@ -253,6 +262,7 @@ chrome.runtime.getBackgroundPage((bg) => {
   isChannel()
   start()
   openOptions()
+  translate()
   // // bg.scheduleUpdate(bg.scheduleCallback)
   // // if set bg.myChannel.recent=0, update all whenever popup.
   bg.scheduleUpdate(function(channel) {

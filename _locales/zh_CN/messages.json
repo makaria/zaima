@@ -1,5 +1,107 @@
 {
-    "browser_action_default_title": {
-        "message": "LiveTV 查看关注的直播间是否在线"
-    }
+  "extName": {
+    "message": "在么"
+  },
+  "extDesc": {
+    "message": "LiveTV 定时查询关注的主播在线状态"
+  },
+  "ext_default_title": {
+    "message": "在么"
+  },
+  "timeout": {
+    "message": "超时"
+  },
+  "online": {
+    "message": "在播"
+  },
+  "offline": {
+    "message": "在摸"
+  },
+  "invalid_url": {
+    "message": "非法地址"
+  },
+  "options": {
+    "message": "选项"
+  },
+  "subscribe": {
+    "message": "关注"
+  },
+  "subscribed": {
+    "message": "已关注"
+  },
+  "no_channels": {
+    "message": "目前没有关注的主播"
+  },
+  "last_online": {
+    "message": "上次直播时间"
+  },
+  "options_manage": {
+    "message": "房间列表"
+  },
+  "options_status": {
+    "message": "状态"
+  },
+  "options_nickname": {
+    "message": "昵称"
+  },
+   "options_nickname_placeholder": {
+    "message": "昵称"
+  },
+  "options_url": {
+    "message": "网址"
+  },
+  "options_url_placeholder": {
+    "message": "请输入一条新网址"
+  },
+  "options_actions": {
+    "message": "管理"
+  },
+  "options_delete": {
+    "message": "删除"
+  },
+  "options_insert": {
+    "message": "新增"
+  },
+  "options_move": {
+    "message": "上移"
+  },
+  "options_import": {
+    "message": "从书签中导入"
+  },
+  "options_export": {
+    "message": "导出成书签"
+  },
+  "options_customize": {
+    "message": "个性化设置"
+  },
+  "options_onlinefirst": {
+    "message": "优先在顶部显示在线的主播"
+  },
+  "options_newtab": {
+    "message": "在新标签页打开地址"
+  },
+  "options_hidename": {
+    "message": "隐藏主播名"
+  },
+  "options_hidename_detail": {
+    "message": "如果有昵称的话"
+  },
+  "options_hidetitle": {
+    "message": "隐藏频道名称"
+  },
+  "options_hidetitle_detail": {
+    "message": "不显示主播的房间名称"
+  },
+  "options_immediately": {
+    "message": "立即更新"
+  },
+  "options_immediately_detail": {
+    "message": "点击插件图标会立即更新所有频道在线信息"
+  },
+  "options_interval": {
+    "message": "更新间隔(分钟)"
+  },
+  "options_interval_detail": {
+    "message": "定时更新频道的间隔时间,大于5小于240的任意值"
+  }
 }

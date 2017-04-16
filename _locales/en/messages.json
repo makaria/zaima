@@ -1,5 +1,107 @@
 {
-    "browser_action_default_title": {
-        "message": "LiveTV Show online statuses of live streams"
-    }
+  "extName": {
+    "message": "LiveTV"
+  },
+  "extDesc": {
+    "message": "LiveTV Show online statuses of live streams"
+  },
+  "ext_default_title": {
+    "message": "LiveTV Show online statuses of live streams"
+  },
+  "timeout": {
+    "message": "Timeout"
+  },
+  "online": {
+    "message": "Online"
+  },
+  "offline": {
+    "message": "Offline"
+  },
+  "invalid_url": {
+    "message": "Invalid Url"
+  },
+  "options": {
+    "message": "options"
+  },
+  "subscribe": {
+    "message": "Subscribe"
+  },
+  "subscribed": {
+    "message": "Subscribed"
+  },
+  "no_channels": {
+    "message": "None channel subscribed"
+  },
+  "last_online": {
+    "message": "Last Online"
+  },
+  "options_manage": {
+    "message": "Manage Channels"
+  },
+  "options_status": {
+    "message": "Status"
+  },
+  "options_nickname": {
+    "message": "Nickname"
+  },
+  "options_nickname_placeholder": {
+    "message": "Nickname"
+  },
+  "options_url": {
+    "message": "Url"
+  },
+  "options_url_placeholder": {
+    "message": "Type a url"
+  },
+  "options_actions": {
+    "message": "Actions"
+  },
+  "options_delete": {
+    "message": "Delete"
+  },
+  "options_insert": {
+    "message": "Insert"
+  },
+  "options_move": {
+    "message": "Up"
+  },
+  "options_import": {
+    "message": "Import From Bookmarks"
+  },
+  "options_export": {
+    "message": "Export to Bookmarks"
+  },
+  "options_customize": {
+    "message": "Customize Options"
+  },
+  "options_onlinefirst": {
+    "message": "Online First"
+  },
+  "options_newtab": {
+    "message": "Open in new tab"
+  },
+  "options_hidename": {
+    "message": "Hide Name"
+  },
+  "options_hidename_detail": {
+    "message": "Hide broadcasters' name if there is a nickname"
+  },
+  "options_hidetitle": {
+    "message": "Hide Title"
+  },
+  "options_hidetitle_detail": {
+    "message": "Hide broadcasters' title"
+  },
+  "options_immediately": {
+    "message": "Immediately Update"
+  },
+  "options_immediately_detail": {
+    "message": "Click extension icon will trigger an update immediately"
+  },
+  "options_interval": {
+    "message": "Customize Update Interval(minutes)"
+  },
+  "options_interval_detail": {
+    "message": "Periodic refresh channels' status, [5-240]"
+  }
 }

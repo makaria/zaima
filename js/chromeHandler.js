@@ -91,6 +91,11 @@ class ChromeHandler {
     chrome.alarms.onAlarm.addListener(callback)
   }
 
+  //i18n
+  getMessage(name) {
+    return chrome.i18n.getMessage(name)
+  }
+
   // install, start, change
   onChanged(callback) {
     chrome.storage.onChanged.addListener(callback)
