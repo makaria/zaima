@@ -109,12 +109,16 @@ class ChannelHandler {
     return this.channels.findIndex(item => this.isExists(item, channel))
   }
 
-  addChannel(channel) {
-    var index = this.getIndex(channel)
-    if (index !== -1) {
-      this.channels[index] = channel
+  addChannel(channel, index) {
+    if (index !== undefined && index !== null) {
+      this.channels.splice(index, 0, channel)
     } else {
-      this.channels.push(channel)
+      var index = this.getIndex(channel)
+      if (index !== -1) {
+        this.channels[index] = channel
+      } else {
+        this.channels.push(channel)
+      }
     }
   }
 
@@ -132,7 +136,8 @@ class ChannelHandler {
     var channel_id = channel.domain + '-' + channel.id
     var size = JSON.stringify(channel).length // 小于8192
     var obj = {}
-    if ((size + channel_id.length) > 8192) {
+    // item's key+value.length must < 8192 for storage.sync
+    if ((size + channel_id.length) < 8100) {
       obj[channel_id] = channel
     } else {
       obj[channel_id] = JSON.parse(JSON.stringify(channel))

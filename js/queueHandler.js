@@ -9,7 +9,7 @@ class QueueHandler {
     .then(req => req.json()) // 返回数据目前仅限是json。如果不是则不是合法的直播间。
     .then(json => callback(json))
     .catch(e => {
-      console.error(e)
+      console.error(e, url)
       callback(e)
     })
   }

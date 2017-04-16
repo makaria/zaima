@@ -7,12 +7,12 @@ chrome.runtime.getBackgroundPage((bg) => {
       e.preventDefault()
       e.stopPropagation()
       if (bg.myChannel.newtab) { // left button
-        chrome.tabs.create({
+        bg.myChrome.createTab({
           url: channel.url,
           active: true
         })
       } else {
-        chrome.tabs.update({
+        bg.myChrome.updateTab({
           url: channel.url,
           active: true
         })
@@ -45,7 +45,7 @@ chrome.runtime.getBackgroundPage((bg) => {
   function isChannel() {
     console.log('is channel start')
     var button = document.getElementById('subscribe')
-    chrome.tabs.getSelected(function(tab) {
+    bg.myChrome.getSelected(function(tab) {
       var room = bg.myChannel.getDomainAndId(tab.url)
       bg.getChannel(room, function(data) {
         bg.updateChannel(room, data, function(channel) {
@@ -103,6 +103,9 @@ chrome.runtime.getBackgroundPage((bg) => {
     console.log('create dom', channel)
     if (!template) {
       template = document.getElementsByClassName('channel_template')[0]
+    }
+    if (!template.classList.contains('none')) {
+      template.classList.add('none')
     }
     var el = template.cloneNode(true)
     var id = channel.domain + channel.id
@@ -200,16 +203,27 @@ chrome.runtime.getBackgroundPage((bg) => {
       var template = document.getElementsByClassName('channel_template')[0]
       var timeout = false
       template.classList.add('none')
+      // online frag
+      var first = document.createDocumentFragment()
+      // timeout frag
+      var third = document.createDocumentFragment()
+      // offline frag
       if (bg.myChannel.onlinefirst) {
-        var first = document.createDocumentFragment()
         var second = document.createDocumentFragment()
-        var third = document.createDocumentFragment()
       } else {
-        var first = document.createDocumentFragment()
         var second = first
-        var third = document.createDocumentFragment()
       }
-      bg.myChannel.channels.forEach(channel => {
+      // bg.myChannel.channels.forEach(channel => {
+      //   if (channel.online) {
+      //     addDom(channel, template, first)
+      //   } else if (channel.timeout) {
+      //     timeout = true
+      //     addDom(channel, template, third)
+      //   } else {
+      //     addDom(channel, template, second)
+      //   }
+      // })
+      for (let channel of bg.myChannel.channels) {
         if (channel.online) {
           addDom(channel, template, first)
         } else if (channel.timeout) {
@@ -218,8 +232,10 @@ chrome.runtime.getBackgroundPage((bg) => {
         } else {
           addDom(channel, template, second)
         }
-      })
-      fragment.appendChild(first)
+      }
+      if (bg.myChannel.online > 0) {
+        fragment.appendChild(first)
+      }
       fragment.appendChild(second)
       if (timeout) {
         fragment.appendChild(third)
@@ -237,19 +253,22 @@ chrome.runtime.getBackgroundPage((bg) => {
   isChannel()
   start()
   openOptions()
-  // if set bg.myChannel.recent=0, update all whenever popup.
-  // bg.scheduleUpdate(function(channel) {
-  //   if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
-  //     if (channel.timeout || Date.now() - channel.timestamp > bg.myChannel.recent) {
-  //       console.log('channel not changed', channel)
-  //     } else {
-  //       bg.myChannel.adsdChannel(channel)
-  //       bg.updateIcon()
-  //       bg.saveChannel(channel)
-  //       updateDom(channel)
-  //     }
-  //   } else {
-  //     console.error("popup update error", channel)
-  //   }
-  // })
+  // // bg.scheduleUpdate(bg.scheduleCallback)
+  // // if set bg.myChannel.recent=0, update all whenever popup.
+  bg.scheduleUpdate(function(channel) {
+    if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
+      var recent = Date.now() - channel.timestamp > bg.myChannel.recent && bg.myChannel.recent != 0
+      if (channel.timeout || recent) {
+        console.log('channel not changed', channel)
+      } else {
+        bg.myChannel.addChannel(channel)
+        bg.updateIcon()
+        bg.myChrome.setLocal(bg.myChannel.exportChannel(channel))
+        // bg.saveChannel(channel)
+        updateDom(channel)
+      }
+    } else {
+      console.error("popup update error", channel)
+    }
+  })
 })

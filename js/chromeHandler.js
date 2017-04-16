@@ -1,6 +1,8 @@
-// storage, 简单的包装, 可有可无
+// just show chrome api used in this extension, maybe delete in future.
 class ChromeHandler {
   constructor() {}
+
+  // storage
   setLocal(obj, callback) {
     chrome.storage.local.set(obj, callback)
   }
@@ -50,6 +52,7 @@ class ChromeHandler {
     }
   }
 
+  // badgeAction text
   setTitle(title) {
     chrome.browserAction.setTitle({'title': title})
   }
@@ -58,6 +61,20 @@ class ChromeHandler {
     chrome.browserAction.setBadgeText({text: text})
   }
 
+  // tabs
+  getSelected(callback) {
+    chrome.tabs.getSelected(callback)
+  }
+
+  createTab(tab) {
+    chrome.tabs.create(tab)
+  }
+
+  updateTab(tab) {
+    chrome.tabs.updateTab(tab)
+  }
+
+  // alarms
   getAlarm(name, callback) {
     chrome.alarms.get(name, callback)
   }
@@ -74,6 +91,7 @@ class ChromeHandler {
     chrome.alarms.onAlarm.addListener(callback)
   }
 
+  // install, start, change
   onChanged(callback) {
     chrome.storage.onChanged.addListener(callback)
   }

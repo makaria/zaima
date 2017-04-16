@@ -163,6 +163,10 @@ input {
     display: none;
 }
 
+input.nickname {
+  text-align: center;
+}
+
 .toggle div {
     position: relative;
 }
