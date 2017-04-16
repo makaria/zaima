@@ -56,6 +56,4 @@ node_modules
 *.sublime-workspace
 *.sublime-project
 LiveTV.sublime-*
-
-# vscode files
-.vscode
+.vscode/

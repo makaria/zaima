@@ -1,40 +1,106 @@
-// storage
+// just show chrome api used in this extension, maybe delete in future.
 class ChromeHandler {
   constructor() {}
-  set(obj, callback) {
-    chrome.storage.sync.set(obj, function (data) {
-      callback && callback(data)
-    })
+
+  // storage
+  setLocal(obj, callback) {
+    chrome.storage.local.set(obj, callback)
   }
 
-  get(key, callback) {
-    chrome.storage.sync.get(key, function (data) {
-      callback && callback(data)
-    })
+  setSync(obj, callback) {
+    chrome.storage.sync.set(obj, callback)
   }
 
-  remove(key, callback) {
-    chrome.storage.sync.remove(key, function (data) {
-      callback && callback(data)
-    })
+  setLocalByKey(key, value, callback) {
+    var obj = {}
+    obj[key] = value
+    this.setLocal(obj, callback)
   }
 
-  push(key, value, callback) {
-    chrome.storage.sync.get(key, function (result) {
-      var array = result[key] ? result[key] : []
-      array.push(value)
-      var obj = {}
-      obj[key] = array
-      chrome.storage.sync.set(obj, function (data) {
-        callback && callback(data)
-      })
-    })
+  setSyncByKey(key, value, callback) {
+    var obj = {}
+    obj[key] = value
+    this.setSync(obj, callback)
   }
 
-  setBadge(text, callback) {
-    chrome.browserAction.setBadgeText({
-      text: myChannel.online.toString()
-    })
-    callback && callback()
+  getSync(key, callback) {
+    chrome.storage.sync.get(key, callback)
+  }
+
+  getLocal(key, callback) {
+    chrome.storage.local.get(key, callback)
+  }
+
+  removeLocal(key, callback) {
+    chrome.storage.local.remove(key, callback)
+  }
+
+  removeSync(key, callback) {
+    chrome.storage.sync.remove(key, callback)
+  }
+
+  remove(channel, callback) {
+    if (typeof channel == 'string') {
+      this.removeLocal(channel, callback)
+      this.removeSync(channel, callback)
+    } else if (typeof channel == 'object') {
+      var key = channel.domain + '-' + 'channel.id'
+      this.removeLocal(key, callback)
+      this.removeSync(key, callback)
+    } else {
+      callback && callback()
+    }
+  }
+
+  // badgeAction text
+  setTitle(title) {
+    chrome.browserAction.setTitle({'title': title})
+  }
+
+  setBadge(text) {
+    chrome.browserAction.setBadgeText({text: text})
+  }
+
+  // tabs
+  getSelected(callback) {
+    chrome.tabs.getSelected(callback)
+  }
+
+  createTab(tab) {
+    chrome.tabs.create(tab)
+  }
+
+  updateTab(tab) {
+    chrome.tabs.updateTab(tab)
+  }
+
+  // alarms
+  getAlarm(name, callback) {
+    chrome.alarms.get(name, callback)
+  }
+
+  createAlarm(name, alarmInfo) {
+    chrome.alarms.create(name, alarmInfo)
+  }
+
+  removeAlarm(name, callback) {
+    chrome.alarms.clear(name, callback)
+  }
+
+  onAlarm(callback) {
+    chrome.alarms.onAlarm.addListener(callback)
+  }
+
+  // install, start, change
+  onChanged(callback) {
+    chrome.storage.onChanged.addListener(callback)
+  }
+
+  onStartup(callback) {
+    chrome.runtime.onStartup.addListener(callback)
+  }
+
+  onInstalled(callback) {
+    chrome.runtime.onInstalled.addListener(callback)
   }
 }

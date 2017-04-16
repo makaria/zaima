@@ -1,289 +1,201 @@
-// channels
+// channels, 异步操作移至eventPage
 class ChannelHandler {
   constructor() {
-    this.defaultChannels = [{
-      url: 'http://www.douyu.com/63375',
-      nickname: 'SteamParty',
-      title: '',
-      domain: 'douyu',
-      id: '63375',
-      alterId: null,
-      online: false,
-      hide: false, //暂时不想知道这个房间是否online。获取数据时忽略此房间
-      color: false, //自定义online颜色
-      data: null
-    }, {
-      url: 'http://live.bilibili.com/41515',
-      nickname: '有C',
-      title: '',
-      domain: 'bilibili',
-      id: '41515',
-      alterId: null,
-      online: false,
-      hide: false,
-      color: false,
-      data: null
-    }]
-    this.api = {
-      douyu: 'http://open.douyucdn.cn/api/RoomApi/room/',
-      bilibili: 'http://live.bilibili.com/live/getInfo?roomid='
-    }
-    this.online = 0
-    this.newChannel = null
-    this.channels = []
-    this.interval = 1000 * 60 * 30 //每隔一定时间间隔重新获取数据
+    // this.defaultChannels = [{
+    //   domain: 'douyu', //属于哪个网站
+    //   id: '63375', //数字，必须有
+    //   online: false, //是否在线
+    //   name: '63375',//字符串，主播名, 有时候可以替代id.
+    //   title: '', //当前房间名称，一般主播会改来改去，rua
+    //   slug: '', //字符串，房间url别名，可以替代id
+    //   nickname: 'SteamParty', //自定义昵称，所有自定义内容（nickname/hide/color）统一放到setting里？
+    //   // avatar: '', //头像图片地址，B站没有
+    //   start_time: '', // 上次/本次开播时间。用于显示主播最近直播时段(仅部分网站)（某些主播太摸鱼了）
+    //   end_time: '', // 上次关播时间
+    //   loading: false, // 是否正在更新直播间信息
+    //   data: null //json返回的原始数据，可以不放在这。
+    // }]
+    this.online = 0 //关注的主播在线人数
+    this.title = '' //在线的主播名
+    this.channels = [] //显示popup用
+    this.interval = 30 //minutes, 每隔一定时间间隔重新获取数据
     this.recent = 1000 * 60 * 5 //如果最近刚获取过数据则不再请求
-    this.start = true
-    this.fetching = false
+    // this.start = true
+    // this.fetching = false
     this.timestamp = 0
-    this.myRequest = new QueueHandler()
+    this.newtab = true
+    this.onlinefirst = true
+    this.hidename = false
+    this.hidetitle = false
   }
 
-  filter(key, text) {
-    if (text.match(/douyu/) || text.match(/live\.bilibili/)) {
-      var reg = null
-      var match = null
-      var result = null
-      if (key === 'id') {
-        reg = /(\.com\/(.*))|(\.tv\/(.*))|(\.tv\/star\/)(.*)/
-      } else if (key === 'domain') {
-        reg = /\.(.*)\.com|\.(.*)\.tv/
-      };
-      match = text.match(reg)
-      if (match) {
-        var length = match.length - 1
-        for (var i = length; i--; i > 0) {
-          result = match[i]
-          if (result !== undefined) {
-            return result
-          }
-        }
+  // too many "if"!
+
+  // 提取网站名，如bilibili,panda.正则获取.com或.tv前面的内容
+  getDomainAndId(url) {
+    var reg1 = /(.+)\.com\/(.+)/ //把.com前后的字符串提取出来
+    var reg2 = /(.+)\.tv\/(.+)/ //把.tv后的字符串提取出来
+    var reg3 = /(.+)\.tv\/v\/(.+)/ // 针对quanmin.tv的slug网址
+    var regs = [reg3, reg2, reg1]
+    for (let reg of regs) {
+      var result = url.match(reg)
+      if (result && result[1] && result[2] !== undefined && result[2] !== null) {
+        return {domain: result[1].replace(/.*\./,''), id: result[2].replace(/\/.*/, '')}
       }
     }
+    return false
   }
 
-  getApiUrl(channel) {
-    if (channel.apiUrl) {
-      return channel.apiUrl
+  // 转化成统一的date格式
+  date2string(date) {
+    // 如果是纯数字('1490999000'),则new Date(date*1000)
+    // 如果是string('2017-03-14 14:06'),则new Date(date)
+    // 预设只有两种格式，有其他格式需要改api.
+    if (date && !isNaN(date)) {
+      return new Date(date*1000)
     } else {
-      var domain = channel.domain
-      var id = channel.id
-      if (id && domain) {
-        channel.apiUrl = this.api[domain] + id
-        return channel.apiUrl
+      return date
+    }
+  }
+
+  //http://stackoverflow.com/questions/6393943/convert-javascript-string-in-dot-notation-into-an-object-reference
+  getByDot(obj, key, value) {
+    if (!key || !obj) {
+      return value
+    } else if (typeof key == 'string') {
+      return this.getByDot(obj, key.split('.'), value)
+    } else if (key.length == 1) {
+      return obj[key[0]]
+    } else if (key.length == 0) {
+      return value
+    } else {
+      return this.getByDot(obj[key[0]], key.slice(1), value)
+    }
+  }
+
+  // 将返回的数据格式化成统一的格式以作为dom的数据
+  json2channel(data, channel) {
+    if (!channel || !data) {
+      return false
+    }
+    var online = false
+    // 没有用===，是为了 "1"==1
+    if (this.getByDot(data, channel.keys.online.key) == channel.keys.online.on) {
+      online = true
+    }
+    return {
+      domain: channel.domain,
+      id: this.getByDot(data, channel.keys.id), //数字id，可能与room.id(有可能是slug)不同
+      online: online,
+      name: this.getByDot(data, channel.keys.name),
+      slug: this.getByDot(data, channel.keys.slug),
+      title: this.getByDot(data, channel.keys.title),
+      url: channel.url.replace(/:id/, this.getByDot(data, channel.keys.id)),
+      apiUrl: channel.api.replace(/ROOMID/, this.getByDot(data, channel.keys.id)),
+      // nickname: 'SteamParty',
+      avatar: this.getByDot(data, channel.keys.avatar),
+      start_time: this.date2string(this.getByDot(data, channel.keys.start_time)),
+      end_time: this.date2string(this.getByDot(data, channel.keys.end_time)),
+      // loading: false,
+      data: data
+    }
+  }
+
+  isExists(one, two) {
+    return one.domain == two.domain && one.id == two.id
+  }
+
+  getIndex(channel) {
+    return this.channels.findIndex(item => this.isExists(item, channel))
+  }
+
+  addChannel(channel, index) {
+    if (index !== undefined && index !== null) {
+      this.channels.splice(index, 0, channel)
+    } else {
+      var index = this.getIndex(channel)
+      if (index !== -1) {
+        this.channels[index] = channel
+      } else {
+        this.channels.push(channel)
       }
     }
   }
 
-  getTitle(channel) {
-    var data = channel.data
-    var url = channel.url
-    if (url.match(/douyu/)) {
-      channel.title = data.owner_name + data.room_name
-      this.setNickname(channel, data.owner_name)
-    } else if (url.match(/bilibili/)) {
-      channel.title = data.ANCHOR_NICK_NAME + data.ROOMTITLE
-      this.setNickname(channel, data.ANCHOR_NICK_NAME)
-    }
-  }
-
-  setNickname(channel, nickname) {
-    if (channel.nickname === 'New' || !channel.nickname) {
-      channel.nickname = nickname
-    }
-  }
-
-  isNewChannel(channel) {
-    var isNew = true
-    var channels = this.channels
-    var length = channels.length
-    var data = channel.data
-    var id = data.room_id || data.ROOMID
-    // 更改id&&别名id&&apiUrl中的id
-    if (id !== channel.id) {
-      channel.alterId = channel.id
-      channel.id = id
-      channel.apiUrl = this.api[channel.domain] + id
-    }
-    for (var i = 0; i < length; i++) {
-      if (channels[i].apiUrl === channel.apiUrl) {
-        isNew = isNew && false
-      }
-    }
-    if (isNew) {
-      this.channels.push(channel)
-    }
-    this.newChannel = null
-  }
-
-  generateChannel(value) {
-    var id = this.filter('id', value)
-    var domain = this.filter('domain', value)
-    var channel = {
-      apiUrl: this.api[domain] + id,
-      nickname: 'New',
-      domain: domain,
-      id: id,
-      data: null
-    }
-    // 补全url，有必要吗？
-    if (domain === 'douyu') {
-      channel.url = 'http://www.douyu.com/' + id
-    } else if (domain === 'bilibili') {
-      channel.url = 'http://live.bilibili.com/' + id
-    }
-    return channel
-  }
-
-  deleteChannel(channel, callback) {
-    var channels = this.channels
-    var index = channels.indexOf(channel)
+  deleteChannel(channel) {
+    var index = this.getIndex(channel)
     if (index !== -1) {
-      channels.splice(index, 1)
-      this.saveChannels(callback)
-    }
-  }
-
-  saveChannel(text, url, callback) { //找到对应的channel然后更新。考虑更改callback的方式以直接更新，不用找。
-    var obj = JSON.parse(text)
-    var data = obj.data,
-      channel
-    if (this.newChannel) {
-      channel = this.newChannel
-      channel.data = data
-      this.isOnline(channel)
-      this.getTitle(channel, url)
-      this.isNewChannel(channel)
+      this.channels.splice(index, 1)
     } else {
-      var channels = JSON.parse(JSON.stringify(this.channels))
-      var length = channels.length
-      for (var i = 0; i < length; i++) {
-        channel = channels[i]
-        if (channel.apiUrl === url) {
-          channel.data = data
-          var id = data.room_id || data.ROOMID
-          // 更改id&&别名id&&apiUrl中的id
-          if (id !== channel.id) {
-            channel.alterId = channel.id
-            channel.id = id
-            channel.apiUrl = this.api[channel.domain] + id
-          }
-          this.isOnline(channel)
-          this.getTitle(channel)
-          this.channels[i] = channel
-        }
-      }
+      console.error(channel, "not found in", this.channels)
     }
   }
 
-  saveChannels(callback) {
-    var that = this
+  // 保存一个channel数据，key为domain+id，value即生成的channel对象
+  exportChannel(channel) {
+    var channel_id = channel.domain + '-' + channel.id
+    var size = JSON.stringify(channel).length // 小于8192
     var obj = {}
-    var channels = JSON.parse(JSON.stringify(this.channels))
-    var length = channels.length
-    for (var i = 0; i < length; i++) {
-      var channel = channels[i]
-      channel.data = null // 否则数据太大会超过限制无法存储
-    }
-    obj['channels'] = channels
-    chrome.storage.sync.set(obj, function (data) {
-      callback && callback()
-    })
-  }
-
-  addChannel(value, callback) { //TODO 无法同时添加多个？没有检验是否重复
-    var channel = this.generateChannel(value)
-    var url = this.getApiUrl(channel)
-    this.newChannel = channel
-    this.myRequest.request('GET', url, callback)
-  }
-
-  initChannels(callback) {
-    var that = this
-    chrome.storage.sync.get('channels', function (data) {
-      that.channels = data['channels'] ? data['channels'] : that.defaultChannels
-      callback && callback(data)
-    })
-  }
-
-  fetchChannels(callback) {
-    var that = this
-    this.fetching = true
-    this.initChannels(function (data) {
-      var channels = that.channels
-      var length = channels.length
-      // console.log(channels)
-      var channel
-      for (var i = 0; i < length; i++) {
-        channel = channels[i]
-        var url = that.getApiUrl(channel)
-        // console.log(url)
-        if (url) {
-          that.myRequest.request('GET', url, callback)
-        }
-      }
-    })
-  }
-
-  isOnline(channel) {
-    var data = channel.data ? channel.data : {}
-    if (data.room_status == 1 || data.LIVE_STATUS == 'LIVE') {
-      channel.online = true
+    // item's key+value.length must < 8192 for storage.sync
+    if ((size + channel_id.length) < 8100) {
+      obj[channel_id] = channel
     } else {
-      channel.online = false
+      obj[channel_id] = JSON.parse(JSON.stringify(channel))
+      obj[channel_id].data = null
     }
+    return obj
   }
 
-  totalOnline(callback) {
-    this.online = 0
-    var channels = this.channels
-    var length = channels.length
-    var channel
-    for (var i = 0; i < length; i++) {
-      channel = channels[i]
+  // 保存所有的channels数据，一个只含有channel的domain+id信息的数组
+  exportChannels() {
+    var channels = []
+    var invalid = false
+    for (let channel of this.channels) {
+      if (channel && channel.domain && channel.id !== undefined && channel.id !== null) {
+        channels.push(channel.domain + '-' + channel.id)
+      } else {
+        invalid = true
+      }
+    }
+    if (invalid) {
+      this.validChannels()
+    }
+    return channels
+  }
+
+  // this shall never run
+  validChannels() {
+    var validChannels = this.channels.filter(channel => {
+      console.log(channel)
+      return channel && channel.domain && channel.id !== undefined && channel.id !== null
+    })
+    console.error(validChannels, this.channels)
+    this.channels = validChannels
+  }
+
+  totalOnline() {
+    var online = 0
+    for (let channel of this.channels) {
       if (channel.online) {
-        this.online += 1
+        online += 1
       }
     }
-    this.setBadge()
-    callback && callback()
+    this.online = online
   }
 
-  setBadge(callback) {
-    var that = this
-    chrome.browserAction.setBadgeText({
-      text: that.online.toString()
-    })
-    callback && callback()
-  }
-
-  isExciting(url, callback) {
-    var naive = false
-    var id = this.filter('id', url)
-    if (id) {
-      var channels = this.channels
-      var length = channels.length
-      var channel
-      for (var i = 0; i < length; i++) {
-        channel = channels[i]
-        // 此处id为String，但是channel.id是Number，不能用===
-        if (channel.id == id || channel.alterId == id) {
-          naive = true
+  updateTitle() {
+    var title = ''
+    for (let channel of this.channels) {
+      if (channel.online) {
+        if (channel.nickname !== undefined) {
+          title += ' '
+          title += channel.nickname
+        } else {
+          title += ' '
+          title += channel.name
         }
       }
-    } else {
-      naive = 'none'
     }
-    callback && callback(naive)
-  }
-
-  toggleExciting(url, callback) {
-    var id = this.filter("id", url)
-    var naive = this.channels.find((channel) => channel.id == id || channel.alterId == id)
-    if (naive) {
-      this.deleteChannel(naive, callback.complete)
-    } else {
-      this.addChannel(url, callback)
-    }
+    this.title = title
   }
 }

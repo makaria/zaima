@@ -1,5 +1,9 @@
 {
-  "options_page": "html/options.html",
+  // "options_page": "html/options.html",
+  "options_ui": {
+    "page": "html/options.html",
+    "chrome_style": true
+  },
 
   "browser_action": {
     "default_title": "__MSG_browser_action_default_title__",
@@ -16,14 +20,20 @@
   "permissions": [
     "tabs",
     "storage",
-    "http://*.douyu.com/*",
-    "http://*.douyucdn.cn/*",
-    "http://*.bilibili.com/*"
+    "alarms",
+    "bookmarks",
+    "*://*.douyu.com/*",
+    "*://*.douyucdn.cn/*",
+    "*://*.bilibili.com/*",
+    "*://*.panda.tv/*",
+    // "*://*.zhanqi.tv/*",
+    "*://*.quanmin.tv/*"
   ],
 
   "background": {
     "scripts": [
-      "js/libs/jquery-3.1.1.min.js",
+      "js/api.js",
+      "js/bookmarkHandler.js",
       "js/queueHandler.js",
       "js/chromeHandler.js",
       "js/channelHandler.js",
@@ -35,7 +45,8 @@
 
   "manifest_version": 2,
   "name": "LiveTV",
-  "description": "查看主播是否在线",
-  "default_locale": "zh_CN",
-  "version": "0.1.1"
+  "description": "定时查询主播是否在线,目前支持bilibili, douyu, panda, quanmin",
+  // "update_url": "http://clients2.google.com/service/update2/crx",
+  "version": "1.0.0",
+  "default_locale": "zh_CN"
 }
