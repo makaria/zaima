@@ -48,6 +48,5 @@
   "description": "定时查询主播是否在线,目前支持bilibili, douyu, panda, quanmin",
   // "update_url": "http://clients2.google.com/service/update2/crx",
   "version": "1.0.0",
-  "default_locale": "zh_CN",
-  "version": "0.1.1"
+  "default_locale": "zh_CN"
 }
