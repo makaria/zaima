@@ -22,14 +22,15 @@ td {
     overflow: hidden;
 }
 
-td:hover {
+/*td:hover {
     overflow: visible;
     white-space: normal;
     word-wrap: break-word;
-}
+}*/
 
 .status {
     text-align: center;
+    cursor: pointer;
 }
 
 .nickname {
@@ -48,12 +49,29 @@ td:hover {
     display: none;
 }
 
+.button {
+    border: 0;
+    color: white;
+    text-align: center;
+    box-shadow: none;
+}
+
+.delete {
+    height: 1.75rem;
+    cursor: pointer;
+    background: #f44336;
+}
+
 .move {
+    height: 1.75rem;
     cursor: move;
+    background: #0f88eb;
 }
 
 .insert {
+    height: 1.75rem;
     cursor: copy;
+    background: #0f88eb;
 }
 
 .bookmark {
@@ -64,7 +82,11 @@ td:hover {
 
 .bookmark button {
     flex: auto;
-    height: 2rem;
+    height: 2.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    background: #0f88eb;
+    margin: .2rem;
 }
 
 .list {
@@ -286,12 +308,4 @@ input::-webkit-inner-spin-button{
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     flex-direction: row;
-}
-
-button {
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
 }

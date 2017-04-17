@@ -162,7 +162,7 @@ function getChannel(room, callback) {
 
 //callback for schedule update
 function scheduleCallback(channel) {
-  console.log('schedule update callback', channel)
+  console.log('schedule update callback')
   if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
     // channel may exists and not changed(schedule update), or not(start update)
     myChannel.addChannel(channel)
@@ -239,6 +239,13 @@ function scheduleUpdate(callback) {
     console.log('Lasest Update at: ' + new Date(myChannel.timestamp))
     // callback && callback('Updated')
   }
+  // check onAlarm has eventListener
+  myChrome.hasListeners(function(data){
+    if (!data) {
+      console.error('alarm has no event listener')
+      myChrome.onAlarm(onAlarm)
+    }
+  })
 }
 
 // clear invalid channel, why those channels exist?
@@ -336,6 +343,7 @@ function mergeChannel(array) {
     }
   }
   if (expire) {
+    console.log('schedule update from sync changed', array)
     startUpdate(scheduleCallback)
   }
 }
@@ -345,7 +353,7 @@ function onChanged(changes, namespace) {
   for (let key in changes) {
     var storageChange = changes[key]
     console.log('Storage key "%s" in namespace "%s" changed. ', key, namespace)
-    console.log('Old value was: ', storageChange.oldValue, 'new value is: ', storageChange.newValue)
+    // console.log('Old value was: ', storageChange.oldValue, 'new value is: ', storageChange.newValue)
   }
   if (namespace == 'sync') {
     for (let key in changes) {
@@ -410,6 +418,7 @@ function onAlarm(alarm) {
   if (alarm && alarm.name == 'watchdog') {
     onWatchdog()
   } else {
+    console.log('schedule update from alarm', alarm)
     scheduleUpdate(scheduleCallback)
     // console.error('Unknown alarm', alarm)
     // if (alarm.name) {
@@ -447,9 +456,9 @@ function onInstalled() {
   // myChrome.onAlarm(onAlarm)
 }
 //"only doing so at runtime.onInstalled by itself is insufficient."
-
 myChrome.onStartup(onStart)
 myChrome.onChanged(onChanged)
 // todo: onInstall?
 myChrome.onInstalled(onInstalled)
+// maybe shall check if event
 myChrome.onAlarm(onAlarm)

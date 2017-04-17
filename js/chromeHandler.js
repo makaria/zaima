@@ -88,7 +88,13 @@ class ChromeHandler {
   }
 
   onAlarm(callback) {
+    console.log('on alarm')
     chrome.alarms.onAlarm.addListener(callback)
+  }
+
+  // hasListener always return false?
+  hasListeners(callback) {
+    chrome.alarms.onAlarm.hasListeners(callback)
   }
 
   //i18n

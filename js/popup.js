@@ -169,7 +169,7 @@ chrome.runtime.getBackgroundPage((bg) => {
     if (bg.myChannel.hidename) {
       name = ' ' + nickname
     } else {
-      name = nickname + ' ' + channel.name
+      name = ' ' + nickname + ' ' + channel.name
     }
     if (bg.myChannel.hidetitle) {
       title = ''

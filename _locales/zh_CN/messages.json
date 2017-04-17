@@ -15,7 +15,7 @@
     "message": "在播"
   },
   "offline": {
-    "message": "在摸"
+    "message": "不在"
   },
   "invalid_url": {
     "message": "非法地址"
