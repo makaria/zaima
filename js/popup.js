@@ -251,9 +251,8 @@ chrome.runtime.getBackgroundPage((bg) => {
   function isExpire() {
     bg.scheduleUpdate(function(channel) {
       if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
-        var expire = Date.now() - channel.timestamp > bg.myChannel.recent || bg.myChannel.recent == 0
-        if (channel.timeout || !expire) {
-          console.log('channel not changed', channel)
+        if (channel.timeout) {
+          console.log('Timeout when get channel info', channel)
         } else {
           bg.myChannel.addChannel(channel)
           bg.updateIcon()
@@ -269,9 +268,9 @@ chrome.runtime.getBackgroundPage((bg) => {
 
   function start() {
     translate()
-    showChannels()
-    isChannel()
     openOptions()
+    isChannel()
+    showChannels()
     isExpire()
   }
   // start

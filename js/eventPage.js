@@ -168,11 +168,9 @@ function scheduleCallback(channel) {
     // channel may exists and not changed(schedule update), or not(start update)
     myChannel.addChannel(channel)
     // if channel doesn't change
-    var expire = Date.now() - channel.timestamp > myChannel.recent || myChannel.recent == 0
-    if (channel.timeout || !expire) {
-      console.log('channel info not changed', channel)
+    if (channel.timeout) {
+      console.log('Timeout when get channel info', channel)
       // when reload extension, need to run this
-      updateIcon()
     } else {
       updateIcon()
       // saveChannel(channel)
