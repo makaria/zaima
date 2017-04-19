@@ -18,5 +18,9 @@
     "gulp-eslint": "^3.0.1",
     "gulp-htmllint": "^0.0.11",
     "gulp-util": "^3.0.7"
+  },
+  "scripts": {
+    "start": "npm run lint",
+    "lint": "gulp lint"
   }
 }
