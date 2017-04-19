@@ -211,6 +211,7 @@ chrome.runtime.getBackgroundPage((bg) => {
       var fragment = document.createDocumentFragment()
       var template = document.getElementsByClassName('channel_template')[0]
       var timeout = false
+      var online = false
       template.classList.add('none')
       // online frag
       var first = document.createDocumentFragment()
@@ -224,6 +225,7 @@ chrome.runtime.getBackgroundPage((bg) => {
       }
       for (let channel of bg.myChannel.channels) {
         if (channel.online) {
+          online = true
           addDom(channel, template, first)
         } else if (channel.timeout) {
           timeout = true
@@ -232,7 +234,7 @@ chrome.runtime.getBackgroundPage((bg) => {
           addDom(channel, template, second)
         }
       }
-      if (bg.myChannel.online > 0) {
+      if (online) {
         fragment.appendChild(first)
       }
       fragment.appendChild(second)

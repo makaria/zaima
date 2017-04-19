@@ -261,9 +261,6 @@ function start() {
         } else {
           console.log('invalid channel', channel)
         }
-        bg.myChannel.addChannel(channel)
-        bg.updateIcon()
-        bg.myChrome.setLocal(bg.myChannel.exportChannel(channel))
       })
     }
 
