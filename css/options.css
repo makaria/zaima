@@ -89,6 +89,11 @@ td {
     margin: .2rem;
 }
 
+button:disabled {
+    cursor: not-allowed;
+    /*background: #0f88eb;*/
+}
+
 .list {
     text-align: left;
     border: 1px solid #e0e0e0;

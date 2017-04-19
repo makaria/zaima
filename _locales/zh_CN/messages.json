@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "在么"
+    "message": "在吗"
   },
   "extDesc": {
     "message": "LiveTV 定时查询关注的主播在线状态"
   },
   "ext_default_title": {
-    "message": "在么"
+    "message": "在吗"
   },
   "timeout": {
     "message": "超时"
@@ -38,8 +38,20 @@
   "options_manage": {
     "message": "房间列表"
   },
-  "options_status": {
+  "head_status": {
     "message": "状态"
+  },
+  "head_nickname": {
+    "message": "昵称"
+  },
+  "head_url": {
+    "message": "网址"
+  },
+  "head_actions": {
+    "message": "管理"
+  },
+  "options_status": {
+    "message": "未知"
   },
   "options_nickname": {
     "message": "昵称"
@@ -53,9 +65,9 @@
   "options_url_placeholder": {
     "message": "请输入一条新网址"
   },
-  "options_actions": {
-    "message": "管理"
-  },
+  // "options_actions": {
+  //   "message": "管理"
+  // },
   "options_delete": {
     "message": "删除"
   },

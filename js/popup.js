@@ -2,7 +2,7 @@ chrome.runtime.getBackgroundPage((bg) => {
   console.log("popup")
   // add left click support for open a new tab
   function openChannel(el, channel) {
-    console.log('add click for channel', channel)
+    // console.log('add click for channel', channel)
     el.onclick = function (e) {
       e.preventDefault()
       e.stopPropagation()
@@ -22,7 +22,7 @@ chrome.runtime.getBackgroundPage((bg) => {
 
   // add click function for subscribe/unsubscribe
   function toggleSubscribe(el, channel) {
-    console.log('add click for subcribe button', channel)
+    // console.log('add click for subcribe button', channel)
     el.onclick = function(e) {
       e.preventDefault()
       e.stopPropagation()
@@ -69,7 +69,7 @@ chrome.runtime.getBackgroundPage((bg) => {
 
   // when toggle subscribe, remove channel element
   function removeDom(channel) {
-    console.log('remove dom', channel)
+    // console.log('remove dom', channel)
     var el = document.getElementById(channel.domain+channel.id)
     el.remove()
     if (bg.myChannel.channels.length == 0) {
@@ -79,7 +79,7 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   function addDom(channel, template, fragment) {
-    console.log('add dom', channel)
+    // console.log('add dom', channel)
     // var el = template.cloneNode(true)
     // el.classList.remove('channel_template', 'none')
     var el = createDom(channel, template)
@@ -100,7 +100,7 @@ chrome.runtime.getBackgroundPage((bg) => {
 
   // dom is created everytime when pupup.html popup
   function createDom(channel, template) {
-    console.log('create dom', channel)
+    // console.log('create dom', channel)
     if (!template) {
       template = document.getElementsByClassName('channel_template')[0]
     }
@@ -130,7 +130,7 @@ chrome.runtime.getBackgroundPage((bg) => {
 
   // update dom after schedule update
   function updateDom(channel) {
-    console.log('update dom', channel)
+    // console.log('update dom', channel)
     if (channel.timestamp)
     var id = channel.domain + channel.id
     var el = document.getElementById(id)
@@ -157,7 +157,7 @@ chrome.runtime.getBackgroundPage((bg) => {
 
   // change online && title
   function updateEle(el, channel) {
-    console.log('update el', el, channel)
+    // console.log('update el', el, channel)
     var a = el.getElementsByClassName("detail")[0]
     var small = el.getElementsByClassName("small")[0]
     var online, name, title, nickname
@@ -205,8 +205,8 @@ chrome.runtime.getBackgroundPage((bg) => {
     small.innerText = bg.myChrome.getMessage('last_online')
   }
 
-  function start() {
-    console.log('start')
+  function showChannels() {
+    console.log('show channels')
     if (bg.myChannel.channels.length > 0) {
       var fragment = document.createDocumentFragment()
       var template = document.getElementsByClassName('channel_template')[0]
@@ -222,16 +222,6 @@ chrome.runtime.getBackgroundPage((bg) => {
       } else {
         var second = first
       }
-      // bg.myChannel.channels.forEach(channel => {
-      //   if (channel.online) {
-      //     addDom(channel, template, first)
-      //   } else if (channel.timeout) {
-      //     timeout = true
-      //     addDom(channel, template, third)
-      //   } else {
-      //     addDom(channel, template, second)
-      //   }
-      // })
       for (let channel of bg.myChannel.channels) {
         if (channel.online) {
           addDom(channel, template, first)
@@ -255,30 +245,37 @@ chrome.runtime.getBackgroundPage((bg) => {
       console.log('No channel', bg.myChannel.channels)
     }
   }
+
+  function isExpire() {
+    bg.scheduleUpdate(function(channel) {
+      if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
+        var expire = Date.now() - channel.timestamp > bg.myChannel.recent || bg.myChannel.recent == 0
+        if (channel.timeout || !expire) {
+          console.log('channel not changed', channel)
+        } else {
+          bg.myChannel.addChannel(channel)
+          bg.updateIcon()
+          bg.myChrome.setLocal(bg.myChannel.exportChannel(channel))
+          // bg.saveChannel(channel)
+          updateDom(channel)
+        }
+      } else {
+        console.error("popup update error", channel)
+      }
+    })
+  }
+
+  function start() {
+    translate()
+    showChannels()
+    isChannel()
+    openOptions()
+    isExpire()
+  }
   // start
   // create dom use bg.myChannel.channels
-  // channel num will not change after popup except click subcribe button
   // todo: first display popup.html then add channel item one by one
-  isChannel()
+  console.time('start')
   start()
-  openOptions()
-  translate()
-  // // bg.scheduleUpdate(bg.scheduleCallback)
-  // // if set bg.myChannel.recent=0, update all whenever popup.
-  bg.scheduleUpdate(function(channel) {
-    if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
-      var recent = Date.now() - channel.timestamp > bg.myChannel.recent && bg.myChannel.recent != 0
-      if (channel.timeout || recent) {
-        console.log('channel not changed', channel)
-      } else {
-        bg.myChannel.addChannel(channel)
-        bg.updateIcon()
-        bg.myChrome.setLocal(bg.myChannel.exportChannel(channel))
-        // bg.saveChannel(channel)
-        updateDom(channel)
-      }
-    } else {
-      console.error("popup update error", channel)
-    }
-  })
+  console.timeEnd('start')
 })

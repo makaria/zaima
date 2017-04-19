@@ -75,10 +75,14 @@ function changeInterval(e) {
 function translate() {
   var names = [
     "options_manage",
+    "head_status",
+    "head_nickname",
+    "head_url",
+    "head_actions",
     "options_status",
     "options_nickname",
     "options_url",
-    "options_actions",
+    // "options_actions",
     "options_delete",
     "options_insert",
     "options_move",
@@ -105,13 +109,13 @@ function translate() {
     var template = document.getElementsByClassName('channel_template')[0]
     var input_nickname = template.getElementsByClassName('nickname')[0]
     var input_url = template.getElementsByClassName('url')[0]
-    input_nickname.innerText = bg.myChrome.getMessage("options_nickname_placeholder")
-    input_url.innerText = bg.myChrome.getMessage("options_url_placeholder")
+    input_nickname.placeholder = bg.myChrome.getMessage("options_nickname_placeholder")
+    input_url.placeholder = bg.myChrome.getMessage("options_url_placeholder")
   })
 }
 
-function showChannels() {
-  console.log('show channels start')
+function start() {
+  console.log('start')
   chrome.runtime.getBackgroundPage(bg => {
     console.log('get bg done!')
     //
@@ -244,23 +248,26 @@ function showChannels() {
       }
     }
 
-    function start() {
-      if (bg.myChannel.channels.length > 0) {
-        var fragment = document.createDocumentFragment()
-        var template = document.getElementsByClassName('channel_template')[0]
-        template.classList.add('none')
-        bg.myChannel.channels.forEach(channel => {
+    function showChannels() {
+      console.log('show channels start')
+      var parentNode = document.getElementById('channels_list')
+      var template = document.getElementsByClassName('channel_template')[0]
+      bg.scheduleUpdate(function(channel) {
+        if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
+          template.classList.add('none')
           var el = createDom(template)
           updateDom(el, channel)
-          fragment.appendChild(el)
-        })
-        document.getElementById('channels_list').appendChild(fragment)
-      } else {
-        console.log("No channels", bg.myChannel.channels)
-      }
+          parentNode.appendChild(el)
+        } else {
+          console.log('invalid channel', channel)
+        }
+        bg.myChannel.addChannel(channel)
+        bg.updateIcon()
+        bg.myChrome.setLocal(bg.myChannel.exportChannel(channel))
+      })
     }
 
-    start()
+    showChannels()
     // use fragment?
     document.querySelector('.import').addEventListener('click', function() {
       // confirm('This will import avaliable channels from your bookmarks', function() {
@@ -295,7 +302,7 @@ function showChannels() {
 function onInit() {
   translate()
   restore_options()
-  showChannels()
+  start()
 }
 
 document.addEventListener('DOMContentLoaded', onInit)

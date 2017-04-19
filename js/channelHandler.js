@@ -27,6 +27,7 @@ class ChannelHandler {
     this.onlinefirst = true
     this.hidename = false
     this.hidetitle = false
+    this.restored = false
   }
 
   // too many "if"!

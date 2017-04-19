@@ -6,6 +6,7 @@ var myBookmark = new BookmarkHandler()
 
 
 // todo: use local replace unnecessary chrome.storage.sync
+// todo: myChannel will be reset after background page is inactive for a few time.
 
 // bookmark function
 // bookmark convert to channel && channel convert to bookmark
@@ -167,8 +168,8 @@ function scheduleCallback(channel) {
     // channel may exists and not changed(schedule update), or not(start update)
     myChannel.addChannel(channel)
     // if channel doesn't change
-    var recent = Date.now() - channel.timestamp > myChannel.recent && myChannel.recent != 0
-    if (channel.timeout || recent) {
+    var expire = Date.now() - channel.timestamp > myChannel.recent || myChannel.recent == 0
+    if (channel.timeout || !expire) {
       console.log('channel info not changed', channel)
     } else {
       updateIcon()
@@ -237,6 +238,9 @@ function scheduleUpdate(callback) {
     }
   } else { // only trig when click browserAction
     console.log('Lasest Update at: ' + new Date(myChannel.timestamp))
+    myChannel.channels.forEach(channel => {
+      callback(channel)
+    })
     // callback && callback('Updated')
   }
   // check onAlarm has eventListener
@@ -301,6 +305,7 @@ function startUpdate(callback) {
 
 function restoreOptions() {
   console.log('restore options')
+  if (myChannel.restored)  return
   myChrome.getSync({
     'onlinefirst': true,
     'newtab': true,
@@ -318,6 +323,7 @@ function restoreOptions() {
     if (options.interval && myChannel.interval != options.interval) {
       myChannel.interval = options.interval
     }
+    myChannel.restored = true
     // myChrome.createAlarm('watchdog', {periodInMinutes: ~~myChannel.interval})
   })
 }
@@ -344,6 +350,7 @@ function mergeChannel(array) {
   }
   if (expire) {
     console.log('schedule update from sync changed', array)
+    restoreOptions()
     startUpdate(scheduleCallback)
   }
 }
@@ -386,18 +393,6 @@ function onChanged(changes, namespace) {
         changeAlarm(storageChange.newValue)
       } else {
         console.log(key, storageChange)
-        // 如果有新的channel, channels一定会触发.单独更新channel既无必要也是错误的
-        // var room = {
-        //   domain: key.split('-')[0],
-        //   id: key.split('-')[1]
-        // }
-        // getChannel(room, function(data) {
-        //   updateChannel(room, data, function(channel) {
-        //     if (channel && !channel.timeout) {
-        //       myChannel.addChannel(storageChange.newValue)
-        //     }
-        //   })
-        // })
       }
     }
   }
@@ -419,11 +414,8 @@ function onAlarm(alarm) {
     onWatchdog()
   } else {
     console.log('schedule update from alarm', alarm)
+    restoreOptions()
     scheduleUpdate(scheduleCallback)
-    // console.error('Unknown alarm', alarm)
-    // if (alarm.name) {
-    //   myChrome.removeAlarm(alarm.name)
-    // }
   }
 }
 
@@ -433,7 +425,8 @@ function onWatchdog() {
       console.log('Refresh alarm exists. Yay.');
     } else {
       console.log('Refresh alarm doesn\'t exist!? ' +
-                  'Refreshing now and rescheduling.');
+                  'Refreshing now and rescheduling.')
+      restoreOptions()
       scheduleUpdate(scheduleCallback)
     }
   })
@@ -460,5 +453,4 @@ myChrome.onStartup(onStart)
 myChrome.onChanged(onChanged)
 // todo: onInstall?
 myChrome.onInstalled(onInstalled)
-// maybe shall check if event
 myChrome.onAlarm(onAlarm)

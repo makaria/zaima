@@ -38,8 +38,20 @@
   "options_manage": {
     "message": "Manage Channels"
   },
-  "options_status": {
+  "head_status": {
     "message": "Status"
+  },
+  "head_nickname": {
+    "message": "Nickname"
+  },
+  "head_url": {
+    "message": "Url"
+  },
+  "head_actions": {
+    "message": "Actions"
+  },
+  "options_status": {
+    "message": "Unknown"
   },
   "options_nickname": {
     "message": "Nickname"
@@ -53,9 +65,9 @@
   "options_url_placeholder": {
     "message": "Type a url"
   },
-  "options_actions": {
-    "message": "Actions"
-  },
+  // "options_actions": {
+  //   "message": "Actions"
+  // },
   "options_delete": {
     "message": "Delete"
   },
