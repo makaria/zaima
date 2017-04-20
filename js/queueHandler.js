@@ -1,10 +1,10 @@
 // xhr request
 class QueueHandler {
-  constructor() {
+  constructor () {
     this.timeout = 5000 // 请求超时，单位为毫秒
   }
 
-  fetchOne(url, callback) {
+  fetchOne (url, callback) {
     this.timeoutPromise(this.timeout, fetch(url))
     .then(req => req.json()) // 返回数据目前仅限是json。如果不是则不是合法的直播间。
     .then(json => callback(json))
@@ -15,10 +15,10 @@ class QueueHandler {
   }
 
   // todo: timeout shall be catch & callback('timeout')
-  timeoutPromise(ms, promise) {
-    return new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        reject(new Error("timeout"))
+  timeoutPromise (ms, promise) {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        reject(new Error('timeout'))
       }, ms)
       promise.then(resolve, reject)
     })

@@ -1,6 +1,6 @@
-//各直播网站的json网址
+// 各直播网站的json网址
 class Rooms {
-  constructor() {
+  constructor () {
     this.bilibili = {
       // 目前似乎没有slug
       api: 'https://live.bilibili.com/live/getInfo?roomid=ROOMID',
@@ -84,10 +84,10 @@ class Rooms {
     //   }
     // },
     this.quanmin = {
-      //ROOMID可以为房间别名
+      // ROOMID可以为房间别名
       api: 'http://www.quanmin.tv/json/rooms/ROOMID/noinfo4.json',
-      //数字id和别名的网址不一样。
-      url: 'http://www.quanmin.tv/:id', //'http://www.quanmin.tv/v/:slug'
+      // 数字id和别名的网址不一样。
+      url: 'http://www.quanmin.tv/:id', // 'http://www.quanmin.tv/v/:slug'
       domain: 'quanmin',
       keys: {
         name: 'nick',

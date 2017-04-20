@@ -1,7 +1,7 @@
 chrome.runtime.getBackgroundPage((bg) => {
-  console.log("popup")
+  console.log('popup')
   // add left click support for open a new tab
-  function openChannel(el, channel) {
+  function openChannel (el, channel) {
     // console.log('add click for channel', channel)
     el.onclick = function (e) {
       e.preventDefault()
@@ -21,20 +21,20 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   // add click function for subscribe/unsubscribe
-  function toggleSubscribe(el, channel) {
+  function toggleSubscribe (el, channel) {
     // console.log('add click for subcribe button', channel)
-    el.onclick = function(e) {
+    el.onclick = function (e) {
       e.preventDefault()
       e.stopPropagation()
       var index = bg.myChannel.getIndex(channel)
       if (index !== -1) { // remove a channel
         el.innerText = bg.myChrome.getMessage('subscribe')
-        el.classList.remove("subscribed")
+        el.classList.remove('subscribed')
         bg.deleteChannel(channel)
         removeDom(channel)
       } else { // add a channel
         el.innerText = bg.myChrome.getMessage('subscribed')
-        el.classList.add("subscribed")
+        el.classList.add('subscribed')
         bg.addChannel(channel)
         addDom(channel)
       }
@@ -42,13 +42,13 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   // add a toggle subscribe button for avaliabe channel
-  function isChannel() {
+  function isChannel () {
     console.log('is channel start')
     var button = document.getElementById('subscribe')
-    bg.myChrome.getSelected(function(tab) {
+    bg.myChrome.getSelected(function (tab) {
       var room = bg.myChannel.getDomainAndId(tab.url)
-      bg.getChannel(room, function(data) {
-        bg.updateChannel(room, data, function(channel) {
+      bg.getChannel(room, function (data) {
+        bg.updateChannel(room, data, function (channel) {
           console.log('got channel data', channel)
           if (!channel || channel.timout) {
             button.classList.add('none')
@@ -56,10 +56,9 @@ chrome.runtime.getBackgroundPage((bg) => {
             var index = bg.myChannel.getIndex(channel)
             if (index !== -1) {
               button.innerText = bg.myChrome.getMessage('subscribed')
-              button.classList.add("subscribed")
-            } else
-              button.innerText = bg.myChrome.getMessage('subscribe')
-              button.classList.remove("subscribed")
+              button.classList.add('subscribed')
+            } else { button.innerText = bg.myChrome.getMessage('subscribe') }
+            button.classList.remove('subscribed')
             toggleSubscribe(button, channel)
           }
         })
@@ -68,9 +67,9 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   // when toggle subscribe, remove channel element
-  function removeDom(channel) {
+  function removeDom (channel) {
     // console.log('remove dom', channel)
-    var el = document.getElementById(channel.domain+channel.id)
+    var el = document.getElementById(channel.domain + channel.id)
     el.remove()
     if (bg.myChannel.channels.length == 0) {
       var template = document.getElementsByClassName('channel_template')[0]
@@ -78,7 +77,7 @@ chrome.runtime.getBackgroundPage((bg) => {
     }
   }
 
-  function addDom(channel, template, fragment) {
+  function addDom (channel, template, fragment) {
     // console.log('add dom', channel)
     // var el = template.cloneNode(true)
     // el.classList.remove('channel_template', 'none')
@@ -99,7 +98,7 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   // dom is created everytime when pupup.html popup
-  function createDom(channel, template) {
+  function createDom (channel, template) {
     // console.log('create dom', channel)
     if (!template) {
       template = document.getElementsByClassName('channel_template')[0]
@@ -115,29 +114,28 @@ chrome.runtime.getBackgroundPage((bg) => {
     return el
   }
 
-  function openOptions() {
-    document.querySelector(".options").innerText = bg.myChrome.getMessage('options')
-    document.querySelector('.options').addEventListener('click', function() {
+  function openOptions () {
+    document.querySelector('.options').innerText = bg.myChrome.getMessage('options')
+    document.querySelector('.options').addEventListener('click', function () {
       if (chrome.runtime.openOptionsPage) {
         // New way to open options pages, if supported (Chrome 42+).
-        chrome.runtime.openOptionsPage();
+        chrome.runtime.openOptionsPage()
       } else {
         // Reasonable fallback.
-        window.open(chrome.runtime.getURL('options.html'));
+        window.open(chrome.runtime.getURL('options.html'))
       }
     })
   }
 
   // update dom after schedule update
-  function updateDom(channel) {
+  function updateDom (channel) {
     // console.log('update dom', channel)
-    if (channel.timestamp)
-    var id = channel.domain + channel.id
+    if (channel.timestamp) { var id = channel.domain + channel.id }
     var el = document.getElementById(id)
     if (el) {
       if (bg.myChannel.onlinefirst) {
         var parentNode = document.getElementById('channels_list')
-        var a = el.getElementsByClassName("detail")[0]
+        var a = el.getElementsByClassName('detail')[0]
         if (a.classList.contains('offline') && channel.online) {
           // move online channel to the top
           var refNode = parentNode.getElementsByClassName('channel_template')[0]
@@ -146,7 +144,7 @@ chrome.runtime.getBackgroundPage((bg) => {
           // move offline channel to the bottom
           parentNode.appendChild(el)
         } else {
-          console.log("channel status not changed", channel)
+          console.log('channel status not changed', channel)
         }
       }
       updateEle(el, channel)
@@ -156,10 +154,10 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   // change online && title
-  function updateEle(el, channel) {
+  function updateEle (el, channel) {
     // console.log('update el', el, channel)
-    var a = el.getElementsByClassName("detail")[0]
-    var small = el.getElementsByClassName("small")[0]
+    var a = el.getElementsByClassName('detail')[0]
+    var small = el.getElementsByClassName('small')[0]
     var online, name, title, nickname
     if (channel.nickname !== undefined) {
       nickname = channel.nickname
@@ -197,15 +195,15 @@ chrome.runtime.getBackgroundPage((bg) => {
     }
   }
 
-  function translate() {
+  function translate () {
     var template = document.getElementsByClassName('channel_template')[0]
-    var a = template.getElementsByClassName("detail")[0]
-    var small = template.getElementsByClassName("small")[0]
+    var a = template.getElementsByClassName('detail')[0]
+    var small = template.getElementsByClassName('small')[0]
     a.innerText = bg.myChrome.getMessage('no_channels')
     small.innerText = bg.myChrome.getMessage('last_online')
   }
 
-  function showChannels() {
+  function showChannels () {
     console.log('show channels')
     if (bg.myChannel.channels.length > 0) {
       var fragment = document.createDocumentFragment()
@@ -248,8 +246,8 @@ chrome.runtime.getBackgroundPage((bg) => {
     }
   }
 
-  function isExpire() {
-    bg.scheduleUpdate(function(channel) {
+  function isExpire () {
+    bg.scheduleUpdate(function (channel) {
       if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
         if (channel.timeout) {
           console.log('Timeout when get channel info', channel)
@@ -261,12 +259,12 @@ chrome.runtime.getBackgroundPage((bg) => {
           updateDom(channel)
         }
       } else {
-        console.error("popup update error", channel)
+        console.error('popup update error', channel)
       }
     })
   }
 
-  function start() {
+  function start () {
     translate()
     openOptions()
     isChannel()
