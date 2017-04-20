@@ -1,3 +1,5 @@
+'use strict'
+
 // xhr request
 class QueueHandler {
   constructor () {
@@ -36,3 +38,5 @@ class QueueHandler {
   //   })
   // }
 }
+
+window.a = 1

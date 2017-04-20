@@ -1,7 +1,7 @@
+'use strict'
+
 // just show chrome api used in this extension, maybe delete in future.
 class ChromeHandler {
-  constructor () {}
-
   // storage
   setLocal (obj, callback) {
     chrome.storage.local.set(obj, callback)

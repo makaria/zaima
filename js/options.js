@@ -1,5 +1,7 @@
+'use strict'
+
 // stored in chrome.storage.
-function restore_options () {
+function restoreOptions () {
   chrome.storage.sync.get({
     'onlinefirst': true,
     'newtab': true,
@@ -47,10 +49,9 @@ function hideTitle (e) {
 
 function changeRecent (e) {
   console.log(e)
-  if (e.target.checked) {
-    var recent = 0
-  } else {
-    var recent = 1000 * 60 * 5
+  let recent = 0
+  if (!e.target.checked) {
+    recent = 1000 * 60 * 5
   }
   chrome.storage.sync.set({'recent': recent}, function (data) {
     console.log('recent change', data)
@@ -60,10 +61,11 @@ function changeRecent (e) {
 // without a save button, onchange will trigger too much. so add a save button for only this option?
 function changeInterval (e) {
   console.log(e)
+  let value
   if (!e) {
-    var value = document.querySelector('.interval').value
+    value = document.querySelector('.interval').value
   } else {
-    var value = e.target.value
+    value = e.target.value
   }
   chrome.storage.sync.set({'interval': ~~value}, function (data) {
     console.log('interval change', data)
@@ -106,10 +108,10 @@ function translate () {
       document.querySelector(classname).innerText = bg.myChrome.getMessage(name)
     })
     var template = document.getElementsByClassName('channel_template')[0]
-    var input_nickname = template.getElementsByClassName('nickname')[0]
-    var input_url = template.getElementsByClassName('url')[0]
-    input_nickname.placeholder = bg.myChrome.getMessage('options_nickname_placeholder')
-    input_url.placeholder = bg.myChrome.getMessage('options_url_placeholder')
+    var inputNickname = template.getElementsByClassName('nickname')[0]
+    var inputUrl = template.getElementsByClassName('url')[0]
+    inputNickname.placeholder = bg.myChrome.getMessage('options_nickname_placeholder')
+    inputUrl.placeholder = bg.myChrome.getMessage('options_url_placeholder')
   })
 }
 
@@ -296,7 +298,7 @@ function start () {
 
 function onInit () {
   translate()
-  restore_options()
+  restoreOptions()
   start()
 }
 

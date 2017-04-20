@@ -1,3 +1,5 @@
+'use strict'
+
 chrome.runtime.getBackgroundPage((bg) => {
   console.log('popup')
   // add left click support for open a new tab
@@ -71,7 +73,7 @@ chrome.runtime.getBackgroundPage((bg) => {
     // console.log('remove dom', channel)
     var el = document.getElementById(channel.domain + channel.id)
     el.remove()
-    if (bg.myChannel.channels.length == 0) {
+    if (bg.myChannel.channels.length === 0) {
       var template = document.getElementsByClassName('channel_template')[0]
       template.classList.remove('none')
     }
@@ -216,10 +218,11 @@ chrome.runtime.getBackgroundPage((bg) => {
       // timeout frag
       var third = document.createDocumentFragment()
       // offline frag
+      let second
       if (bg.myChannel.onlinefirst) {
-        var second = document.createDocumentFragment()
+        second = document.createDocumentFragment()
       } else {
-        var second = first
+        second = first
       }
       for (let channel of bg.myChannel.channels) {
         if (channel.online) {

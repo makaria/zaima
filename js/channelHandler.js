@@ -1,3 +1,5 @@
+'use strict'
+
 // channels, 异步操作移至eventPage
 class ChannelHandler {
   constructor () {
@@ -65,9 +67,9 @@ class ChannelHandler {
       return value
     } else if (typeof key === 'string') {
       return this.getByDot(obj, key.split('.'), value)
-    } else if (key.length == 1) {
+    } else if (key.length === 1) {
       return obj[key[0]]
-    } else if (key.length == 0) {
+    } else if (key.length === 0) {
       return value
     } else {
       return this.getByDot(obj[key[0]], key.slice(1), value)
@@ -81,7 +83,7 @@ class ChannelHandler {
     }
     var online = false
     // 没有用===，是为了 "1"==1
-    if (this.getByDot(data, channel.keys.online.key) == channel.keys.online.on) {
+    if (this.getByDot(data, channel.keys.online.key) === channel.keys.online.on) {
       online = true
     }
     return {
@@ -103,7 +105,7 @@ class ChannelHandler {
   }
 
   isExists (one, two) {
-    return one.domain == two.domain && one.id == two.id
+    return one.domain === two.domain && one.id === two.id
   }
 
   getIndex (channel) {
@@ -114,9 +116,9 @@ class ChannelHandler {
     if (index !== undefined && index !== null) {
       this.channels.splice(index, 0, channel)
     } else {
-      var index = this.getIndex(channel)
-      if (index !== -1) {
-        this.channels[index] = channel
+      const newIndex = this.getIndex(channel)
+      if (newIndex !== -1) {
+        this.channels[newIndex] = channel
       } else {
         this.channels.push(channel)
       }
@@ -134,15 +136,15 @@ class ChannelHandler {
 
   // 保存一个channel数据，key为domain+id，value即生成的channel对象
   exportChannel (channel) {
-    var channel_id = channel.domain + '-' + channel.id
+    var channelID = channel.domain + '-' + channel.id
     var size = JSON.stringify(channel).length // 小于8192
     var obj = {}
     // item's key+value.length must < 8192 for storage.sync
-    if ((size + channel_id.length) < 8100) {
-      obj[channel_id] = channel
+    if ((size + channelID.length) < 8100) {
+      obj[channelID] = channel
     } else {
-      obj[channel_id] = JSON.parse(JSON.stringify(channel))
-      obj[channel_id].data = null
+      obj[channelID] = JSON.parse(JSON.stringify(channel))
+      obj[channelID].data = null
     }
     return obj
   }

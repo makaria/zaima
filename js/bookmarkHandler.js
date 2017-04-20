@@ -1,9 +1,7 @@
+'use strict'
+
 // bookmark, traversal bookmarkTreeNode to get all valid channel
 class BookmarkHandler {
-  constructor () {
-
-  }
-
   get (id, callback) {
     // id: A single string-valued id, or an array of string-valued ids
     chrome.bookmarks.get(id, callback)

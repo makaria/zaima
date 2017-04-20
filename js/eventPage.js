@@ -1,3 +1,5 @@
+'use strict'
+
 var myChannel = new ChannelHandler()
 var myChrome = new ChromeHandler()
 var myQuest = new QueueHandler()
@@ -128,7 +130,7 @@ function deleteChannel (channel) {
   myChrome.remove(channel, function (data) {
     console.log(data)
   })
-  if (myChannel.channels.length == 0) {
+  if (myChannel.channels.length === 0) {
     myChrome.removeAlarm('schedule', function (data) {
       console.info('remove alarm schedule because no channel exists', myChannel.channels)
     })
@@ -187,7 +189,7 @@ function updateChannel (room, data, callback) {
       var json = data.data || data.no
       var channel = myChannel.json2channel(json, myRoom[room.domain])
       if (channel && channel.id !== null && channel.id !== undefined) {
-        if (channel.id != room.id) {
+        if (channel.id !== room.id) {
           channel.slug = room.id
         }
         channel.nickname = room.nickname
@@ -197,7 +199,7 @@ function updateChannel (room, data, callback) {
         // console.error("unknown data", room, data, channel, json)
         callback(false)
       }
-    } else if (data && data.message == 'timeout') {
+    } else if (data && data.message === 'timeout') {
       console.log('timeout', room, data)
       room.timeout = Date.now()
       callback(room)
@@ -316,7 +318,7 @@ function restoreOptions () {
     myChannel.hidename = options.hidename
     myChannel.hidetitle = options.hidetitle
     myChannel.recent = options.recent
-    if (options.interval && myChannel.interval != options.interval) {
+    if (options.interval && myChannel.interval !== options.interval) {
       myChannel.interval = options.interval
     }
     myChannel.restored = true
@@ -334,7 +336,7 @@ function mergeChannel (array) {
     if (channels.length > 0) {
       channels.forEach((one, i) => {
         var two = array[i]
-        if (one.domain != two.domain || one.id != two.id) {
+        if (one.domain !== two.domain || one.id !== two.id) {
           expire = true
           // shall break here, but forEach don't
         }
@@ -353,14 +355,12 @@ function mergeChannel (array) {
 // storage.onChanged
 function onChanged (changes, namespace) {
   for (let key in changes) {
-    var storageChange = changes[key]
     console.log('Storage key "%s" in namespace "%s" changed. ', key, namespace)
-    // console.log('Old value was: ', storageChange.oldValue, 'new value is: ', storageChange.newValue)
   }
-  if (namespace == 'sync') {
+  if (namespace === 'sync') {
     for (let key in changes) {
-      var storageChange = changes[key]
-      if (key == 'channels') {
+      const storageChange = changes[key]
+      if (key === 'channels') {
         if (storageChange.newValue && storageChange.newValue.length > 0) {
           var array = storageChange.newValue.map(key => {
             return {
@@ -374,17 +374,17 @@ function onChanged (changes, namespace) {
           myChannel.channels = []
           myChrome.setLocal({'channels': []})
         }
-      } else if (key == 'onlinefirst') {
+      } else if (key === 'onlinefirst') {
         myChannel.onlinefirst = storageChange.newValue
-      } else if (key == 'newtab') {
+      } else if (key === 'newtab') {
         myChannel.newtab = storageChange.newValue
-      } else if (key == 'hidename') {
+      } else if (key === 'hidename') {
         myChannel.hidename = storageChange.newValue
-      } else if (key == 'hidetitle') {
+      } else if (key === 'hidetitle') {
         myChannel.hidetitle = storageChange.newValue
-      } else if (key == 'recent') {
+      } else if (key === 'recent') {
         myChannel.recent = storageChange.newValue
-      } else if (key == 'interval') {
+      } else if (key === 'interval') {
         changeAlarm(storageChange.newValue)
       } else {
         console.log(key, storageChange)
@@ -396,7 +396,7 @@ function onChanged (changes, namespace) {
 // change update interval
 function changeAlarm (interval) {
   console.log('change alarm?', interval, myChannel.interval)
-  if (interval && myChannel.interval != interval) {
+  if (interval && myChannel.interval !== interval) {
     myChannel.interval = interval
     myChrome.createAlarm('refresh', {periodInMinutes: ~~myChannel.interval})
   }
@@ -405,7 +405,7 @@ function changeAlarm (interval) {
 // alarm could  miss?
 function onAlarm (alarm) {
   console.log('Got alarm', alarm)
-  if (alarm && alarm.name == 'watchdog') {
+  if (alarm && alarm.name === 'watchdog') {
     onWatchdog()
   } else {
     console.log('schedule update from alarm', alarm)

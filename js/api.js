@@ -1,3 +1,5 @@
+'use strict'
+
 // 各直播网站的json网址
 class Rooms {
   constructor () {
@@ -21,7 +23,7 @@ class Rooms {
         start_time: '', // no such key
         end_time: '' // no such key
       }
-    },
+    }
     this.douyu = {
       // id和slug均可
       api: 'http://open.douyucdn.cn/api/RoomApi/room/ROOMID',
@@ -41,7 +43,7 @@ class Rooms {
         start_time: 'start_time', // '2017-03-14 14:06'
         end_time: '' // no such key
       }
-    },
+    }
     this.panda = {
       // 貌似没有slug
       api: 'http://www.panda.tv/api_room?roomid=ROOMID',
@@ -61,7 +63,7 @@ class Rooms {
         start_time: 'start_time', // '1489994852', second
         end_time: 'end_time' // '1489920119', second
       }
-    },
+    }
     // this.zhanqi = {
     //   // 必须是数字id，不能是slug。window.oPageConfig.oRoom的值即是json数据。
     //   // 如何获取到数字id？id只能用于获取json. slug和code才是网页网址
