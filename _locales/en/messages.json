@@ -3,10 +3,10 @@
     "message": "LiveTV"
   },
   "extDesc": {
-    "message": "LiveTV Show online statuses of live streams"
+    "message": "Show online statuses of live streams"
   },
   "ext_default_title": {
-    "message": "LiveTV Show online statuses of live streams"
+    "message": "LiveTV"
   },
   "timeout": {
     "message": "Timeout"

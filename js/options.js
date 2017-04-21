@@ -15,7 +15,7 @@ function restoreOptions () {
     document.querySelector('.hidename').checked = items.hidename
     document.querySelector('.hidetitle').checked = items.hidetitle
     document.querySelector('.recent').checked = !items.recent
-    document.querySelector('.interval').value = items.interval
+    document.querySelector('.interval').value = ~~items.interval
   })
 }
 
@@ -67,9 +67,18 @@ function changeInterval (e) {
   } else {
     value = e.target.value
   }
-  chrome.storage.sync.set({'interval': ~~value}, function (data) {
-    console.log('interval change', data)
-  })
+  if (isNaN(value) || value === "") {
+    console.log('invalid value for interval', value)
+    chrome.storage.sync.get({
+      interval: 30
+    }, function (item) {
+      document.querySelector('.interval').value = ~~item.interval
+    })
+  } else {
+    chrome.storage.sync.set({'interval': ~~value}, function (data) {
+      console.log('interval change', data)
+    })
+  }
 }
 
 // i18n. seems wired
@@ -163,12 +172,12 @@ function start () {
         } else {
           statusEl.innerText = bg.myChrome.getMessage('offline')
         }
-        if (channel.nickname !== undefined) {
-          nameEl.value = channel.nickname
+        if (channel.nickname) {
+          nameEl.value = unescape(channel.nickname)
         } else {
-          nameEl.value = channel.name
+          nameEl.placeholder = channel.name
         }
-        urlEl.value = channel.url
+        urlEl.value = encodeURI(channel.url)
         urlEl.disabled = true
         urlEl.classList.add('disabled')
         insertEl.disabled = false
@@ -182,7 +191,7 @@ function start () {
         nameEl.onblur = function (e) {
           console.log(e)
           if (channel.nickname !== e.target.value) {
-            channel.nickname = e.target.value
+            channel.nickname = unescape(e.target.value)
             bg.addChannel(channel)
           } else {
             console.log('nickname not changed', e.target.value)
@@ -221,12 +230,12 @@ function start () {
         insertEl.disabled = true
         moveEl.disabled = true
         urlEl.onblur = function (e) {
-          var url = e.target.value
+          var url = encodeURI(e.target.value)
           var room = bg.myChannel.getDomainAndId(url)
           bg.getChannel(room, function (data) {
             bg.updateChannel(room, data, function (channel) {
               if (channel && !channel.timeout) {
-                channel.nickname = nameEl.value
+                channel.nickname = unescape(nameEl.value)
                 // get index first!
                 var id = el.previousSibling.id
                 if (id) {
@@ -291,7 +300,7 @@ function start () {
     })
     document.querySelector('.add').addEventListener('click', function () {
       document.querySelector('.interval').value = ~~document.querySelector('.interval').value + 1
-      changeInterval(document.querySelector('.interval').value)
+      changeInterval()
     })
   })
 }

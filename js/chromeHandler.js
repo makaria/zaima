@@ -63,7 +63,9 @@ class ChromeHandler {
 
   // tabs
   getSelected (callback) {
-    chrome.tabs.getSelected(callback)
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+      callback(tabs[0])
+    })
   }
 
   createTab (tab) {

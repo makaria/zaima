@@ -1,6 +1,6 @@
 {
   "name": "livetv",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "A chrome extension for inspect live streaming",
   "repository": "https://github.com/makaria/LiveTV",
   "keywords": [
