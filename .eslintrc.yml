@@ -1,0 +1,14 @@
+extends: standard
+plugins:
+  - standard
+env:
+  webextensions: true
+  browser: true
+globals:
+  ChromeHandler: true
+  ChannelHandler: true
+  QueueHandler: true
+  BookmarkHandler: true
+  Rooms: true
+rules:
+  no-unused-vars: 0
