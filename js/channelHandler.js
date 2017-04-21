@@ -43,7 +43,7 @@ class ChannelHandler {
     for (let reg of regs) {
       var result = url.match(reg)
       if (result && result[1] && result[2] !== undefined && result[2] !== null) {
-        return {domain: result[1].replace(/.*\./, ''), id: result[2].replace(/\/.*/, '')}
+        return {domain: result[1].replace(/.*\./, ''), id: ~~result[2].replace(/\/.*/, '')}
       }
     }
     return false
@@ -88,7 +88,7 @@ class ChannelHandler {
     }
     return {
       domain: channel.domain,
-      id: this.getByDot(data, channel.keys.id), // 数字id，可能与room.id(有可能是slug)不同
+      id: ~~this.getByDot(data, channel.keys.id), // 数字id，可能与room.id(有可能是slug)不同
       online: online,
       name: this.getByDot(data, channel.keys.name),
       slug: this.getByDot(data, channel.keys.slug),

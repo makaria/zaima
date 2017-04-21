@@ -115,5 +115,8 @@
   },
   "options_interval_detail": {
     "message": "定时更新频道的间隔时间,大于5小于240的任意值"
+  },
+  "bookmarks_folder_name": {
+    "message": "在吗"
   }
 }

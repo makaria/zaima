@@ -232,7 +232,7 @@ function start () {
                 if (id) {
                   var room = {
                     domain: id.split('-')[0],
-                    id: id.split('-')[1]
+                    id: ~~id.split('-')[1]
                   }
                   var index = bg.myChannel.getIndex(room)
                 }

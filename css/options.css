@@ -54,6 +54,7 @@ td {
     color: white;
     text-align: center;
     box-shadow: none;
+    min-width: 3.5rem;
 }
 
 .delete {
@@ -91,7 +92,7 @@ td {
 
 button:disabled {
     cursor: not-allowed;
-    /*background: #0f88eb;*/
+    background: #777;
 }
 
 .list {

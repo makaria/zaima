@@ -36,7 +36,7 @@ function exportBookmarks (name, callback) {
   if (channels.length > 0) {
     var folder = {
       parentId: '1',
-      title: name || 'Live Stream'
+      title: name || myChrome.getMessage('bookmarks_folder_name')
     }
     myBookmark.create(folder, function (data) {
       console.log(data)
@@ -282,7 +282,7 @@ function startUpdate (callback) {
       myChannel.channels = data.channels.map(key => {
         return {
           domain: key.split('-')[0],
-          id: key.split('-')[1]
+          id: ~~key.split('-')[1]
         }
       })
       myChannel.timestamp = Date.now()
@@ -365,7 +365,7 @@ function onChanged (changes, namespace) {
           var array = storageChange.newValue.map(key => {
             return {
               domain: key.split('-')[0],
-              id: key.split('-')[1]
+              id: ~~key.split('-')[1]
             }
           })
           mergeChannel(array)

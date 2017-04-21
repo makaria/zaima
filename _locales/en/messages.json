@@ -115,5 +115,8 @@
   },
   "options_interval_detail": {
     "message": "Periodic refresh channels' status, [5-240]"
+  },
+  "bookmarks_folder_name": {
+    "message": "LiveTV"
   }
 }
