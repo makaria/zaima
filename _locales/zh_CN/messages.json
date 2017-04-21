@@ -26,8 +26,8 @@
   "subscribe": {
     "message": "关注"
   },
-  "subscribed": {
-    "message": "已关注"
+  "unsubscribe": {
+    "message": "取消关注"
   },
   "no_channels": {
     "message": "目前没有关注的主播"
@@ -91,6 +91,9 @@
   },
   "options_newtab": {
     "message": "在新标签页打开地址"
+  },
+  "options_hide_lastonline": {
+    "message": "隐藏上次在线时间"
   },
   "options_hidename": {
     "message": "隐藏主播名"

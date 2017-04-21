@@ -73,7 +73,7 @@ class ChromeHandler {
   }
 
   updateTab (tab) {
-    chrome.tabs.updateTab(tab)
+    chrome.tabs.update(tab)
   }
 
   // alarms

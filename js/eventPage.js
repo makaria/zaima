@@ -185,6 +185,7 @@ function scheduleCallback (channel) {
 function updateChannel (room, data, callback) {
   console.log('schedule update channel')
   if (room && room.domain) {
+    // not good. data canbe empty [] or {}, which is invalid.
     if (data && (data.data || data.no)) {
       var json = data.data || data.no
       var channel = myChannel.json2channel(json, myRoom[room.domain])
@@ -282,7 +283,7 @@ function startUpdate (callback) {
       myChannel.channels = data.channels.map(key => {
         return {
           domain: key.split('-')[0],
-          id: ~~key.split('-')[1]
+          id: key.split('-')[1]
         }
       })
       myChannel.timestamp = Date.now()
@@ -307,6 +308,7 @@ function restoreOptions () {
   myChrome.getSync({
     'onlinefirst': true,
     'newtab': true,
+    'hide_lastonline': false,
     'hidename': true,
     'hidetitle': false,
     'recent': 1000 * 60 * 5,
@@ -315,6 +317,7 @@ function restoreOptions () {
     console.log(options)
     myChannel.onlinefirst = options.onlinefirst
     myChannel.newtab = options.newtab
+    myChannel.hide_lastonline = options.hide_lastonline
     myChannel.hidename = options.hidename
     myChannel.hidetitle = options.hidetitle
     myChannel.recent = options.recent
@@ -365,7 +368,7 @@ function onChanged (changes, namespace) {
           var array = storageChange.newValue.map(key => {
             return {
               domain: key.split('-')[0],
-              id: ~~key.split('-')[1]
+              id: key.split('-')[1]
             }
           })
           mergeChannel(array)
@@ -378,6 +381,8 @@ function onChanged (changes, namespace) {
         myChannel.onlinefirst = storageChange.newValue
       } else if (key === 'newtab') {
         myChannel.newtab = storageChange.newValue
+      } else if (key === 'hide_lastonline') {
+        myChannel.hide_lastonline = storageChange.newValue
       } else if (key === 'hidename') {
         myChannel.hidename = storageChange.newValue
       } else if (key === 'hidetitle') {
@@ -396,9 +401,9 @@ function onChanged (changes, namespace) {
 // change update interval
 function changeAlarm (interval) {
   console.log('change alarm?', interval, myChannel.interval)
-  if (interval && myChannel.interval !== interval) {
+  if ( 5 <= interval <= 240 && myChannel.interval !== interval) {
     myChannel.interval = interval
-    myChrome.createAlarm('refresh', {periodInMinutes: ~~myChannel.interval})
+    myChrome.createAlarm('refresh', {periodInMinutes: ~~interval})
   }
 }
 

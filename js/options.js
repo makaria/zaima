@@ -5,6 +5,7 @@ function restoreOptions () {
   chrome.storage.sync.get({
     'onlinefirst': true,
     'newtab': true,
+    'hide_lastonline': false,
     'hidename': true,
     'hidetitle': false,
     'recent': false,
@@ -12,6 +13,7 @@ function restoreOptions () {
   }, function (items) {
     document.querySelector('.onlinefirst').checked = items.onlinefirst
     document.querySelector('.newtab').checked = items.newtab
+    document.querySelector('.hide_lastonline').checked = items.hide_lastonline
     document.querySelector('.hidename').checked = items.hidename
     document.querySelector('.hidetitle').checked = items.hidetitle
     document.querySelector('.recent').checked = !items.recent
@@ -30,6 +32,13 @@ function toggleNewtab (e) {
   console.log(e)
   chrome.storage.sync.set({'newtab': e.target.checked}, function (data) {
     console.log('open in new tab change', data)
+  })
+}
+
+function hideLastonline (e) {
+  console.log(e)
+  chrome.storage.sync.set({'hide_lastonline': e.target.checked}, function (data) {
+    console.log('hide last online change', data)
   })
 }
 
@@ -63,9 +72,9 @@ function changeInterval (e) {
   console.log(e)
   let value
   if (!e) {
-    value = document.querySelector('.interval').value
+    value = ~~document.querySelector('.interval').value
   } else {
-    value = e.target.value
+    value = ~~e.target.value
   }
   if (isNaN(value) || value === "") {
     console.log('invalid value for interval', value)
@@ -75,9 +84,13 @@ function changeInterval (e) {
       document.querySelector('.interval').value = ~~item.interval
     })
   } else {
-    chrome.storage.sync.set({'interval': ~~value}, function (data) {
-      console.log('interval change', data)
-    })
+    if (5 <= value <=240) {
+      chrome.storage.sync.set({'interval': value}, function (data) {
+        console.log('interval change', data)
+      })
+    } else {
+      console.error("invalid value for interval", value)
+    }
   }
 }
 
@@ -101,6 +114,7 @@ function translate () {
     'options_customize',
     'options_onlinefirst',
     'options_newtab',
+    'options_hide_lastonline',
     'options_hidename',
     'options_hidename_detail',
     'options_hidetitle',
@@ -241,7 +255,7 @@ function start () {
                 if (id) {
                   var room = {
                     domain: id.split('-')[0],
-                    id: ~~id.split('-')[1]
+                    id: id.split('-')[1]
                   }
                   var index = bg.myChannel.getIndex(room)
                 }
@@ -295,11 +309,13 @@ function start () {
       // })
     })
     document.querySelector('.remove').addEventListener('click', function () {
-      document.querySelector('.interval').value = ~~document.querySelector('.interval').value - 1
+      var interval = document.querySelector('.interval')
+      interval.value = Math.max(~~interval.value - 1, 5)
       changeInterval()
     })
     document.querySelector('.add').addEventListener('click', function () {
-      document.querySelector('.interval').value = ~~document.querySelector('.interval').value + 1
+      var interval = document.querySelector('.interval')
+      interval.value = Math.min(~~interval.value + 1, 240)
       changeInterval()
     })
   })
@@ -314,6 +330,7 @@ function onInit () {
 document.addEventListener('DOMContentLoaded', onInit)
 document.querySelector('.onlinefirst').onchange = toggleSort
 document.querySelector('.newtab').onchange = toggleNewtab
+document.querySelector('.hide_lastonline').onchange = hideLastonline
 document.querySelector('.hidename').onchange = hideName
 document.querySelector('.hidetitle').onchange = hideTitle
 document.querySelector('.recent').onchange = changeRecent

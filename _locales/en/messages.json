@@ -26,8 +26,8 @@
   "subscribe": {
     "message": "Subscribe"
   },
-  "subscribed": {
-    "message": "Subscribed"
+  "unsubscribe": {
+    "message": "Unsubscribe"
   },
   "no_channels": {
     "message": "None channel subscribed"
@@ -91,6 +91,9 @@
   },
   "options_newtab": {
     "message": "Open in new tab"
+  },
+  "options_hide_lastonline": {
+    "message": "Hide last online"
   },
   "options_hidename": {
     "message": "Hide Name"

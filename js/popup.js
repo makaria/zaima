@@ -9,9 +9,18 @@ chrome.runtime.getBackgroundPage((bg) => {
       e.preventDefault()
       e.stopPropagation()
       if (bg.myChannel.newtab) { // left button
-        bg.myChrome.createTab({
-          url: channel.url,
-          active: true
+        bg.myChrome.getSelected(function (tab) {
+          if (tab.url) {
+            bg.myChrome.createTab({
+              url: channel.url,
+              active: true
+            })
+          } else { //current tab is a new tab
+            bg.myChrome.updateTab({
+              url: channel.url,
+              active: true
+            })
+          }
         })
       } else {
         bg.myChrome.updateTab({
@@ -32,11 +41,13 @@ chrome.runtime.getBackgroundPage((bg) => {
       if (index !== -1) { // remove a channel
         el.innerText = bg.myChrome.getMessage('subscribe')
         el.classList.remove('subscribed')
+        el.classList.add('subscribe')
         bg.deleteChannel(channel)
         removeDom(channel)
       } else { // add a channel
-        el.innerText = bg.myChrome.getMessage('subscribed')
+        el.innerText = bg.myChrome.getMessage('unsubscribe')
         el.classList.add('subscribed')
+        el.classList.remove('subscribe')
         bg.addChannel(channel)
         addDom(channel)
       }
@@ -52,15 +63,18 @@ chrome.runtime.getBackgroundPage((bg) => {
       bg.getChannel(room, function (data) {
         bg.updateChannel(room, data, function (channel) {
           console.log('got channel data', channel)
-          if (!channel || channel.timout) {
-            button.classList.add('none')
-          } else {
+          if (channel && !channel.timout) {
+            button.classList.remove('none')
             var index = bg.myChannel.getIndex(channel)
             if (index !== -1) {
-              button.innerText = bg.myChrome.getMessage('subscribed')
+              button.innerText = bg.myChrome.getMessage('unsubscribe')
+              button.classList.remove('subscribe')
               button.classList.add('subscribed')
-            } else { button.innerText = bg.myChrome.getMessage('subscribe') }
-            button.classList.remove('subscribed')
+            } else {
+              button.innerText = bg.myChrome.getMessage('subscribe')
+              button.classList.remove('subscribed')
+              button.classList.add('subscribe')
+            }
             toggleSubscribe(button, channel)
           }
         })
@@ -117,8 +131,8 @@ chrome.runtime.getBackgroundPage((bg) => {
   }
 
   function openOptions () {
-    document.querySelector('.options').innerText = bg.myChrome.getMessage('options')
-    document.querySelector('.options').addEventListener('click', function () {
+    document.getElementById('options').innerText = bg.myChrome.getMessage('options')
+    document.getElementById('options').addEventListener('click', function () {
       if (chrome.runtime.openOptionsPage) {
         // New way to open options pages, if supported (Chrome 42+).
         chrome.runtime.openOptionsPage()
@@ -161,7 +175,7 @@ chrome.runtime.getBackgroundPage((bg) => {
     var a = el.getElementsByClassName('detail')[0]
     var small = el.getElementsByClassName('small')[0]
     var online, name, title, nickname
-    if (channel.nickname !== undefined) {
+    if (channel.nickname) {
       nickname = channel.nickname
     } else {
       nickname = ''
@@ -178,7 +192,13 @@ chrome.runtime.getBackgroundPage((bg) => {
     }
     a.href = channel.url
     a.title = channel.url
-    small.innerText = (channel.start_time || '--') + ' - ' + (channel.end_time || '--')
+    if (bg.myChannel.hide_lastonline) {
+      small.classList.add('none')
+    } else {
+      if (channel.start_time || channel.end_time) {
+        small.innerText = (channel.start_time || '--') + ' - ' + (channel.end_time || '--')
+      }
+    }
     if (channel.online) {
       online = bg.myChrome.getMessage('online')
       a.classList.remove('offline', 'timeout')

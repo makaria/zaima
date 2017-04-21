@@ -1,3 +1,4 @@
+/* style like Tampermonkey or SwitchOmega seems better  */
 body {
     margin: .3125rem .3125rem;
 }
@@ -6,6 +7,7 @@ table {
     /*max-width: 15rem;*/
     width: 12rem;
     table-layout: fixed;
+    padding-top: .5rem;
 }
 
 td {
@@ -14,6 +16,7 @@ td {
     text-decoration: none;
     text-overflow: ellipsis;
     overflow: hidden;
+    height: 2rem;
 }
 
 td:hover {
@@ -29,14 +32,20 @@ button {
     cursor: help;
 }
 
-.wrapper {
-    padding: .3rem;
-    border-bottom: 1px solid black;
-    text-align: center;
+.subscribed {
+    background: red;
+    color: white;
+    cursor: pointer;
 }
 
-.subscribed {
-    color: blue;
+.subscribe {
+    background: #0f88eb;
+    color: white;
+    cursor: pointer
+}
+
+.options {
+    background: none;
 }
 
 .none {
