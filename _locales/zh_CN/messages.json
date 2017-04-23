@@ -33,7 +33,13 @@
     "message": "目前没有关注的主播"
   },
   "last_online": {
-    "message": "上次直播时间"
+    "message": "上次在线时间: -- : --"
+  },
+  "last_updated": {
+    "message": "上次更新时间: --"
+  },
+  "minutes": {
+    "message": "分钟前"
   },
   "options_manage": {
     "message": "房间列表"

@@ -8,6 +8,7 @@ var myBookmark = new BookmarkHandler()
 
 // todo: use local replace unnecessary chrome.storage.sync
 // todo: myChannel will be reset after background page is inactive for a few time.
+// todo: 目前只处理timeout的错误,还有几种错误需要处理
 
 // bookmark function
 // bookmark convert to channel && channel convert to bookmark
@@ -291,6 +292,8 @@ function startUpdate (callback) {
       myChrome.getSync(data.channels, function (channels) {
         for (let key in channels) {
           let channel = channels[key]
+          // 应该验证channel的有效性.目前channel的有效性验证分散在各个函数里且不完整, 需要改进.
+          myChannel.addChannel(channel)
           getChannel(channel, function (data) {
             updateChannel(channel, data, callback)
           })

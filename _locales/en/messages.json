@@ -33,7 +33,13 @@
     "message": "None channel subscribed"
   },
   "last_online": {
-    "message": "Last Online"
+    "message": "Last Online: -- : --"
+  },
+  "last_updated": {
+    "message": "Last Updated: --"
+  },
+  "minutes": {
+    "message": "m"
   },
   "options_manage": {
     "message": "Manage Channels"

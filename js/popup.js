@@ -138,7 +138,7 @@ chrome.runtime.getBackgroundPage((bg) => {
         chrome.runtime.openOptionsPage()
       } else {
         // Reasonable fallback.
-        window.open(chrome.runtime.getURL('options.html'))
+        window.open(chrome.runtime.getURL('html/options.html'))
       }
     })
   }
@@ -146,7 +146,7 @@ chrome.runtime.getBackgroundPage((bg) => {
   // update dom after schedule update
   function updateDom (channel) {
     // console.log('update dom', channel)
-    if (channel.timestamp) { var id = channel.domain + channel.id }
+    var id = channel.domain + channel.id
     var el = document.getElementById(id)
     if (el) {
       if (bg.myChannel.onlinefirst) {
@@ -173,7 +173,8 @@ chrome.runtime.getBackgroundPage((bg) => {
   function updateEle (el, channel) {
     // console.log('update el', el, channel)
     var a = el.getElementsByClassName('detail')[0]
-    var small = el.getElementsByClassName('small')[0]
+    var lastonline = el.getElementsByClassName('lastonline')[0]
+    var lastupdated = el.getElementsByClassName('lastupdated')[0]
     var online, name, title, nickname
     if (channel.nickname) {
       nickname = channel.nickname
@@ -193,21 +194,25 @@ chrome.runtime.getBackgroundPage((bg) => {
     a.href = channel.url
     a.title = channel.url
     if (bg.myChannel.hide_lastonline) {
-      small.classList.add('none')
+      lastonline.classList.add('none')
     } else {
       if (channel.start_time || channel.end_time) {
-        small.innerText = (channel.start_time || '--') + ' - ' + (channel.end_time || '--')
+        lastonline.innerText = (channel.start_time || '--') + ' - ' + (channel.end_time || '--')
       }
     }
-    if (channel.online) {
-      online = bg.myChrome.getMessage('online')
-      a.classList.remove('offline', 'timeout')
-      a.classList.add('online')
-      a.innerText = online + name + ' ' + title
-    } else if (channel.timeout) {
+    if (channel.timestamp) {
+      var minutes = Math.ceil((Date.now()-channel.timestamp)/1000/60)
+      lastupdated.innerText =  minutes + ' ' + bg.myChrome.getMessage('minutes')
+    }
+    if (channel.timeout) {
       online = bg.myChrome.getMessage('timeout')
       a.classList.remove('online', 'offline')
       a.classList.add('timeout')
+      a.innerText = online + name + ' ' + title
+    } else if (channel.online) {
+      online = bg.myChrome.getMessage('online')
+      a.classList.remove('offline', 'timeout')
+      a.classList.add('online')
       a.innerText = online + name + ' ' + title
     } else {
       online = bg.myChrome.getMessage('offline')
@@ -220,9 +225,11 @@ chrome.runtime.getBackgroundPage((bg) => {
   function translate () {
     var template = document.getElementsByClassName('channel_template')[0]
     var a = template.getElementsByClassName('detail')[0]
-    var small = template.getElementsByClassName('small')[0]
+    var lastonline = template.getElementsByClassName('lastonline')[0]
+    var lastupdated = template.getElementsByClassName('lastupdated')[0]
     a.innerText = bg.myChrome.getMessage('no_channels')
-    small.innerText = bg.myChrome.getMessage('last_online')
+    lastonline.innerText = bg.myChrome.getMessage('last_online')
+    lastupdated.innerText = bg.myChrome.getMessage('last_updated')
   }
 
   function showChannels () {

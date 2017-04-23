@@ -79,7 +79,8 @@ class ChannelHandler {
 
   // 将返回的数据格式化成统一的格式以作为dom的数据
   json2channel (data, channel) {
-    if (!channel || !data) {
+    // 排除data为{}或[]的情况, 一般长度为1000~3000
+    if (!channel || !data || JSON.stringify(data).length < 42) {
       return false
     }
     var online = false
