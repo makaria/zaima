@@ -8,21 +8,14 @@ chrome.runtime.getBackgroundPage((bg) => {
     el.onclick = function (e) {
       e.preventDefault()
       e.stopPropagation()
-      if (bg.myChannel.newtab) { // left button
-        bg.myChrome.getSelected(function (tab) {
-          if (tab.url) {
-            bg.myChrome.createTab({
-              url: channel.url,
-              active: true
-            })
-          } else { //current tab is a new tab
-            bg.myChrome.updateTab({
-              url: channel.url,
-              active: true
-            })
-          }
+      if (bg.myChannel.newtab) {
+        // Is current tab a newtab?
+        bg.myChrome.createTab({
+          url: channel.url,
+          active: true
         })
       } else {
+        // popup is not closed!
         bg.myChrome.updateTab({
           url: channel.url,
           active: true
@@ -102,7 +95,7 @@ chrome.runtime.getBackgroundPage((bg) => {
     openChannel(el, channel)
     if (!fragment) {
       var parentNode = document.getElementById('channels_list')
-      if (bg.myChannel.onlinefirst && channel.online) {
+      if (bg.myChannel.onlinefirst && channel.online && !channel.timeout) {
         var refNode = parentNode.getElementsByClassName('channel_template')[0]
         parentNode.insertBefore(el, refNode.nextSibling)
       } else {
@@ -201,8 +194,13 @@ chrome.runtime.getBackgroundPage((bg) => {
       }
     }
     if (channel.timestamp) {
-      var minutes = Math.ceil((Date.now()-channel.timestamp)/1000/60)
-      lastupdated.innerText =  minutes + ' ' + bg.myChrome.getMessage('minutes')
+      // use 'just now' replace '0'?
+      var minutes = Math.floor((Date.now()-channel.timestamp)/1000/60)
+      if (minutes > 0) {
+        lastupdated.innerText =  minutes + ' ' + bg.myChrome.getMessage('minutes')
+      } else {
+        lastupdated.innerText = bg.myChrome.getMessage('now')
+      }
     }
     if (channel.timeout) {
       online = bg.myChrome.getMessage('timeout')
@@ -252,12 +250,12 @@ chrome.runtime.getBackgroundPage((bg) => {
         second = first
       }
       for (let channel of bg.myChannel.channels) {
-        if (channel.online) {
-          online = true
-          addDom(channel, template, first)
-        } else if (channel.timeout) {
+        if (channel.timeout) {
           timeout = true
           addDom(channel, template, third)
+        } else if (channel.online) {
+          online = true
+          addDom(channel, template, first)
         } else {
           addDom(channel, template, second)
         }
@@ -270,6 +268,9 @@ chrome.runtime.getBackgroundPage((bg) => {
         fragment.appendChild(third)
       }
       console.log('fragment done, ready to append to dom')
+      first = null
+      second = null
+      third = null
       document.getElementById('channels_list').appendChild(fragment)
     } else {
       console.log('No channel', bg.myChannel.channels)
@@ -281,6 +282,7 @@ chrome.runtime.getBackgroundPage((bg) => {
       if (channel && channel.domain && channel.id !== null && channel.id !== undefined) {
         if (channel.timeout) {
           console.log('Timeout when get channel info', channel)
+          updateDom(channel)
         } else {
           bg.myChannel.addChannel(channel)
           bg.updateIcon()

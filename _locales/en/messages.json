@@ -41,6 +41,9 @@
   "minutes": {
     "message": "m"
   },
+  "now": {
+    "message": "just now"
+  },
   "options_manage": {
     "message": "Manage Channels"
   },
