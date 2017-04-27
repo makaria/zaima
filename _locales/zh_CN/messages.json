@@ -41,9 +41,6 @@
   "minutes": {
     "message": "分钟前"
   },
-  "now": {
-    "message": "几秒前"
-  },
   "options_manage": {
     "message": "房间列表"
   },

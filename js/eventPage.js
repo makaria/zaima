@@ -9,10 +9,6 @@ var myBookmark = new BookmarkHandler()
 // todo: use local replace unnecessary chrome.storage.sync
 // todo: myChannel will be reset after background page is inactive for a few time.
 // todo: 目前只处理timeout的错误,还有几种错误需要处理
-// todo: 插件安装(onInstalled), chrome启动(onStartup)需要storage.sync同步channels和options
-// todo: chrome运行期间, 比如eventPage页面被唤醒, 应该用storage.local. 同步由onChanged接管
-// local与sync的区别只考虑数据大小, 不考虑数据同步?
-// 功能有限,代码太多.
 
 // bookmark function
 // bookmark convert to channel && channel convert to bookmark
