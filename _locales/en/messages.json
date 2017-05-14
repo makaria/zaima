@@ -95,11 +95,14 @@
   "options_onlinefirst": {
     "message": "Online First"
   },
-  "options_newtab": {
-    "message": "Open in new tab"
-  },
-  "options_hide_lastonline": {
-    "message": "Hide last online"
+  // "options_newtab": {
+  //   "message": "Open in new tab"
+  // },
+  // "options_hide_lastonline": {
+  //   "message": "Hide last online"
+  // },
+  "options_notification": {
+    "message": "Show Notifications"
   },
   "options_hidename": {
     "message": "Hide Name"
@@ -127,5 +130,11 @@
   },
   "bookmarks_folder_name": {
     "message": "LiveTV"
+  },
+  "notification_title": {
+    "message": "LiveTV Online Notification"
+  },
+  "notification_message": {
+    "message": "Someone you subscribed has just came online!"
   }
 }

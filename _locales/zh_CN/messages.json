@@ -62,7 +62,7 @@
   "options_nickname": {
     "message": "昵称"
   },
-   "options_nickname_placeholder": {
+  "options_nickname_placeholder": {
     "message": "昵称"
   },
   "options_url": {
@@ -95,11 +95,14 @@
   "options_onlinefirst": {
     "message": "优先在顶部显示在线的主播"
   },
-  "options_newtab": {
-    "message": "在新标签页打开地址"
-  },
-  "options_hide_lastonline": {
-    "message": "隐藏上次在线时间"
+  // "options_newtab": {
+  //   "message": "在新标签页打开地址"
+  // },
+  // "options_hide_lastonline": {
+  //   "message": "隐藏上次在线时间"
+  // },
+  "options_notification": {
+    "message": "显示通知"
   },
   "options_hidename": {
     "message": "隐藏主播名"
@@ -127,5 +130,11 @@
   },
   "bookmarks_folder_name": {
     "message": "在吗"
+  },
+  "notification_title": {
+    "message": "播了"
+  },
+  "notification_message": {
+    "message": "敬业先锋上线了"
   }
 }

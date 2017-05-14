@@ -60,8 +60,8 @@ class Rooms {
         },
         title: 'roominfo.name',
         avatar: 'hostinfo.avatar',
-        start_time: 'start_time', // '1489994852', second
-        end_time: 'end_time' // '1489920119', second
+        start_time: 'roominfo.start_time', // '1489994852', second
+        end_time: 'roominfo.end_time' // '1489920119', second
       }
     }
     // this.zhanqi = {

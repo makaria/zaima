@@ -3,43 +3,43 @@
 // just show chrome api used in this extension, maybe delete in future.
 class ChromeHandler {
   // storage
-  setLocal (obj, callback) {
+  setLocal(obj, callback) {
     chrome.storage.local.set(obj, callback)
   }
 
-  setSync (obj, callback) {
+  setSync(obj, callback) {
     chrome.storage.sync.set(obj, callback)
   }
 
-  setLocalByKey (key, value, callback) {
+  setLocalByKey(key, value, callback) {
     var obj = {}
     obj[key] = value
     this.setLocal(obj, callback)
   }
 
-  setSyncByKey (key, value, callback) {
+  setSyncByKey(key, value, callback) {
     var obj = {}
     obj[key] = value
     this.setSync(obj, callback)
   }
 
-  getSync (key, callback) {
+  getSync(key, callback) {
     chrome.storage.sync.get(key, callback)
   }
 
-  getLocal (key, callback) {
+  getLocal(key, callback) {
     chrome.storage.local.get(key, callback)
   }
 
-  removeLocal (key, callback) {
+  removeLocal(key, callback) {
     chrome.storage.local.remove(key, callback)
   }
 
-  removeSync (key, callback) {
+  removeSync(key, callback) {
     chrome.storage.sync.remove(key, callback)
   }
 
-  remove (channel, callback) {
+  remove(channel, callback) {
     if (typeof channel === 'string') {
       this.removeLocal(channel, callback)
       this.removeSync(channel, callback)
@@ -53,67 +53,76 @@ class ChromeHandler {
   }
 
   // badgeAction text
-  setTitle (title) {
-    chrome.browserAction.setTitle({'title': title})
+  setTitle(title) {
+    chrome.browserAction.setTitle({ 'title': title })
   }
 
-  setBadge (text) {
-    chrome.browserAction.setBadgeText({text: text})
+  setBadge(text) {
+    chrome.browserAction.setBadgeText({ text: text })
   }
 
   // tabs
-  getSelected (callback) {
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+  getSelected(callback) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       callback(tabs[0])
     })
   }
 
-  createTab (tab) {
+  createTab(tab) {
     chrome.tabs.create(tab)
   }
 
-  updateTab (tab) {
+  updateTab(tab) {
     chrome.tabs.update(tab)
   }
 
   // alarms
-  getAlarm (name, callback) {
+  getAlarm(name, callback) {
     chrome.alarms.get(name, callback)
   }
 
-  createAlarm (name, alarmInfo) {
+  createAlarm(name, alarmInfo) {
     chrome.alarms.create(name, alarmInfo)
   }
 
-  removeAlarm (name, callback) {
+  removeAlarm(name, callback) {
     chrome.alarms.clear(name, callback)
   }
 
-  onAlarm (callback) {
+  onAlarm(callback) {
     console.log('on alarm')
     chrome.alarms.onAlarm.addListener(callback)
   }
 
   // hasListener always return false?
-  hasListeners (callback) {
+  hasListeners(callback) {
     chrome.alarms.onAlarm.hasListeners(callback)
   }
 
   // i18n
-  getMessage (name) {
+  getMessage(name) {
     return chrome.i18n.getMessage(name)
   }
 
+  //notification
+  createNotification(options, callback) {
+    chrome.notifications.create('online', options, callback)
+  }
+
+  removeNotification(callback) {
+    chrome.notifications.clear('online', callback)
+  }
+
   // install, start, change
-  onChanged (callback) {
+  onChanged(callback) {
     chrome.storage.onChanged.addListener(callback)
   }
 
-  onStartup (callback) {
+  onStartup(callback) {
     chrome.runtime.onStartup.addListener(callback)
   }
 
-  onInstalled (callback) {
+  onInstalled(callback) {
     chrome.runtime.onInstalled.addListener(callback)
   }
 }

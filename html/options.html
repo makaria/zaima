@@ -3,8 +3,8 @@
 
 <head>
   <title>LiveTV Extension Options</title>
-  <meta charset="utf-8"/>
-  <link href="../css/options.css" type="text/css" rel="stylesheet" />
+  <meta charset="utf-8">
+  <link type="text/css" href="../css/options.css" rel="stylesheet">
 </head>
 
 <body>
@@ -14,10 +14,10 @@
       <table summary="Channel List">
         <!--<caption>Channel List</caption>-->
         <thead>
-          <th scope="col" class="head_status">Status</th>
-          <th scope="col" class="head_nickname">Nickname</th>
-          <th scope="col" class="head_url">URL</th>
-          <th scope="col" colspan="3" class="head_actions">Actions</th>
+          <th class="head_status" scope="col">Status</th>
+          <th class="head_nickname" scope="col">Nickname</th>
+          <th class="head_url" scope="col">URL</th>
+          <th class="head_actions" scope="col" colspan="3">Actions</th>
         </thead>
         <tbody id="channels_list">
           <tr class="channel_template">
@@ -53,12 +53,21 @@
         <div class="item-content options_onlinefirst">Online First</div>
         <div class="item-secondary">
           <span class="toggle">
-            <input type="checkbox" class="onlinefirst">
+            <input class="onlinefirst" type="checkbox">
             <div></div>
           </span>
         </div>
       </label>
       <label class="item">
+        <div class="item-content options_notification">Online First</div>
+        <div class="item-secondary">
+          <span class="toggle">
+            <input class="notification" type="checkbox">
+            <div></div>
+          </span>
+        </div>
+      </label>
+      <!--<label class="item">
         <div class="item-content options_newtab">Open channel in new tab</div>
         <div class="item-secondary">
           <span class="toggle">
@@ -75,7 +84,7 @@
             <div></div>
           </span>
         </div>
-      </label>
+      </label>-->
       <label class="item two-lines">
         <div class="item-content has-secondary">
           <div class="options_hidename">Hide Name</div>
@@ -85,7 +94,7 @@
         </div>
         <div class="item-secondary">
           <span class="toggle">
-            <input type="checkbox" class="hidename">
+            <input class="hidename" type="checkbox">
             <div></div>
           </span>
         </div>
@@ -97,7 +106,7 @@
         </div>
         <div class="item-secondary">
           <span class="toggle">
-            <input type="checkbox" class="hidetitle">
+            <input class="hidetitle" type="checkbox">
             <div></div>
           </span>
         </div>
@@ -111,7 +120,7 @@
         </div>
         <div class="item-secondary">
           <span class="toggle">
-            <input type="checkbox" class="recent">
+            <input class="recent" type="checkbox">
             <div></div>
           </span>
         </div>
@@ -125,7 +134,7 @@
         </div>
         <div class="item-secondary numberic textfield row inline items-center">
           <i class="remove">－</i>
-          <input type="number" pattern="[0-9]*" tabindex="0" step="1" min="5" max="240" class="no-style interval">
+          <input class="no-style interval" type="number" pattern="[0-9]*" tabindex="0" step="1" min="5" max="240">
           <i class="add">＋</i>
         </div>
       </label>

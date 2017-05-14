@@ -1,19 +1,21 @@
 'use strict'
 
 // stored in chrome.storage.
-function restoreOptions () {
+function restoreOptions() {
   chrome.storage.sync.get({
     'onlinefirst': true,
-    'newtab': true,
-    'hide_lastonline': false,
+    // 'newtab': true,
+    'show_notification': true,
+    // 'hide_lastonline': false,
     'hidename': true,
     'hidetitle': false,
     'recent': false,
     'interval': 30
   }, function (items) {
     document.querySelector('.onlinefirst').checked = items.onlinefirst
-    document.querySelector('.newtab').checked = items.newtab
-    document.querySelector('.hide_lastonline').checked = items.hide_lastonline
+    // document.querySelector('.newtab').checked = items.newtab
+    // document.querySelector('.hide_lastonline').checked = items.hide_lastonline
+    document.querySelector('.notification').checked = items.show_notification
     document.querySelector('.hidename').checked = items.hidename
     document.querySelector('.hidetitle').checked = items.hidetitle
     document.querySelector('.recent').checked = !items.recent
@@ -21,54 +23,61 @@ function restoreOptions () {
   })
 }
 
-function toggleSort (e) {
+function toggleSort(e) {
   console.log(e)
-  chrome.storage.sync.set({'onlinefirst': e.target.checked}, function (data) {
+  chrome.storage.sync.set({ 'onlinefirst': e.target.checked }, function (data) {
     console.log('onlinefirst change', data)
   })
 }
 
-function toggleNewtab (e) {
+// function toggleNewtab (e) {
+//   console.log(e)
+//   chrome.storage.sync.set({'newtab': e.target.checked}, function (data) {
+//     console.log('open in new tab change', data)
+//   })
+// }
+
+// function hideLastonline (e) {
+//   console.log(e)
+//   chrome.storage.sync.set({'hide_lastonline': e.target.checked}, function (data) {
+//     console.log('hide last online change', data)
+//   })
+// }
+
+function toggleNotification(e) {
   console.log(e)
-  chrome.storage.sync.set({'newtab': e.target.checked}, function (data) {
-    console.log('open in new tab change', data)
+  chrome.storage.sync.set({ 'show_notification': e.target.checked }, function (data) {
+    console.log('notification change', data)
   })
 }
 
-function hideLastonline (e) {
+function hideName(e) {
   console.log(e)
-  chrome.storage.sync.set({'hide_lastonline': e.target.checked}, function (data) {
-    console.log('hide last online change', data)
-  })
-}
-
-function hideName (e) {
-  console.log(e)
-  chrome.storage.sync.set({'hidename': e.target.checked}, function (data) {
+  chrome.storage.sync.set({ 'hidename': e.target.checked }, function (data) {
     console.log('hidename change', data)
   })
 }
 
-function hideTitle (e) {
+function hideTitle(e) {
   console.log(e)
-  chrome.storage.sync.set({'hidetitle': e.target.checked}, function (data) {
+  chrome.storage.sync.set({ 'hidetitle': e.target.checked }, function (data) {
     console.log('hidetitle change', data)
   })
 }
 
-function changeRecent (e) {
+function changeRecent(e) {
   console.log(e)
   let recent = 0
   if (!e.target.checked) {
     recent = 1000 * 60 * 5
   }
-  chrome.storage.sync.set({'recent': recent}, function (data) {
+  chrome.storage.sync.set({ 'recent': recent }, function (data) {
     console.log('recent change', data)
   })
 }
 
 // without a save button, onchange will trigger too much. so add a save button for only this option?
-function changeInterval (e) {
+function changeInterval(e) {
   console.log(e)
   let value
   if (!e) {
@@ -84,8 +93,8 @@ function changeInterval (e) {
       document.querySelector('.interval').value = ~~item.interval
     })
   } else {
-    if (5 <= value <=240) {
-      chrome.storage.sync.set({'interval': value}, function (data) {
+    if (5 <= value <= 240) {
+      chrome.storage.sync.set({ 'interval': value }, function (data) {
         console.log('interval change', data)
       })
     } else {
@@ -95,7 +104,7 @@ function changeInterval (e) {
 }
 
 // i18n. seems wired
-function translate () {
+function translate() {
   var names = [
     'options_manage',
     'head_status',
@@ -113,8 +122,9 @@ function translate () {
     'options_export',
     'options_customize',
     'options_onlinefirst',
-    'options_newtab',
-    'options_hide_lastonline',
+    // 'options_newtab',
+    // 'options_hide_lastonline',
+    'options_notification',
     'options_hidename',
     'options_hidename_detail',
     'options_hidetitle',
@@ -138,12 +148,12 @@ function translate () {
   })
 }
 
-function start () {
+function start() {
   console.log('start')
   chrome.runtime.getBackgroundPage(bg => {
     console.log('get bg done!')
     //
-    function createDom (template) {
+    function createDom(template) {
       if (!template) {
         template = document.getElementsByClassName('channel_template')[0]
         template.classList.add('none')
@@ -154,7 +164,7 @@ function start () {
       return el
     }
 
-    function removeDom (el) {
+    function removeDom(el) {
       el.remove()
       if (bg.myChannel.channels.length === 0) {
         var template = document.getElementsByClassName('channel_template')[0]
@@ -162,7 +172,7 @@ function start () {
       }
     }
 
-    function updateDom (el, channel) {
+    function updateDom(el, channel) {
       var parentNode = document.getElementById('channels_list')
       var statusEl = el.getElementsByClassName('status')[0]
       var nameEl = el.getElementsByClassName('nickname')[0]
@@ -272,7 +282,7 @@ function start () {
       }
     }
 
-    function showChannels () {
+    function showChannels() {
       console.log('show channels start')
       var parentNode = document.getElementById('channels_list')
       var template = document.getElementsByClassName('channel_template')[0]
@@ -321,7 +331,7 @@ function start () {
   })
 }
 
-function onInit () {
+function onInit() {
   translate()
   restoreOptions()
   start()
@@ -329,8 +339,9 @@ function onInit () {
 
 document.addEventListener('DOMContentLoaded', onInit)
 document.querySelector('.onlinefirst').onchange = toggleSort
-document.querySelector('.newtab').onchange = toggleNewtab
-document.querySelector('.hide_lastonline').onchange = hideLastonline
+// document.querySelector('.newtab').onchange = toggleNewtab
+// document.querySelector('.hide_lastonline').onchange = hideLastonline
+document.querySelector('.notification').onchange = toggleNotification
 document.querySelector('.hidename').onchange = hideName
 document.querySelector('.hidetitle').onchange = hideTitle
 document.querySelector('.recent').onchange = changeRecent

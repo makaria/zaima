@@ -2,7 +2,7 @@
 
 // channels, 异步操作移至eventPage
 class ChannelHandler {
-  constructor () {
+  constructor() {
     // this.defaultChannels = [{
     //   domain: 'douyu', //属于哪个网站
     //   id: '63375', //数字，必须有
@@ -25,9 +25,10 @@ class ChannelHandler {
     // this.start = true
     // this.fetching = false
     this.timestamp = 0
-    this.newtab = true
     this.onlinefirst = true
-    this.hide_lastonline = false
+    this.newtab = true
+    // this.hide_lastonline = false
+    this.show_notification = true
     this.hidename = false
     this.hidetitle = false
     this.restored = false
@@ -36,7 +37,7 @@ class ChannelHandler {
   // too many "if"!
 
   // 提取网站名，如bilibili,panda.正则获取.com或.tv前面的内容
-  getDomainAndId (url) {
+  getDomainAndId(url) {
     var reg1 = /(.+)\.com\/(.+)/ // 把.com前后的字符串提取出来
     var reg2 = /(.+)\.tv\/(.+)/ // 把.tv后的字符串提取出来
     var reg3 = /(.+)\.tv\/v\/(.+)/ // 针对quanmin.tv的slug网址
@@ -44,26 +45,41 @@ class ChannelHandler {
     for (let reg of regs) {
       var result = url.match(reg)
       if (result && result[1] && result[2] !== undefined && result[2] !== null) {
-        return {domain: result[1].replace(/.*\./, ''), id: result[2].replace(/\/.*/, '')}
+        return { domain: result[1].replace(/.*\./, ''), id: result[2].replace(/\/.*/, '') }
       }
     }
     return false
   }
 
+  format(num) {
+    return num < 10 ? '0' + num : num
+  }
+
   // 转化成统一的date格式
-  date2string (date) {
+  date2string(date) {
     // 如果是纯数字('1490999000'),则new Date(date*1000)
     // 如果是string('2017-03-14 14:06'),则new Date(date)
     // 预设只有两种格式，有其他格式需要改api.
+    var time
     if (date && !isNaN(date)) {
-      return new Date(date * 1000)
+      time = new Date(date * 1000)
     } else {
+      time = new Date(date)
+    }
+    if (isNaN(time.getDate())) {
       return date
+    } else {
+      var Y = time.getFullYear()
+      var M = this.format(time.getMonth() + 1)
+      var D = this.format(time.getDate())
+      var h = this.format(time.getHours())
+      var m = this.format(time.getMinutes())
+      return Y + '-' + M + '-' + D + ' ' + h + ':' + m
     }
   }
 
   // http://stackoverflow.com/questions/6393943/convert-javascript-string-in-dot-notation-into-an-object-reference
-  getByDot (obj, key, value) {
+  getByDot(obj, key, value) {
     if (!key || !obj) {
       return value
     } else if (typeof key === 'string') {
@@ -78,7 +94,7 @@ class ChannelHandler {
   }
 
   // 将返回的数据格式化成统一的格式以作为dom的数据
-  json2channel (data, channel) {
+  json2channel(data, channel) {
     // 排除data为{}或[]的情况, 一般长度为1000~3000
     if (!channel || !data || JSON.stringify(data).length < 42) {
       return false
@@ -106,15 +122,15 @@ class ChannelHandler {
     }
   }
 
-  isExists (one, two) {
+  isExists(one, two) {
     return one.domain === two.domain && ~~one.id === ~~two.id
   }
 
-  getIndex (channel) {
+  getIndex(channel) {
     return this.channels.findIndex(item => this.isExists(item, channel))
   }
 
-  addChannel (channel, index) {
+  addChannel(channel, index) {
     if (index !== undefined && index !== null) {
       this.channels.splice(index, 0, channel)
     } else {
@@ -127,7 +143,7 @@ class ChannelHandler {
     }
   }
 
-  deleteChannel (channel) {
+  deleteChannel(channel) {
     var index = this.getIndex(channel)
     if (index !== -1) {
       this.channels.splice(index, 1)
@@ -137,7 +153,7 @@ class ChannelHandler {
   }
 
   // 保存一个channel数据，key为domain+id，value即生成的channel对象
-  exportChannel (channel) {
+  exportChannel(channel) {
     var channelID = channel.domain + '-' + channel.id
     var size = JSON.stringify(channel).length // 小于8192
     var obj = {}
@@ -152,7 +168,7 @@ class ChannelHandler {
   }
 
   // 保存所有的channels数据，一个只含有channel的domain+id信息的数组
-  exportChannels () {
+  exportChannels() {
     var channels = []
     var invalid = false
     for (let channel of this.channels) {
@@ -169,7 +185,7 @@ class ChannelHandler {
   }
 
   // this shall never run
-  validChannels () {
+  validChannels() {
     var validChannels = this.channels.filter(channel => {
       console.log(channel)
       return channel && channel.domain && channel.id !== undefined && channel.id !== null
@@ -178,7 +194,7 @@ class ChannelHandler {
     this.channels = validChannels
   }
 
-  totalOnline () {
+  totalOnline() {
     var online = 0
     for (let channel of this.channels) {
       if (channel.online) {
@@ -188,7 +204,7 @@ class ChannelHandler {
     this.online = online
   }
 
-  updateTitle () {
+  updateTitle() {
     var title = ''
     for (let channel of this.channels) {
       if (channel.online) {
