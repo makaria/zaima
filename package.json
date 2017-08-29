@@ -1,8 +1,8 @@
 {
-  "name": "livetv",
+  "name": "zaima",
   "version": "1.0.0",
   "description": "A chrome extension for inspect live streaming",
-  "repository": "https://github.com/makaria/LiveTV",
+  "repository": "https://github.com/makaria/zaima",
   "keywords": [
     "chrome",
     "extension",
